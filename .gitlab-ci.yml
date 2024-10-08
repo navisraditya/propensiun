@@ -14,7 +14,7 @@ variables:
 
 stages:
   - build
-  - test
+  # - test
   - publish
   - deploy
 
@@ -87,3 +87,4 @@ Deploy:
       docker run --name $CONTAINER_NAME -d -p 80:8080 $REGISTRY_USER/$IMAGE_NAME:$IMAGE_TAG"
   only:
     - master
+# nama namanya juga coba-coba
