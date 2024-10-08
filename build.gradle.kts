@@ -2,7 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.3.3"
 	id("io.spring.dependency-management") version "1.1.6"
-	jacoco
+	// jacoco
 }
 
 group = "propensi.propensiun"
@@ -37,18 +37,18 @@ dependencies {
 }
 
 tasks.withType<Test> {
-	useJUnitPlatform()
-	finalizedBy(tasks.jacocoTestReport)
+	// useJUnitPlatform()
+	// finalizedBy(tasks.jacocoTestReport)
 	
-	task.jacocoTestReport{
-		classDirectories.setFrom(files(classDirectories.files.map {
-			fileTree(it) { exclude("**/*Application**")}
-		})) 
-		dependsOn(tasks.test)
-		reports {
-			xml.required.set(false)
-			csv.required.set(false)
-			html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
-		}
-	}
+	// task.jacocoTestReport{
+	// 	classDirectories.setFrom(files(classDirectories.files.map {
+	// 		fileTree(it) { exclude("**/*Application**")}
+	// 	})) 
+	// 	dependsOn(tasks.test)
+	// 	reports {
+	// 		xml.required.set(false)
+	// 		csv.required.set(false)
+	// 		html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+	// 	}
+	// }
 }
