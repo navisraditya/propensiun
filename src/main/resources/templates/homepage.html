@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>gundam</title>
+</head>
+<body>
+<li class="nav-item" th:classappend="${onevar == 'logout'} ? active">
+    <a class="nav-link" th:href="@{/logout}">Keluar</a>
+</li>
+</body>
+</html>
