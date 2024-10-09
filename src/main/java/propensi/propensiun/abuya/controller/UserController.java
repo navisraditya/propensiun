@@ -9,6 +9,7 @@ import propensi.propensiun.abuya.model.UserModel;
 import propensi.propensiun.abuya.service.PeranService;
 import propensi.propensiun.abuya.service.UserService;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -47,5 +48,20 @@ public class UserController {
         model.addAttribute("username", user.getUsername());
 
         return "add-user";
+    }
+
+    @GetMapping(value = "/profile")
+    public String viewProfile(Model model, Principal principal) {
+        String username = principal.getName();
+        UserModel user = userService.findByUsername(username);
+
+        model.addAttribute("user", user);
+
+
+        if (user.getPeran().getName().equals("Member")) {
+            model.addAttribute("showEditButton", true);
+            model.addAttribute("showDeleteButton", true);
+        }
+        return "profile-view.html";
     }
 }
