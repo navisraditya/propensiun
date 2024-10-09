@@ -29,15 +29,41 @@ public class HomepageController {
             user = userService.getUserByUsername(currAccName);
 
             if (auth.getAuthorities().stream()
+                    .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase("admin"))) {
+                return new ModelAndView("redirect:/memberlanding");
+            }
+            if (auth.getAuthorities().stream()
                     .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase("member"))) {
                 return new ModelAndView("redirect:/memberlanding");
             }
+            if (auth.getAuthorities().stream()
+                    .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase("Store Manager"))) {
+                return new ModelAndView("redirect:/memberlanding");
+            }
+            if (auth.getAuthorities().stream()
+                    .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase("Marketing"))) {
+                return new ModelAndView("redirect:/memberlanding");
+            }
+            if (auth.getAuthorities().stream()
+                    .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase("Chief Operating Officer"))) {
+                return new ModelAndView("redirect:/memberlanding");
+            }
+
         }
         return new ModelAndView("redirect:/login");
     }
 
+    @GetMapping("/adminlanding")
+    public String adminLanding(Model model) {
+        if (user != null) {
+            return "homepage-admin";
+        }
+
+        return "redirect:/login";
+    }
+
     @GetMapping("/memberlanding")
-    public String landingController(Model model) {
+    public String memberLanding(Model model) {
         if (user != null) {
             return "homepage-member";
         }
