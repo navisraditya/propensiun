@@ -30,7 +30,7 @@ public class HomepageController {
 
             if (auth.getAuthorities().stream()
                     .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase("admin"))) {
-                return new ModelAndView("redirect:/memberlanding");
+                return new ModelAndView("redirect:/adminlanding");
             }
             if (auth.getAuthorities().stream()
                     .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase("member"))) {
@@ -42,11 +42,11 @@ public class HomepageController {
             }
             if (auth.getAuthorities().stream()
                     .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase("Marketing"))) {
-                return new ModelAndView("redirect:/memberlanding");
+                return new ModelAndView("redirect:/marketinglanding");
             }
             if (auth.getAuthorities().stream()
                     .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase("Chief Operating Officer"))) {
-                return new ModelAndView("redirect:/memberlanding");
+                return new ModelAndView("redirect:/opslanding");
             }
 
         }
@@ -66,6 +66,33 @@ public class HomepageController {
     public String memberLanding(Model model) {
         if (user != null) {
             return "homepage-member";
+        }
+
+        return "redirect:/login";
+    }
+
+    @GetMapping("/opslanding")
+    public String opsLanding(Model model) {
+        if (user != null) {
+            return "homepage-ops";
+        }
+
+        return "redirect:/login";
+    }
+
+    @GetMapping("/marketinglanding")
+    public String marketingLanding(Model model) {
+        if (user != null) {
+            return "homepage-marketing";
+        }
+
+        return "redirect:/login";
+    }
+
+    @GetMapping("/smlanding")
+    public String storemanagerLanding(Model model) {
+        if (user != null) {
+            return "homepage-sm";
         }
 
         return "redirect:/login";
