@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <title>Abuya</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <div class="card m-4 p-4">
+        <div class="card-body">
+            <div class="justify-content-center">
+                <h2>Tambah Gerai</h2>
+                <br>
+                <form th:action="@{/gerai/tambah}" th:object="${store}" method="POST">
+                    <div class="mb-3">
+                        <label for="storeName" class="form-label">Nama Gerai:</label>
+                        <input class="form-control" type="text" id="storeName" name="storeName" required minlength="5" />
+                        <div class="text-danger" id="storeNameError"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="storeAddr" class="form-label">Alamat:</label>
+                        <input class="form-control" type="text" id="storeAddr" name="storeAddr" required minlength="7" />
+                        <div class="text-danger" id="storeAddrError"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="storeAddrLink" class="form-label">Lokasi (Google Maps):</label>
+                        <input class="form-control" type="text" id="storeAddrLink" name="storeAddrLink" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="storePhone" class="form-label">Nomor Telefon:</label>
+                        <input class="form-control" type="tel" id="storePhone" name="storePhone" required pattern="^\d{10,13}$" title="Nomor telefon harus 10-13 digit" />
+                        <div class="text-danger" id="storePhoneError"></div>
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <a class="btn btn-secondary" href="/">Home</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Simple client-side validation for displaying error messages
+    document.querySelector('form').addEventListener('submit', function (event) {
+        let valid = true;
+
+        // Clear previous error messages
+        document.getElementById('storeNameError').textContent = '';
+        document.getElementById('storeAddrError').textContent = '';
+        document.getElementById('storePhoneError').textContent = '';
+
+        // Validate store name
+        const storeNameInput = document.getElementById('storeName');
+        if (storeNameInput.value.length < 5) {
+            document.getElementById('storeNameError').textContent = 'Nama Gerai harus minimal 5 karakter.';
+            valid = false;
+        }
+
+        // Validate store address
+        const storeAddrInput = document.getElementById('storeAddr');
+        if (storeAddrInput.value.length < 7) {
+            document.getElementById('storeAddrError').textContent = 'Alamat harus minimal 7 karakter.';
+            valid = false;
+        }
+
+        // Validate store phone
+        const storePhoneInput = document.getElementById('storePhone');
+        const phonePattern = /^\d{10,13}$/;
+        if (!phonePattern.test(storePhoneInput.value)) {
+            document.getElementById('storePhoneError').textContent = 'Nomor telefon harus 10-13 digit.';
+            valid = false;
+        }
+
+        if (!valid) {
+            event.preventDefault(); // Prevent form submission if validation fails
+        }
+    });
+</script>
+</body>
+</html>
