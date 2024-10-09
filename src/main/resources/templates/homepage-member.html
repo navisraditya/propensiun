@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello, Member!</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .carousel-item {
+        height: 400px;
+        background-color: #343a40;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .carousel-item h1 {
+        font-size: 48px;
+        margin-bottom: 10px;
+      }
+      .carousel-item p {
+        font-size: 24px;
+      }
+      .user-icon {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 24px;
+        color: #343a40;
+        cursor: pointer;
+      }
+      .user-icon:hover {
+        color: #007bff;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- User Icon for Logged-in User -->
+    <a href="/user-profile" class="user-icon" title="View Profile">
+      <i class="bi bi-person-circle"></i>
+      <!-- Bootstrap icon -->
+    </a>
+
+    <!-- Banner for Menus in carousel -->
+    <section id="menuCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <!-- Dynamically load menu items in the carousel -->
+        <div
+          th:each="menu, iterStat : ${menus}"
+          th:classappend="${iterStat.index == 0} ? 'active' : ''"
+          class="carousel-item"
+        >
+          <div>
+            <h1 th:text="${menu.title}">Menu Title</h1>
+            <p th:text="${menu.description}">Menu Description</p>
+          </div>
+        </div>
+      </div>
+      <!-- Carousel controls -->
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#menuCarousel"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#menuCarousel"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </section>
+
+    <!-- promo card -->
+    <section class="promos-section container">
+      <h2 class="text-center mb-4">Available Promotions</h2>
+      <div class="row">
+        <!-- Promo Cards: Dynamically load promotions -->
+        <div class="col-md-4" th:each="promo : ${promotions}">
+          <div class="card promo-card">
+            <img
+              th:src="@{${promo.imageUrl}}"
+              class="card-img-top"
+              alt="Promo Image"
+            />
+            <div class="card-body">
+              <h5 class="card-title" th:text="${promo.title}">Promo Title</h5>
+              <p class="card-text" th:text="${promo.description}">
+                Promo Description
+              </p>
+              <a th:href="@{${promo.link}}" class="btn btn-primary"
+                >Claim Now</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bootstrap JS and Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
+  </body>
+</html>
