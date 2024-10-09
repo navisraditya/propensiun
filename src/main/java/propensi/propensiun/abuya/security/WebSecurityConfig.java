@@ -50,7 +50,7 @@ public class WebSecurityConfig {
         auth.inMemoryAuthentication()
                 .passwordEncoder(encoder())
                 .withUser("admin")
-                .password(encoder().encode("1"))
+                .password(encoder().encode("Abuya"))
                 .roles("Admin");
     }
     @Autowired
