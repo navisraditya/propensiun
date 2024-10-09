@@ -12,7 +12,7 @@ public class UserServiceImpl implements UserService {
     private UserDb userDb;
 
     @Override
-    public UserModel addUser(UserModel user){
+    public UserModel addUser(UserModel user) {
         String pass = encrypt(user.getPassword());
         user.setPassword(pass);
         return userDb.save(user);
@@ -23,5 +23,10 @@ public class UserServiceImpl implements UserService {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hashedPassword = passwordEncoder.encode(password);
         return hashedPassword;
+    }
+
+    @Override
+    public UserModel getUserByUsername(String name) {
+        return userDb.findByUsername(name);
     }
 }
