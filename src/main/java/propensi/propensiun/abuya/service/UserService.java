@@ -8,4 +8,7 @@ public interface UserService {
     public String encrypt(String password);
 
     UserModel findByUsername(String username);
+    public UserModel getUserByUsername(String name);
+    UserModel findByUsername(String username);
+    void changePassword(UserModel user, String password);
 }

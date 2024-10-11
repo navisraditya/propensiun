@@ -25,6 +25,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/user/add").permitAll()
                         .requestMatchers("/user/login").permitAll()
                         .requestMatchers("/user/logout").permitAll()
+                        .requestMatchers("/user/ubah-password").permitAll()
                         .anyRequest().authenticated()
 
                 )
@@ -41,7 +42,7 @@ public class WebSecurityConfig {
     @Bean
     public BCryptPasswordEncoder encoder(){
         return new BCryptPasswordEncoder();
-    }
+    }   
 
 
     @Autowired
