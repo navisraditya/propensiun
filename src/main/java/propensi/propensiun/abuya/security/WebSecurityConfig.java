@@ -1,6 +1,5 @@
 package propensi.propensiun.abuya.security;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +30,7 @@ public class WebSecurityConfig {
                 )
                 .formLogin(formLogin -> formLogin
                         .loginProcessingUrl("/user/login")
-                        .defaultSuccessUrl("/user/home")
+                        .defaultSuccessUrl("/home")
                         .permitAll())
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -40,10 +39,9 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public BCryptPasswordEncoder encoder(){
+    public BCryptPasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
-    }   
-
+    }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -53,12 +51,12 @@ public class WebSecurityConfig {
                 .password(encoder().encode("Abuya"))
                 .roles("Admin");
     }
+
     @Autowired
     private UserDetailsService userDetailsService;
 
-
     @Autowired
-    public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception{
+    public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(encoder());
     }
 }
