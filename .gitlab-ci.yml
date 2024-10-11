@@ -44,7 +44,7 @@ Test:
   before_script:
     - echo `pwd`
     - export GRADLE_USER_HOME=`pwd`/.gradle
-    - export SPRING_PROFILES_ACTIVE=test
+    - export SPRING_PROFILES_ACTIVE=dev
   script:
     - gradle check --info --stacktrace
     - gradle test
