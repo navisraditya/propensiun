@@ -27,4 +27,29 @@ public class UserServiceImpl implements UserService {
         return hashedPassword;
     }
 
+
+    @Override
+    public UserModel findByUsername(String username) {
+        return userDb.findByUsername(username);
+
+    public UserModel getUserByUsername(String name) {
+        return userDb.findByUsername(name);
+    }
+
+
+
+    @Override
+    // @Transactional
+    public void changePassword(UserModel user, String password) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String newPassword = passwordEncoder.encode(password);
+        user.setPassword(newPassword);
+        try {
+            userDb.save(user);
+        } catch (Exception e) {
+            // Log the exception or handle it as needed
+            System.err.println("Failed to update password: " + e.getMessage());
+        }
+    }
+
 }

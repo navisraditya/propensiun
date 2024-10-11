@@ -86,4 +86,42 @@ public class UserController {
 
 
 
+
+
+    @GetMapping(value = "/profile")
+    public String viewProfile(Model model, Principal principal) {
+        String username = principal.getName();
+        UserModel user = userService.findByUsername(username);
+
+        model.addAttribute("user", user);
+
+        if (user.getPeran().getName().equals("Member")) {
+            model.addAttribute("showEditButton", true);
+            model.addAttribute("showDeleteButton", true);
+        }
+        return "profile-view.html";
+    }
+
+    
+
+    @PostMapping(value = "/ubah-password")
+    private String ubahPasswordPost(
+            @RequestParam("oldPassword") String oldPassword,
+            @RequestParam("newPassword") String newPassword,
+            @RequestParam("confirmPassword") String confirmPassword,
+            Model model) {
+        if (!newPassword.equals(confirmPassword)) {
+            model.addAttribute("error", "New password and confirm password do not match.");
+            return "ubah-password"; // Return back to the form if passwords don't match
+        }
+
+        // Add your logic for changing the password here.
+        UserModel user = getUser();
+        userService.changePassword(user, confirmPassword);
+
+        // If password change is successful, redirect to a success page (or show a
+        // success message)
+        return "redirect:home"; // Redirect after success
+    }
+
 }
