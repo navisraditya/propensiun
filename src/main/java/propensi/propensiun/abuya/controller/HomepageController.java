@@ -2,7 +2,7 @@ package propensi.propensiun.abuya.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,32 +25,23 @@ public class HomepageController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth != null && auth.getAuthorities() != null) {
-            String currAccName = auth.getName();
-            user = userService.getUserByUsername(currAccName);
-
-            if (auth.getAuthorities().stream()
-                    .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase("admin"))) {
+            if (auth.getAuthorities().contains(new SimpleGrantedAuthority("Admin"))) {
                 return new ModelAndView("redirect:/adminlanding");
-            }
-            if (auth.getAuthorities().stream()
-                    .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase("member"))) {
-                return new ModelAndView("redirect:/memberlanding");
-            }
-            if (auth.getAuthorities().stream()
-                    .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase("Store Manager"))) {
-                return new ModelAndView("redirect:/memberlanding");
-            }
-            if (auth.getAuthorities().stream()
-                    .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase("Marketing"))) {
-                return new ModelAndView("redirect:/marketinglanding");
-            }
-            if (auth.getAuthorities().stream()
-                    .anyMatch(authority -> authority.getAuthority().equalsIgnoreCase("Chief Operating Officer"))) {
+            } else if (auth.getAuthorities().contains(new SimpleGrantedAuthority("Chief Operating Officer"))) {
                 return new ModelAndView("redirect:/opslanding");
+            } else if (auth.getAuthorities().contains(new SimpleGrantedAuthority("Store Manager"))) {
+                return new ModelAndView("redirect:/smlanding");
+            } else if (auth.getAuthorities().contains(new SimpleGrantedAuthority("Marketing"))) {
+                return new ModelAndView("redirect:/marketinglanding");
+            } else if (auth.getAuthorities().contains(new SimpleGrantedAuthority("Member"))) {
+                return new ModelAndView("redirect:/memberlanding");
+            } else {
+                System.out.println("kosong");
+                return new ModelAndView("redirect:/user/home");
             }
 
         }
-        return new ModelAndView("redirect:/login");
+        return new ModelAndView("redirect:/user/home");
     }
 
     @GetMapping("/adminlanding")
