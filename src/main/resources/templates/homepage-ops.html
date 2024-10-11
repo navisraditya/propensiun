@@ -43,6 +43,9 @@
     </style>
   </head>
   <body>
+    <li class="nav-item" th:classappend="${onevar == 'logout'} ? active">
+      <a class="nav-link" th:href="@{/logout}">Keluar</a>
+    </li>
     <div th:replace="fragments/navbar :: navbar"></div>
 
     <section id="menuCarousel" class="carousel slide" data-bs-ride="carousel">

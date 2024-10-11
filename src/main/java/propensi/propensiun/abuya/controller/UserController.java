@@ -39,7 +39,7 @@ public class UserController {
         // Return nilai default
         return null;
     }
-    
+
     private UserModel getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()
@@ -56,17 +56,16 @@ public class UserController {
     }
 
     @RequestMapping("/login")
-    public String login(){
+    public String login() {
         return "login";
     }
 
-    @GetMapping(value="/home")
-    private String home(){
-        return "homepage";
+    @GetMapping(value = "/home")
+    private String home() {
+        return "homepage-admin";
     }
 
-
-    @GetMapping(value="/add")
+    @GetMapping(value = "/add")
     private String addUserFormPage(Model model) {
         UserModel user = new UserModel();
         List<PeranModel> listRole = peranService.findAll();
@@ -76,7 +75,7 @@ public class UserController {
         return "form-add-user";
     }
 
-    @PostMapping(value="/add")
+    @PostMapping(value = "/add")
     private String addUserSubmit(@ModelAttribute UserModel user, Model model) {
         userService.addUser(user);
         model.addAttribute("username", user.getUsername());
@@ -84,12 +83,12 @@ public class UserController {
         return "add-user";
     }
 
-    @GetMapping(value="/ubah-password")
-    private String ubahPasswordGet(){
+    @GetMapping(value = "/ubah-password")
+    private String ubahPasswordGet() {
         return "ubah-password";
     }
 
-    @PostMapping(value="/ubah-password")
+    @PostMapping(value = "/ubah-password")
     private String ubahPasswordPost(
             @RequestParam("oldPassword") String oldPassword,
             @RequestParam("newPassword") String newPassword,
@@ -103,8 +102,9 @@ public class UserController {
         // Add your logic for changing the password here.
         UserModel user = getUser();
         userService.changePassword(user, confirmPassword);
-        
-        // If password change is successful, redirect to a success page (or show a success message)
+
+        // If password change is successful, redirect to a success page (or show a
+        // success message)
         return "redirect:home"; // Redirect after success
     }
 }
