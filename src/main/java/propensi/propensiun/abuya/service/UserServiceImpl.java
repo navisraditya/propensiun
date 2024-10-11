@@ -3,6 +3,8 @@ package propensi.propensiun.abuya.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import propensi.propensiun.abuya.model.UserModel;
 import propensi.propensiun.abuya.repository.UserDb;
 
@@ -12,7 +14,7 @@ public class UserServiceImpl implements UserService {
     private UserDb userDb;
 
     @Override
-    public UserModel addUser(UserModel user){
+    public UserModel addUser(UserModel user) {
         String pass = encrypt(user.getPassword());
         user.setPassword(pass);
         return userDb.save(user);
@@ -25,9 +27,4 @@ public class UserServiceImpl implements UserService {
         return hashedPassword;
     }
 
-    @Override
-    public UserModel findByUsername(String username) {
-        return userDb.findByUsername(username);
-
-    }
 }
