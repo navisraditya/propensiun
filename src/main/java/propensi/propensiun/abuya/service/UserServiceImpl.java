@@ -57,15 +57,16 @@ public class UserServiceImpl implements UserService {
         return hashedPassword;
     }
 
+
     @Override
+    public UserModel findByUsername(String username) {
+        return userDb.findByUsername(username);
+
     public UserModel getUserByUsername(String name) {
         return userDb.findByUsername(name);
     }
 
-    public UserModel findByUsername(String username) {
-        UserModel user = userDb.findByUsername(username);
-        return user;
-    }
+
 
     @Override
     // @Transactional
@@ -79,5 +80,10 @@ public class UserServiceImpl implements UserService {
             // Log the exception or handle it as needed
             System.err.println("Failed to update password: " + e.getMessage());
         }
+    }
+
+    @Override
+    public String getPassword(UserModel user) {
+        return user.getPassword();
     }
 }
