@@ -82,4 +82,8 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public String getPassword(UserModel user) {
+        return user.getPassword();
+    }
 }
