@@ -80,10 +80,6 @@ public class UserController {
         return "add-user";
     }
 
-
-
-
-
     @GetMapping(value = "/profile")
     public String viewProfile(Model model, Principal principal) {
         String username = principal.getName();
@@ -98,37 +94,42 @@ public class UserController {
         return "profile-view.html";
     }
 
+    @GetMapping(value = "/ubah-password")
+    private String ubahPasswordForm(Model model) {
+        return "ubah-password";
+    }
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
     @PostMapping(value = "/ubah-password")
     private String ubahPasswordPost(
             @RequestParam("oldPassword") String oldPassword,
             @RequestParam("newPassword") String newPassword,
             @RequestParam("confirmPassword") String confirmPassword,
             Model model) {
-        
-        UserModel user = getUser();        
+
+        UserModel user = getUser();
         String userPassword = userService.getPassword(user);
 
-        if(!passwordEncoder.matches(oldPassword, userPassword)) {
+        if (!passwordEncoder.matches(oldPassword, userPassword)) {
             model.addAttribute("error", "Password is incorrect.");
             return "ubah-password";
         }
 
-        if(oldPassword.equals(newPassword)) {
+        if (oldPassword.equals(newPassword)) {
             model.addAttribute("error", "You can't change the password into the same password.");
             return "ubah-password";
         }
-        
+
         if (!newPassword.equals(confirmPassword)) {
             model.addAttribute("error", "New password and confirm password do not match.");
             return "ubah-password";
         }
 
         userService.changePassword(user, confirmPassword);
-        model.addAttribute("success","Password has been changed");
-        return "ubah-password"; 
+        model.addAttribute("success", "Password has been changed");
+        return "ubah-password";
     }
 
 }
