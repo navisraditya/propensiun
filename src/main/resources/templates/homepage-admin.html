@@ -43,9 +43,12 @@
     </style>
   </head>
   <body>
-    <li class="nav-item" th:classappend="${onevar == 'logout'} ? active">
-      <a class="nav-link" th:href="@{/logout}">Keluar</a>
-    </li>
+    <a
+      class="nav-link"
+      th:href="@{/logout}"
+      th:classappend="${onevar == 'logout'} ? active"
+      >Keluar</a
+    >
     <!-- User Icon for Logged-in User -->
     <a href="/user-profile" class="user-icon" title="View Profile">
       <i class="bi bi-person-circle"></i>

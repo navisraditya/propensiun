@@ -20,6 +20,11 @@ public class HomepageController {
     @Autowired
     UserService userService;
 
+    @GetMapping("/")
+    public String guestLanding(Model model) {
+        return "homepage";
+    }
+
     @GetMapping("/redirectHomepage")
     public ModelAndView redirectHomepage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -84,11 +89,6 @@ public class HomepageController {
     @GetMapping("/smlanding")
     public String storemanagerLanding(Model model) {
         return "homepage-sm";
-    }
-
-    @GetMapping("/")
-    public String guestLanding(Model model) {
-        return "homepage";
     }
 
 }
