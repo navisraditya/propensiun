@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface UserDb extends JpaRepository<UserModel, Integer> {
     UserModel findByUsername(String username);
+
     List<UserModel> findAll();
 }

@@ -60,11 +60,6 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping(value = "/home")
-    private String home() {
-        return "homepage-admin";
-    }
-
     @GetMapping(value = "/add")
     private String addUserFormPage(Model model) {
         UserModel user = new UserModel();

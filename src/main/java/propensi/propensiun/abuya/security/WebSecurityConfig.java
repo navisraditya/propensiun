@@ -30,7 +30,7 @@ public class WebSecurityConfig {
                 )
                 .formLogin(formLogin -> formLogin
                         .loginProcessingUrl("/user/login")
-                        .defaultSuccessUrl("/home")
+                        .defaultSuccessUrl("/redirectHomepage")
                         .permitAll())
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
