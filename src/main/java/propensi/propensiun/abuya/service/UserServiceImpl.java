@@ -57,16 +57,14 @@ public class UserServiceImpl implements UserService {
         return hashedPassword;
     }
 
-
     @Override
     public UserModel findByUsername(String username) {
         return userDb.findByUsername(username);
+    }
 
     public UserModel getUserByUsername(String name) {
         return userDb.findByUsername(name);
     }
-
-
 
     @Override
     // @Transactional
