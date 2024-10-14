@@ -10,6 +10,8 @@ public interface UserService {
 
 
     public UserModel getUserByUsername(String name);
+    
+    public String getPassword(UserModel user);
 
     UserModel findByUsername(String username);
 

@@ -5,6 +5,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -97,26 +98,37 @@ public class UserController {
         return "profile-view.html";
     }
 
-    
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
     @PostMapping(value = "/ubah-password")
     private String ubahPasswordPost(
             @RequestParam("oldPassword") String oldPassword,
             @RequestParam("newPassword") String newPassword,
             @RequestParam("confirmPassword") String confirmPassword,
             Model model) {
-        if (!newPassword.equals(confirmPassword)) {
-            model.addAttribute("error", "New password and confirm password do not match.");
-            return "ubah-password"; // Return back to the form if passwords don't match
+        
+        UserModel user = getUser();        
+        String userPassword = userService.getPassword(user);
+
+        if(!passwordEncoder.matches(oldPassword, userPassword)) {
+            model.addAttribute("error", "Password is incorrect.");
+            return "ubah-password";
         }
 
-        // Add your logic for changing the password here.
-        UserModel user = getUser();
-        userService.changePassword(user, confirmPassword);
+        if(oldPassword.equals(newPassword)) {
+            model.addAttribute("error", "You can't change the password into the same password.");
+            return "ubah-password";
+        }
+        
+        if (!newPassword.equals(confirmPassword)) {
+            model.addAttribute("error", "New password and confirm password do not match.");
+            return "ubah-password";
+        }
 
-        // If password change is successful, redirect to a success page (or show a
-        // success message)
-        return "redirect:home"; // Redirect after success
+        userService.changePassword(user, confirmPassword);
+        model.addAttribute("success","Password has been changed");
+        return "ubah-password"; 
     }
 
 }
