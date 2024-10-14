@@ -49,6 +49,13 @@
       th:classappend="${onevar == 'logout'} ? active"
       >Keluar</a
     >
+    <br />
+    <a
+      class="nav-link"
+      th:href="@{/user/ubah-password}"
+      th:classappend="${onevar == 'ubahPassword'} ? active"
+      >Ubah Password</a
+    >
     <!-- User Icon for Logged-in User -->
     <a href="/user-profile" class="user-icon" title="View Profile">
       <i class="bi bi-person-circle"></i>
