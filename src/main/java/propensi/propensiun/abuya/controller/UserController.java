@@ -13,6 +13,7 @@ import propensi.propensiun.abuya.model.UserModel;
 import propensi.propensiun.abuya.service.PeranService;
 import propensi.propensiun.abuya.service.UserService;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -78,10 +79,25 @@ public class UserController {
         return "add-user";
     }
 
-    @GetMapping(value = "/ubah-password")
-    private String ubahPasswordGet() {
-        return "ubah-password";
+
+
+
+
+    @GetMapping(value = "/profile")
+    public String viewProfile(Model model, Principal principal) {
+        String username = principal.getName();
+        UserModel user = userService.findByUsername(username);
+
+        model.addAttribute("user", user);
+
+        if (user.getPeran().getName().equals("Member")) {
+            model.addAttribute("showEditButton", true);
+            model.addAttribute("showDeleteButton", true);
+        }
+        return "profile-view.html";
     }
+
+    
 
     @PostMapping(value = "/ubah-password")
     private String ubahPasswordPost(
@@ -102,4 +118,5 @@ public class UserController {
         // success message)
         return "redirect:home"; // Redirect after success
     }
+
 }
