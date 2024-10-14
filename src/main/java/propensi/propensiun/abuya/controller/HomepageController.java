@@ -2,6 +2,7 @@ package propensi.propensiun.abuya.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +30,7 @@ public class HomepageController {
 
             if (user != null) {
                 int userRole = user.getPeran().getUuid();
-                if (userRole == 0) {
+                if (auth.getAuthorities().contains(new SimpleGrantedAuthority("Admin"))) {
                     return new ModelAndView("redirect:/adminlanding");
                 } else if (userRole == 1) {
                     return new ModelAndView("redirect:/opslanding");
@@ -41,15 +42,16 @@ public class HomepageController {
                     return new ModelAndView("redirect:/memberlanding");
                 } else {
                     System.out.println("gk kenal");
-                    return new ModelAndView("redirect:/user/home");
+                    return new ModelAndView("redirect:/");
                 }
             } else {
                 System.out.println("kosong");
-                return new ModelAndView("redirect:/user/home");
+                return new ModelAndView("redirect:/");
             }
 
         }
         return new ModelAndView("redirect:/user/home");
+
     }
 
     @GetMapping("/adminlanding")
@@ -78,6 +80,11 @@ public class HomepageController {
     @GetMapping("/smlanding")
     public String storemanagerLanding(Model model) {
         return "homepage-sm";
+    }
+
+    @GetMapping("/")
+    public String guestLanding(Model model) {
+        return "homepage";
     }
 
 }

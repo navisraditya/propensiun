@@ -21,10 +21,9 @@ public class dataloader implements ApplicationRunner {
     }
 
     public void run(ApplicationArguments args) {
-        peranDb.save(new PeranModel(0, "Admin", new ArrayList<UserModel>()));
-        peranDb.save(new PeranModel(1, "Chief Operating Officer", new ArrayList<UserModel>()));
-        peranDb.save(new PeranModel(2, "Store Manager", new ArrayList<UserModel>()));
-        peranDb.save(new PeranModel(3, "Marketing", new ArrayList<UserModel>()));
-        peranDb.save(new PeranModel(4, "Member", new ArrayList<UserModel>()));
+        peranDb.save(new PeranModel(1, "Admin", new ArrayList<UserModel>()));
+        peranDb.save(new PeranModel(2, "Chief Operating Officer", new ArrayList<UserModel>()));
+        peranDb.save(new PeranModel(3, "Store Manager", new ArrayList<UserModel>()));
+        peranDb.save(new PeranModel(4, "Marketing", new ArrayList<UserModel>()));
     }
 }

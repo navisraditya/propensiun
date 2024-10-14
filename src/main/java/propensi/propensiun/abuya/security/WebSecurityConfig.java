@@ -18,11 +18,13 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/").permitAll()
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/js/**").permitAll()
                         .requestMatchers("/resources/**").permitAll()
-                        .requestMatchers("/user/add").permitAll()
                         .requestMatchers("/user/login").permitAll()
+                        // below, dev purpose only
+                        .requestMatchers("/user/add").permitAll()
                         .requestMatchers("/user/logout").permitAll()
                         .requestMatchers("/user/ubah-password").permitAll()
                         .anyRequest().authenticated()
@@ -34,7 +36,7 @@ public class WebSecurityConfig {
                         .permitAll())
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .logoutSuccessUrl("/login").permitAll());
+                        .logoutSuccessUrl("/redirectHomepage").permitAll());
         return http.build();
     }
 
