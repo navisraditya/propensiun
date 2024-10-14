@@ -28,30 +28,34 @@ public class HomepageController {
             String userName = auth.getName();
             UserModel user = userService.getUserByUsername(userName);
 
-            if (user != null) {
-                int userRole = user.getPeran().getUuid();
-                if (auth.getAuthorities().contains(new SimpleGrantedAuthority("Admin"))) {
-                    return new ModelAndView("redirect:/adminlanding");
-                } else if (userRole == 1) {
-                    return new ModelAndView("redirect:/opslanding");
-                } else if (userRole == 2) {
-                    return new ModelAndView("redirect:/smlanding");
-                } else if (userRole == 3) {
-                    return new ModelAndView("redirect:/marketinglanding");
-                } else if (userRole == 4) {
-                    return new ModelAndView("redirect:/memberlanding");
+            if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_Admin"))) {
+
+                System.out.println("admin login");
+                return new ModelAndView("redirect:/adminlanding");
+            } else {
+                if (user != null) {
+                    int userRole = user.getPeran().getUuid();
+
+                    if (userRole == 1) {
+                        return new ModelAndView("redirect:/opslanding");
+                    } else if (userRole == 2) {
+                        return new ModelAndView("redirect:/smlanding");
+                    } else if (userRole == 3) {
+                        return new ModelAndView("redirect:/marketinglanding");
+                    } else if (userRole == 4) {
+                        return new ModelAndView("redirect:/memberlanding");
+                    } else {
+                        System.out.println("gk kenal");
+                        return new ModelAndView("redirect:/");
+                    }
                 } else {
-                    System.out.println("gk kenal");
+                    System.out.println("kosong");
                     return new ModelAndView("redirect:/");
                 }
-            } else {
-                System.out.println("kosong");
-                return new ModelAndView("redirect:/");
             }
 
         }
-        return new ModelAndView("redirect:/user/home");
-
+        return new ModelAndView("redirect:/");
     }
 
     @GetMapping("/adminlanding")
