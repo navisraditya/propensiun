@@ -1,27 +1,49 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <title>User Profile</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--<h1>Profil Pengguna</h1>-->
-<!--<p>Nama: <span th:text="${user.name}"></span></p>-->
-<!--<p>Username: <span th:text="${user.username}"></span></p>-->
-<!--<p>Role: <span th:text="${user.peran.name}"></span></p> &lt;!&ndash; Menggunakan 'name' untuk peran &ndash;&gt;-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Profile</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
 
-<!--&lt;!&ndash; Jika 'Member', nomor telepon bisa ditampilkan jika ada &ndash;&gt;-->
-<!--<div th:if="${user.peran.name == 'Member'}">-->
-<!--    <p>Nomor Telepon: <span th:text="${user.telephone}"></span></p> &lt;!&ndash; Pastikan field 'telephone' ada di UserModel &ndash;&gt;-->
-<!--</div>-->
+<h1>Profile of <span th:text="${user.name}">User Name</span></h1>
 
-<!--&lt;!&ndash; Tampilkan tombol Edit jika 'showEditButton' true &ndash;&gt;-->
-<!--<div th:if="${showEditButton}">-->
-<!--    <a href="/user/edit" class="btn btn-primary">Edit Profil</a>-->
-<!--</div>-->
+<div>
+    <p><strong>Username:</strong> <span th:text="${user.username}">user.username</span></p>
+    <p><strong>Company ID:</strong> <span th:text="${user.companyid}">user.companyid</span></p>
+    <p><strong>Role:</strong> <span th:text="${user.peran.name}">user.peran.name</span></p>
+</div>
 
-<!--&lt;!&ndash; Tampilkan tombol Delete jika 'showDeleteButton' true &ndash;&gt;-->
-<!--<div th:if="${showDeleteButton}">-->
-<!--    <a href="/user/delete" class="btn btn-danger">Delete Akun</a>-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->
+<!-- Display Edit and Delete buttons for Members -->
+<div th:if="${showEditButton}">
+    <a href="/user/edit" class="btn btn-primary">Edit Profile</a>
+    <a href="/user/delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this account?');">Delete Account</a>
+</div>
+
+<!-- Display specific content for Admin role -->
+<div th:if="${cooAndManagers}">
+    <h2>COO and Managers List</h2>
+    <ul>
+        <li th:each="manager : ${cooAndManagers}">
+            <span th:text="${manager.name}">Manager Name</span> - <span th:text="${manager.peran.name}">Manager Role</span>
+        </li>
+    </ul>
+</div>
+
+<!-- Display specific content for Regional Manager role -->
+<div th:if="${storeManagers}">
+    <h2>Store Managers List</h2>
+    <ul>
+        <li th:each="storeManager : ${storeManagers}">
+            <span th:text="${storeManager.name}">Store Manager Name</span> - <span th:text="${storeManager.peran.name}">Store Manager Role</span>
+        </li>
+    </ul>
+</div>
+
+<!-- Optional Logout Button -->
+<div>
+    <a href="/logout" class="btn btn-secondary">Logout</a>
+</div>
+
+</body>
+</html>

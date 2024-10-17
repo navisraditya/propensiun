@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service;
 import propensi.propensiun.abuya.model.UserModel;
 import propensi.propensiun.abuya.repository.UserDb;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -52,4 +56,15 @@ public class UserServiceImpl implements UserService {
     public String getPassword(UserModel user) {
         return user.getPassword();
     }
+
+    @Override
+    public List<UserModel> findCOOAndManagers() {
+        return userDb.findByRoleNames(Arrays.asList("COO", "Regional Manager", "Store Manager"));
+    }
+
+    @Override
+    public List<UserModel> findStoreManagers() {
+        return userDb.findByRoleNames(Collections.singletonList("Store Manager"));
+    }
+
 }

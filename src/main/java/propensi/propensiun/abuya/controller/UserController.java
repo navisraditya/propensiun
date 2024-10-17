@@ -84,14 +84,26 @@ public class UserController {
     public String viewProfile(Model model, Principal principal) {
         String username = principal.getName();
         UserModel user = userService.findByUsername(username);
-
         model.addAttribute("user", user);
 
-        if (user.getPeran().getName().equals("Member")) {
+        String role = user.getPeran().getName();
+
+        // Display edit and delete buttons for members
+        if (role.equals("Member") || role.equals("Admin") || role.equals("Marketing") || role.equals("Store Manager") || role.equals("Chief Operating Officer")) {
             model.addAttribute("showEditButton", true);
             model.addAttribute("showDeleteButton", true);
         }
-        return "profile-view.html";
+
+        // Conditional logic based on roles
+        if (user.getPeran().getName().equals("Admin")) {
+            List<UserModel> cooAndManagers = userService.findCOOAndManagers();
+            model.addAttribute("cooAndManagers", cooAndManagers);
+        } else if (user.getPeran().getName().equals("Regional Manager")) {
+            List<UserModel> storeManagers = userService.findStoreManagers();
+            model.addAttribute("storeManagers", storeManagers);
+        }
+
+        return "profile-view";
     }
 
     @GetMapping(value = "/ubah-password")
