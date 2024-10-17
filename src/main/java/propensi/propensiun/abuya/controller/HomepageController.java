@@ -42,19 +42,23 @@ public class HomepageController {
                     int userRole = user.getPeran().getUuid();
 
                     if (userRole == 1) {
+                        System.out.println("coo login");
                         return new ModelAndView("redirect:/opslanding");
                     } else if (userRole == 2) {
+                        System.out.println("sm login");
                         return new ModelAndView("redirect:/smlanding");
                     } else if (userRole == 3) {
+                        System.out.println("marketing login");
                         return new ModelAndView("redirect:/marketinglanding");
                     } else if (userRole == 4) {
+                        System.out.println("member login");
                         return new ModelAndView("redirect:/memberlanding");
                     } else {
-                        System.out.println("gk kenal");
+                        System.out.println("guest login");
                         return new ModelAndView("redirect:/");
                     }
                 } else {
-                    System.out.println("kosong");
+                    System.out.println("invalid. identified as guest");
                     return new ModelAndView("redirect:/");
                 }
             }

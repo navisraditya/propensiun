@@ -11,7 +11,13 @@
     />
     <style>
       body {
+        display: flex;
+        flex-direction: column;
+        min-height: 200vh;
         font-family: Arial, sans-serif;
+      }
+      .content {
+        flex: 1;
       }
       .carousel-item {
         height: 400px;
@@ -40,22 +46,68 @@
       .user-icon:hover {
         color: #007bff;
       }
+      .footer {
+        position: relative;
+        bottom: 0;
+        min-height: 250px;
+        width: 100%;
+        text-align: center;
+        padding-top: 50px;
+        background-color: #f8f9fa;
+        font-size: 16px;
+      }
     </style>
   </head>
   <body>
-    <a
-      class="nav-link"
-      th:href="@{/logout}"
-      th:classappend="${onevar == 'logout'} ? active"
-      >Keluar</a
-    >
-    <br />
-    <a
-      class="nav-link"
-      th:href="@{/user/ubah-password}"
-      th:classappend="${onevar == 'ubahPassword'} ? active"
-      >Ubah Password</a
-    >
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <!-- Logo or Brand -->
+        <a class="navbar-brand" href="#">Almaz</a>
+
+        <!-- Toggler for mobile view -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Links in navbar -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+          </ul>
+
+          <!-- Login button aligned right -->
+          <a
+            class="btn btn-outline-primary"
+            href="/user/ubah-password"
+            th:classappend="${onevar == 'ubahPassword'} ? active"
+            >Change Password</a
+          >
+          <br />
+          <a
+            class="btn btn-outline-primary"
+            href="/logout"
+            th:classappend="${onevar == 'logout'} ? active"
+            >Logout</a
+          >
+        </div>
+      </div>
+    </nav>
     <!-- User Icon for Logged-in User -->
     <a href="/user-profile" class="user-icon" title="View Profile">
       <i class="bi bi-person-circle"></i>
@@ -98,31 +150,37 @@
       </button>
     </section>
 
-    <!-- promo card -->
-    <section class="promos-section container">
-      <h2 class="text-center mb-4">Available Promotions</h2>
-      <div class="row">
-        <!-- Promo Cards: Dynamically load promotions -->
-        <div class="col-md-4" th:each="promo : ${promotions}">
-          <div class="card promo-card">
-            <img
-              th:src="@{${promo.imageUrl}}"
-              class="card-img-top"
-              alt="Promo Image"
-            />
-            <div class="card-body">
-              <h5 class="card-title" th:text="${promo.title}">Promo Title</h5>
-              <p class="card-text" th:text="${promo.description}">
-                Promo Description
-              </p>
-              <a th:href="@{${promo.link}}" class="btn btn-primary"
-                >Claim Now</a
-              >
+    <div class="content">
+      <!-- promo card -->
+      <section class="promos-section container">
+        <h2 class="text-center mb-4">Available Promotions</h2>
+        <div class="row">
+          <!-- Promo Cards: Dynamically load promotions -->
+          <div class="col-md-4" th:each="promo : ${promotions}">
+            <div class="card promo-card">
+              <img
+                th:src="@{${promo.imageUrl}}"
+                class="card-img-top"
+                alt="Promo Image"
+              />
+              <div class="card-body">
+                <h5 class="card-title" th:text="${promo.title}">Promo Title</h5>
+                <p class="card-text" th:text="${promo.description}">
+                  Promo Description
+                </p>
+                <a th:href="@{${promo.link}}" class="btn btn-primary"
+                  >Claim Now</a
+                >
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
+
+    <div class="footer">
+      <p>Developed with passion by navisraditya</p>
+    </div>
 
     <!-- Bootstrap JS and Icons -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
