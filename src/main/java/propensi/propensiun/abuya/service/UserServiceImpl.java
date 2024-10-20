@@ -67,4 +67,13 @@ public class UserServiceImpl implements UserService {
         return userDb.findByRoleNames(Collections.singletonList("Store Manager"));
     }
 
+    public void updateUser(UserModel user) {
+        userDb.save(user); // Simpan data pengguna yang telah diubah
+    }
+
+    public boolean isUsernameTaken(String username) {
+        UserModel existingUser = userDb.findByUsername(username);
+        return existingUser != null; // Kembali true jika username sudah ada
+    }
+
 }

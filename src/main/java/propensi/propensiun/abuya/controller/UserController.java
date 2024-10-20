@@ -1,6 +1,7 @@
 package propensi.propensiun.abuya.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -54,9 +55,10 @@ public class UserController {
                 return userService.findByUsername(username);
             }
         }
-        // Return nilai default
+//        return null; // Jika pengguna tidak ditemukan, kembalikan null
         return null;
     }
+
 
     @RequestMapping("/login")
     public String login() {
@@ -81,31 +83,108 @@ public class UserController {
         return "add-user";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/profile")
     public String viewProfile(Model model, Principal principal) {
-        String username = principal.getName();
-        UserModel user = userService.findByUsername(username);
+        UserModel user = getUser();
+
+
+        if (user == null || user.getPeran() == null) {
+            model.addAttribute("error", "User or role not found. Please log in.");
+            return "redirect:/login"; // Arahkan ke halaman login jika user atau role tidak ditemukan
+        }
+
         model.addAttribute("user", user);
 
         String role = user.getPeran().getName();
 
-        // Display edit and delete buttons for members
+
         if (role.equals("Member") || role.equals("Admin") || role.equals("Marketing") || role.equals("Store Manager") || role.equals("Chief Operating Officer")) {
             model.addAttribute("showEditButton", true);
             model.addAttribute("showDeleteButton", true);
         }
 
-        // Conditional logic based on roles
-        if (user.getPeran().getName().equals("Admin")) {
+
+        if (role.equals("Admin")) {
             List<UserModel> cooAndManagers = userService.findCOOAndManagers();
             model.addAttribute("cooAndManagers", cooAndManagers);
-        } else if (user.getPeran().getName().equals("Regional Manager")) {
+        } else if (role.equals("Regional Manager")) {
             List<UserModel> storeManagers = userService.findStoreManagers();
             model.addAttribute("storeManagers", storeManagers);
         }
 
         return "profile-view";
     }
+
+
+    @GetMapping(value = "/edit")
+    public String editProfileForm(Model model) {
+        UserModel user = getUser();
+        if (user == null) {
+            model.addAttribute("error", "User not found.");
+            return "redirect:/login";
+        }
+        List<PeranModel> listRole = peranService.findAll(); // Tambahkan peran yang tersedia
+        model.addAttribute("listRole", listRole);
+        model.addAttribute("user", user); // Tambahkan user ke dalam model
+        return "form-edit-profile"; // Template untuk edit profile
+    }
+
+
+    @PostMapping(value = "/edit")
+    public String editProfileSubmit(@ModelAttribute UserModel user, Model model) {
+        UserModel currentUser = getUser();
+        if (currentUser == null || currentUser.getPeran() == null) {
+            model.addAttribute("error", "User or role not found.");
+            model.addAttribute("user", user); // Tambahkan kembali user jika terjadi error
+            return "form-edit-profile"; // Kembali ke form jika user atau role tidak ditemukan
+        }
+
+
+        user.setPeran(currentUser.getPeran());
+
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            user.setPassword(currentUser.getPassword());
+        }
+
+
+        if (user.getCompanyid() == null) {
+            user.setCompanyid(currentUser.getCompanyid());
+        }
+
+        user.setUuid(currentUser.getUuid()); // Menetapkan ID pengguna saat ini
+
+        // Validasi data input
+        String errorMessage = validateUserInput(user);
+        if (errorMessage != null) {
+            model.addAttribute("error", errorMessage);
+            model.addAttribute("user", user);
+            return "form-edit-profile";
+        }
+
+        // Update profil
+        userService.updateUser(user);
+        model.addAttribute("success", "Profile has been updated.");
+        return "redirect:/user/profile"; // Redirect ke halaman profil
+    }
+
+
+
+    // Metode validasi input
+    private String validateUserInput(UserModel user) {
+        if (user.getUsername().length() < 6) {
+            return "Username must be at least 6 characters.";
+        }
+        if (user.getName().length() < 3 || user.getName().matches(".*\\d.*")) {
+            return "Name must be at least 3 characters and cannot contain numbers.";
+        }
+
+        if (userService.isUsernameTaken(user.getUsername())) {
+            return "Username is already taken.";
+        }
+        return null; // Tidak ada error
+    }
+
 
     @GetMapping(value = "/ubah-password")
     private String ubahPasswordForm(Model model) {

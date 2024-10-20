@@ -1,5 +1,6 @@
 package propensi.propensiun.abuya.service;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import propensi.propensiun.abuya.model.UserModel;
 
@@ -21,4 +22,9 @@ public interface UserService {
     List<UserModel> findCOOAndManagers();
 
     List<UserModel> findStoreManagers();
+
+    @Transactional
+    void updateUser(UserModel user);
+
+    boolean isUsernameTaken(@NotNull String username);
 }

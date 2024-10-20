@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edit Profile</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<h1>Edit Profile</h1>
+
+<!-- Display error message -->
+<div th:if="${error}">
+  <p style="color:red;" th:text="${error}"></p>
+</div>
+
+<!-- Display success message -->
+<div th:if="${success}">
+  <p style="color:green;" th:text="${success}"></p>
+</div>
+
+<form th:action="@{/user/edit}" th:object="${user}" method="post">
+  <div>
+    <label for="name">Name:</label>
+    <input type="text" id="name" th:field="*{name}" required />
+  </div>
+  <div>
+    <label for="username">Username:</label>
+    <input type="text" id="username" th:field="*{username}" required />
+  </div>
+  <div>
+    <button type="submit">Save Changes</button>
+  </div>
+</form>
+
+<a href="/user/profile">Back to Profile</a>
+
+</body>
+</html>
