@@ -7,7 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -83,7 +82,7 @@ public class UserController {
         return "add-user";
     }
 
-    @PreAuthorize("isAuthenticated()")
+    //    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/profile")
     public String viewProfile(Model model, Principal principal) {
         UserModel user = getUser();
@@ -120,10 +119,10 @@ public class UserController {
     @GetMapping(value = "/edit")
     public String editProfileForm(Model model) {
         UserModel user = getUser();
-        if (user == null) {
-            model.addAttribute("error", "User not found.");
-            return "redirect:/login";
-        }
+//        if (user == null) {
+//            model.addAttribute("error", "User not found.");
+//            return "redirect:/login";
+//        }
         List<PeranModel> listRole = peranService.findAll(); // Tambahkan peran yang tersedia
         model.addAttribute("listRole", listRole);
         model.addAttribute("user", user); // Tambahkan user ke dalam model
@@ -185,6 +184,35 @@ public class UserController {
         return null; // Tidak ada error
     }
 
+    @GetMapping("/delete")
+    public String deleteAccountForm(Model model) {
+        UserModel user = getUser();
+        model.addAttribute("user", user);
+        return "form-delete";
+    }
+
+    @PostMapping("/delete")
+    public String deleteAccount(@RequestParam("password") String password, Model model) {
+        UserModel user = getUser();
+        String userPassword = userService.getPassword(user);
+
+        if (!passwordEncoder.matches(password, userPassword)) {
+            model.addAttribute("error", "Password salah. Akun tidak dihapus.");
+            return "form-delete";
+        }
+
+        String role = user.getPeran().getName();
+
+        if (role.equals("Member") || role.equals("Admin")) {
+            userService.deleteUser(user);
+            SecurityContextHolder.clearContext(); // Logout setelah akun dihapus
+            return "redirect:/user/login";
+        }
+
+        model.addAttribute("error", "Anda tidak memiliki izin untuk menghapus akun ini.");
+        return "form-delete";
+    }
+
 
     @GetMapping(value = "/ubah-password")
     private String ubahPasswordForm(Model model) {
@@ -193,6 +221,7 @@ public class UserController {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
     @PostMapping(value = "/ubah-password")
     private String ubahPasswordPost(
             @RequestParam("oldPassword") String oldPassword,

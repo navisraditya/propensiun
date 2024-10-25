@@ -1,5 +1,6 @@
 package propensi.propensiun.abuya.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -74,6 +75,12 @@ public class UserServiceImpl implements UserService {
     public boolean isUsernameTaken(String username) {
         UserModel existingUser = userDb.findByUsername(username);
         return existingUser != null; // Kembali true jika username sudah ada
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(UserModel user) {
+        userDb.delete(user);
     }
 
 }
