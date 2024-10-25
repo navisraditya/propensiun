@@ -27,4 +27,7 @@ public interface UserService {
     void updateUser(UserModel user);
 
     boolean isUsernameTaken(@NotNull String username);
+
+    @Transactional
+    void deleteUser(UserModel user);
 }
