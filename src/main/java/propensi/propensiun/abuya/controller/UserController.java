@@ -86,14 +86,14 @@ public class UserController {
     @GetMapping(value = "/profile")
     public String viewProfile(Model model, Principal principal) {
         UserModel user = getUser();
-
+        model.addAttribute("user", user);
+        model.addAttribute("isCOO", user.getPeran().getName().equals("Chief Operating Officer"));
 
         if (user == null || user.getPeran() == null) {
             model.addAttribute("error", "User or role not found. Please log in.");
             return "redirect:/login"; // Arahkan ke halaman login jika user atau role tidak ditemukan
         }
 
-        model.addAttribute("user", user);
 
         String role = user.getPeran().getName();
 
@@ -211,6 +211,13 @@ public class UserController {
 
         model.addAttribute("error", "Anda tidak memiliki izin untuk menghapus akun ini.");
         return "form-delete";
+    }
+
+    @GetMapping(value = "/store-manager")
+    public String viewStoreManagersPage(Model model) {
+        List<UserModel> storeManagers = userService.findStoreManagers();
+        model.addAttribute("storeManagers", storeManagers);
+        return "store-manager-view";
     }
 
 

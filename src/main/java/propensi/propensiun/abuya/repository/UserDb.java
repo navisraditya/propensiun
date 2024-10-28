@@ -17,4 +17,6 @@ public interface UserDb extends JpaRepository<UserModel, Integer> {
     @Query("SELECT u FROM UserModel u WHERE u.peran.name IN :roles")
     List<UserModel> findByRoleNames(@Param("roles") List<String> roles);
 
+    @Query("SELECT u FROM UserModel u WHERE u.peran.name = 'Store Manager'")
+    List<UserModel> findStoreManagers();
 }
