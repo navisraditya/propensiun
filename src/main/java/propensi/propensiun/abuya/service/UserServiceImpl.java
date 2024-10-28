@@ -65,16 +65,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserModel> findStoreManagers() {
-        return userDb.findByRoleNames(Collections.singletonList("Store Manager"));
+        return userDb.findStoreManagers();
     }
 
     public void updateUser(UserModel user) {
-        userDb.save(user); // Simpan data pengguna yang telah diubah
+        userDb.save(user);
     }
 
     public boolean isUsernameTaken(String username) {
         UserModel existingUser = userDb.findByUsername(username);
-        return existingUser != null; // Kembali true jika username sudah ada
+        return existingUser != null;
     }
 
     @Override

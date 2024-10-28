@@ -20,7 +20,13 @@
     <a href="/user/delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this account?');">Delete Account</a>
 </div>
 
-<!-- Display specific content for Admin role -->
+<!-- Display COO-specific content: Link to Store Manager View -->
+<div th:if="${isCOO}">
+    <h2>COO Actions</h2>
+    <a href="/user/store-manager" class="btn btn-info">View Store Managers</a>
+</div>
+
+<!-- Display specific content for COO and Managers -->
 <div th:if="${cooAndManagers}">
     <h2>COO and Managers List</h2>
     <ul>
