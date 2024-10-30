@@ -1,5 +1,7 @@
 package propensi.propensiun.abuya.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,6 +21,9 @@ public class HomepageController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    PromoService promoService;
 
     @GetMapping("/")
     public String guestLanding(Model model) {
@@ -87,12 +92,19 @@ public class HomepageController {
 
     @GetMapping("/marketinglanding")
     public String marketingLanding(Model model) {
+        List<PromoModel> listPromo = promoService.getPromoList(0);
+        model.addAttribute("promos", listPromo);
         return "homepage-marketing";
     }
 
     @GetMapping("/smlanding")
     public String storemanagerLanding(Model model) {
         return "homepage-sm";
+    }
+
+    @GetMapping("/promo/add")
+    public String addPromoPage(Model model) {
+        return "form-add-promo";
     }
 
 }

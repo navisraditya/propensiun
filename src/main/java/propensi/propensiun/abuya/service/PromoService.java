@@ -10,4 +10,6 @@ public interface PromoService {
     List<PromoModel> getPromoList(Integer storeUuid);
 
     void deletePromoById(Integer promoUuid);
+
+    void deletePromoOnDate();
 }

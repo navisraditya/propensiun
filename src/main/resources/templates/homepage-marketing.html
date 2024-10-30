@@ -1,171 +1,173 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Almaz - Marketing</title>
-  <!-- Bootstrap CSS -->
-  <link
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-  />
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      min-height: 200vh;
-      font-family: Arial, sans-serif;
-    }
-    .content {
-      flex: 1;
-    }
-    .carousel-item {
-      height: 400px;
-      background-color: #343a40;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-    .carousel-item h1 {
-      font-size: 48px;
-      margin-bottom: 10px;
-    }
-    .carousel-item p {
-      font-size: 24px;
-    }
-    .user-icon {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      font-size: 24px;
-      color: #343a40;
-      cursor: pointer;
-    }
-    .user-icon:hover {
-      color: #007bff;
-    }
-    .footer {
-      position: relative;
-      bottom: 0;
-      min-height: 250px;
-      width: 100%;
-      text-align: center;
-      padding-top: 50px;
-      background-color: #f8f9fa;
-      font-size: 16px;
-    }
-  </style>
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <!-- Logo or Brand -->
-    <a class="navbar-brand" href="#">Almaz</a>
-
-    <!-- Toggler for mobile view -->
-    <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <!-- Links in navbar -->
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Contact</a>
-        </li>
-      </ul>
-
-      <!-- Login button aligned right -->
-      <a
-              class="btn btn-outline-primary"
-              href="/user/ubah-password"
-              th:classappend="${onevar == 'ubahPassword'} ? active"
-      >Change Password</a
-      >
-      <br />
-      <a
-              class="btn btn-outline-primary"
-              href="/logout"
-              th:classappend="${onevar == 'logout'} ? active"
-      >Logout</a
-      >
-      <a class="btn btn-outline-primary" href="/user/profile" th:classappend="${onevar == 'profile'} ? active">View Profile</a>
-    </div>
-  </div>
-</nav>
-<!-- User Icon for Logged-in User -->
-<a href="/user-profile" class="user-icon" title="View Profile">
-  <i class="bi bi-person-circle"></i>
-  <!-- Bootstrap icon -->
-</a>
-
-<section id="menuCarousel" class="carousel slide" data-bs-ride="carousel">
-  <div class="carousel-inner">
-    <div class="carousel-item">
-      <h1>Hello, (Name)!</h1>
-    </div>
-  </div>
-</section>
-
-<div class="content">
-  <section class="navcard-section container">
-    <h2 class="text-center mb-4" style="margin-top: 5%">
-      What do you want to do?
-    </h2>
-    <!-- navigation card -->
-    <div class="row justify-content-center" style="margin-top: 5%">
-      <div class="col-md-10">
-        <div class="card navcard">
-          <div class="card-body">
-            <h5 class="card-title" style="font-weight: 750">Buat Promo</h5>
-            <p class="card-text">
-              Gunakan section ini untuk melihat membuat promo baru
-            </p>
-            <a th:href="@{${}}" class="btn btn-primary">Buat Promo</a>
-          </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Almaz - Marketing</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 200vh;
+        font-family: Arial, sans-serif;
+      }
+      .content {
+        flex: 1;
+      }
+      .carousel-item {
+        height: 400px;
+        background-color: #343a40;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .carousel-item h1 {
+        font-size: 48px;
+        margin-bottom: 10px;
+      }
+      .carousel-item p {
+        font-size: 24px;
+      }
+      .user-icon {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 24px;
+        color: #343a40;
+        cursor: pointer;
+      }
+      .user-icon:hover {
+        color: #007bff;
+      }
+      .footer {
+        position: relative;
+        bottom: 0;
+        min-height: 250px;
+        width: 100%;
+        text-align: center;
+        padding-top: 50px;
+        background-color: #f8f9fa;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Almaz</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+          </ul>
+          <a
+            class="btn btn-outline-primary"
+            href="/user/ubah-password"
+            th:classappend="${onevar == 'ubahPassword'} ? active"
+            >Change Password</a
+          >
+          <a
+            class="btn btn-outline-primary"
+            href="/logout"
+            th:classappend="${onevar == 'logout'} ? active"
+            >Logout</a
+          >
+          <a
+            class="btn btn-outline-primary"
+            href="/user/profile"
+            th:classappend="${onevar == 'profile'} ? active"
+            >View Profile</a
+          >
         </div>
       </div>
+    </nav>
+    <a href="/user-profile" class="user-icon" title="View Profile">
+      <i class="bi bi-person-circle"></i>
+    </a>
 
-      <div class="col-md-10" style="margin-top: 2%">
-        <div class="card navcard">
-          <div class="card-body">
-            <h5 class="card-title" style="font-weight: 750">
-              Kelola Promo
-            </h5>
-            <p class="card-text">
-              Gunakan section ini untuk mengubah promo yang sudah ada
-            </p>
-            <a th:href="@{${}}" class="btn btn-primary">Kelola Promo</a>
-          </div>
+    <section id="menuCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item">
+          <h1>Hello, (Name)!</h1>
         </div>
       </div>
+    </section>
+
+    <div class="content">
+      <section class="navcard-section container">
+        <h2 class="text-center mb-4" style="margin-top: 5%">Promo Table</h2>
+
+        <!-- Promo Table -->
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead class="table-light">
+              <tr>
+                <th>No</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Promo Code</th>
+                <th>List Store</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Is Valid</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Example row - replace with dynamic data as needed -->
+              <tr th:each="promo, iterStat : ${promos}">
+                <td th:each="${iterStat.count}"></td>
+                <td th:each="${promo.name}"></td>
+                <td th:each="${promo.desc}"></td>
+                <td th:each="${promo.code}"></td>
+                <td th:each="${#strings.arrayJoin(promo.storeList, ', ')}"></td>
+                <td th:each="${promo.startDate}"></td>
+                <td th:each="${promo.endDate}"></td>
+                <td th:each="${promo.isValid}"></td>
+                <td>
+                  <a th:href="@{${TODO}}" class="btn btn-primary">Edit</a>
+                </td>
+              </tr>
+              <!-- Add more rows dynamically as needed -->
+            </tbody>
+          </table>
+        </div>
+        <a th:href="@{${/promo/add}}" class="btn btn-primary">Buat Promo</a>
+      </section>
     </div>
-  </section>
-</div>
 
-<footer class="footer">
-  <p>Developed with passion by navisraditya</p>
-</footer>
+    <footer class="footer">
+      <p>Developed with passion by navisraditya</p>
+    </footer>
 
-<!-- Bootstrap JS and Icons -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
-</body>
+    <!-- Bootstrap JS and Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
+  </body>
 </html>
