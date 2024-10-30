@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Promo</title>
+  </head>
+  <body>
+    <h2>Add Promo</h2>
+    <form action="/add-promo" method="post">
+      <!-- Name Field -->
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required />
+      <br /><br />
+
+      <!-- Description Field -->
+      <label for="desc">Description:</label>
+      <textarea id="desc" name="desc"></textarea>
+      <br /><br />
+
+      <!-- Code Field -->
+      <label for="code">Code:</label>
+      <input type="text" id="code" name="code" required />
+      <br /><br />
+
+      <!-- Start Date Field -->
+      <label for="startDate">Start Date:</label>
+      <input type="date" id="startDate" name="startDate" required />
+      <br /><br />
+
+      <!-- End Date Field -->
+      <label for="endDate">End Date:</label>
+      <input type="date" id="endDate" name="endDate" required />
+      <br /><br />
+
+      <!-- Is Valid Field -->
+      <label for="isValid">Is Valid:</label>
+      <input type="checkbox" id="isValid" name="isValid" />
+      <br /><br />
+
+      <!-- Store List Field -->
+      <label for="storeList">Store List:</label>
+      <select id="storeList" name="storeList[]" multiple required>
+        <!-- Example options, replace with dynamic options from database -->
+        <option value="Store1">Store 1</option>
+        <option value="Store2">Store 2</option>
+        <option value="Store3">Store 3</option>
+      </select>
+      <br /><br />
+
+      <!-- Submit Button -->
+      <button type="submit">Add Promo</button>
+    </form>
+  </body>
+</html>
