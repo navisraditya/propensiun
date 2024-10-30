@@ -1,6 +1,6 @@
 package propensi.propensiun.abuya.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -37,11 +37,11 @@ public class PromoModel {
 
     @Column(name = "startDate", nullable = false)
     @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "endDate", nullable = false)
     @DateTimeFormat(pattern = "dd-MM-yyyy")
-    private Date endDate;
+    private LocalDate endDate;
 
     @Column(name = "isValid", nullable = false)
     private boolean isValid;
