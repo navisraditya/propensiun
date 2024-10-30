@@ -51,4 +51,7 @@ public class StoreModel {
     // private Integer rating;
     // private List<FeedbackModel> feedbackList;
 
+    @ManyToMany(mappedBy = "storeList")
+    private List<PromoModel> listPromo;
+
 }
