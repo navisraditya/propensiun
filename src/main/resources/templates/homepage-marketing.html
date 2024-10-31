@@ -113,7 +113,7 @@
     <section id="menuCarousel" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item">
-          <h1>Hello, (Name)!</h1>
+          <h1 th:text="'Hello ' + ${logged_user} + ' !'"></h1>
         </div>
       </div>
     </section>
@@ -139,25 +139,25 @@
               </tr>
             </thead>
             <tbody>
-              <!-- Example row - replace with dynamic data as needed -->
               <tr th:each="promo, iterStat : ${promos}">
-                <td th:each="${iterStat.count}"></td>
-                <td th:each="${promo.name}"></td>
-                <td th:each="${promo.desc}"></td>
-                <td th:each="${promo.code}"></td>
-                <td th:each="${#strings.arrayJoin(promo.storeList, ', ')}"></td>
-                <td th:each="${promo.startDate}"></td>
-                <td th:each="${promo.endDate}"></td>
-                <td th:each="${promo.isValid}"></td>
+                <td th:text="${iterStat.count}"></td>
+                <!-- Change th:each to th:text -->
+                <td th:text="${promo.name}"></td>
+                <td th:text="${promo.description}"></td>
+                <!-- Change from promo.desc to promo.description -->
+                <td th:text="${promo.code}"></td>
+                <td th:text="${#strings.arrayJoin(promo.storeList, ', ')}"></td>
+                <td th:text="${promo.startDate}"></td>
+                <td th:text="${promo.endDate}"></td>
+                <td th:text="${promo.isValid}"></td>
                 <td>
                   <a th:href="@{${TODO}}" class="btn btn-primary">Edit</a>
                 </td>
               </tr>
-              <!-- Add more rows dynamically as needed -->
             </tbody>
           </table>
         </div>
-        <a th:href="@{${/promo/add}}" class="btn btn-primary">Buat Promo</a>
+        <a th:href="@{/promo/add}" class="btn btn-primary">Buat Promo</a>
       </section>
     </div>
 
