@@ -41,10 +41,12 @@
       <!-- Store List Field -->
       <label for="storeList">Store List:</label>
       <select id="storeList" name="storeList[]" multiple required>
-        <!-- Example options, replace with dynamic options from database -->
-        <option value="Store1">Store 1</option>
-        <option value="Store2">Store 2</option>
-        <option value="Store3">Store 3</option>
+        <option value="" disabled>Select a Store</option>
+        <option
+          th:each="store : ${listStore}"
+          th:value="${store.id}"
+          th:text="${store.storeName}"
+        ></option>
       </select>
       <br /><br />
 

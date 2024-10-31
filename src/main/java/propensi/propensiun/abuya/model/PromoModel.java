@@ -1,7 +1,7 @@
 package propensi.propensiun.abuya.model;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -34,8 +34,8 @@ public class PromoModel {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "desc", nullable = true)
-    private String desc;
+    @Column(name = "description", nullable = true) // renamed from 'desc'
+    private String description;
 
     @Column(name = "code", nullable = false, unique = true)
     private String code;
@@ -48,10 +48,10 @@ public class PromoModel {
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate endDate;
 
-    @Column(name = "isValid", nullable = false)
+    @Column(name = "is_valid", nullable = false)
     private boolean isValid;
 
     @ManyToMany
-    @JoinTable(name = "promo_store", joinColumns = @JoinColumn(name = "promo_uuid"), inverseJoinColumns = @JoinColumn(name = "store_id"))
-    private List<StoreModel> storeList;
+    @JoinTable(name = "promo_store", joinColumns = @JoinColumn(name = "uuid"), inverseJoinColumns = @JoinColumn(name = "id"))
+    private Set<StoreModel> storeList;
 }

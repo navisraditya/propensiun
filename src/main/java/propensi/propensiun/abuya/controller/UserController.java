@@ -54,10 +54,9 @@ public class UserController {
                 return userService.findByUsername(username);
             }
         }
-//        return null; // Jika pengguna tidak ditemukan, kembalikan null
+        // return null; // Jika pengguna tidak ditemukan, kembalikan null
         return null;
     }
-
 
     @RequestMapping("/login")
     public String login() {
@@ -82,7 +81,7 @@ public class UserController {
         return "add-user";
     }
 
-    //    @PreAuthorize("isAuthenticated()")
+    // @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/profile")
     public String viewProfile(Model model, Principal principal) {
         UserModel user = getUser();
@@ -94,15 +93,13 @@ public class UserController {
             return "redirect:/login"; // Arahkan ke halaman login jika user atau role tidak ditemukan
         }
 
-
         String role = user.getPeran().getName();
 
-
-        if (role.equals("Member") || role.equals("Admin") || role.equals("Marketing") || role.equals("Store Manager") || role.equals("Chief Operating Officer")) {
+        if (role.equals("Member") || role.equals("Admin") || role.equals("Marketing") || role.equals("Store Manager")
+                || role.equals("Chief Operating Officer")) {
             model.addAttribute("showEditButton", true);
             model.addAttribute("showDeleteButton", true);
         }
-
 
         if (role.equals("Admin")) {
             List<UserModel> cooAndManagers = userService.findCOOAndManagers();
@@ -115,20 +112,18 @@ public class UserController {
         return "profile-view";
     }
 
-
     @GetMapping(value = "/edit")
     public String editProfileForm(Model model) {
         UserModel user = getUser();
-//        if (user == null) {
-//            model.addAttribute("error", "User not found.");
-//            return "redirect:/login";
-//        }
+        // if (user == null) {
+        // model.addAttribute("error", "User not found.");
+        // return "redirect:/login";
+        // }
         List<PeranModel> listRole = peranService.findAll(); // Tambahkan peran yang tersedia
         model.addAttribute("listRole", listRole);
         model.addAttribute("user", user); // Tambahkan user ke dalam model
         return "form-edit-profile"; // Template untuk edit profile
     }
-
 
     @PostMapping(value = "/edit")
     public String editProfileSubmit(@ModelAttribute UserModel user, Model model) {
@@ -139,13 +134,11 @@ public class UserController {
             return "form-edit-profile"; // Kembali ke form jika user atau role tidak ditemukan
         }
 
-
         user.setPeran(currentUser.getPeran());
 
         if (user.getPassword() == null || user.getPassword().isEmpty()) {
             user.setPassword(currentUser.getPassword());
         }
-
 
         if (user.getCompanyid() == null) {
             user.setCompanyid(currentUser.getCompanyid());
@@ -166,8 +159,6 @@ public class UserController {
         model.addAttribute("success", "Profile has been updated.");
         return "redirect:/user/profile"; // Redirect ke halaman profil
     }
-
-
 
     // Metode validasi input
     private String validateUserInput(UserModel user) {
@@ -219,7 +210,6 @@ public class UserController {
         model.addAttribute("storeManagers", storeManagers);
         return "store-manager-view";
     }
-
 
     @GetMapping(value = "/ubah-password")
     private String ubahPasswordForm(Model model) {
