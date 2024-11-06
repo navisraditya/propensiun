@@ -1,4 +1,7 @@
 package propensi.propensiun.abuya.service;
+
+import java.util.List;
+
 import propensi.propensiun.abuya.model.StoreModel;
 
 public interface StoreService {
@@ -9,4 +12,6 @@ public interface StoreService {
     void updateStore(StoreModel store);
 
     void deleteStore(String id);
+
+    List<StoreModel> findAll();
 }
