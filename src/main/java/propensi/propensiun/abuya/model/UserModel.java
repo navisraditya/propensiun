@@ -24,7 +24,7 @@ public class UserModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer uuid;
 
-    @NotNull
+    @NotNull(message = "Company ID cannot be empty.")
     @Column(name = "companyid", nullable = false)
     private Integer companyid;
 
@@ -45,4 +45,16 @@ public class UserModel implements Serializable {
     @OnDelete(action= OnDeleteAction.CASCADE)
     @JsonIgnore
     private PeranModel peran;
+
+    @NotNull(message = "Phone number question cannot be empty.")
+    @Column(name = "phoneNumber", nullable = true)
+    private String phoneNumber;
+
+    @NotNull(message = "Security question cannot be empty.")
+    @Column(name = "securityQuestion", nullable = true)
+    private String securityQuestion;
+
+    @NotNull(message = "Security answer cannot be empty.")
+    @Column(name = "securityAnswer", nullable = true)
+    private String securityAnswer;
 }
