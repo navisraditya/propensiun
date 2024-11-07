@@ -19,12 +19,20 @@
                     <input class="form-control" type="text" name="username"/>
                     <br>
 
+                    Nomor Telepon User: <br>
+                    <input class="form-control" type="text" name="phoneNumber"/>
+                    <br>
+
                     Company ID User: <br>
-                    <input class="form-control" type="text" name="companyid"/>
+                    <input class="form-control" type="number" name="companyid"/>
                     <br>
 
                     Password User: <br>
-                    <input class="form-control" type="text" name="password"/>
+                    <input class="form-control" type="password" name="password"/>
+                    <br>
+
+                    Konfirmasi Password User: <br>
+                    <input class="form-control" type="password" name="passwordConfirmation"/>
                     <br>
 
                     Role User:
@@ -36,6 +44,13 @@
                         </option>
                     </select>
                     <br>
+
+                    <span th:text="${security_question}"></span>: <br>
+                    <input class="form-control" type="text" name="securityAnswer"/>
+                    <br>
+
+                    <input name="securityQuestion" value="${security_question}" hidden/>
+
                     <br> <br>
 
                     <button class="btn btn-primary" type="submit">Submit</button>

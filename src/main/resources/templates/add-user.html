@@ -8,8 +8,14 @@
     <div class="card m-4 p-4">
         <div class="card-body">
             <div class="justify-content-center">
-                <h2 th:text="'User dengan username ' + ${username} + ' berhasil ditambahkan.'"></h2>
+                <div th:if="${username != null}">
+                    <h2 th:text="'User dengan username ' + ${username} + ' berhasil ditambahkan.'"></h2>
+                </div>
+                <div th:unless="${username != null}">
+                    <h2 th:text="${error}"></h2>
+                </div>
                 <br>
+                <a class="btn btn-primary" href="/adminlanding">Kembali ke Form</a>
                 <a class="btn btn-primary" href="/adminlanding">Kembali sebagai admin</a>
                 <a class="btn btn-primary" href="/login">Login untuk Member</a>
             </div>
