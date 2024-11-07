@@ -7,12 +7,12 @@ import propensi.propensiun.abuya.model.UserModel;
 import java.util.List;
 
 public interface UserService {
-    UserModel addUser(UserModel user);
+    UserModel addUser(UserModel user) throws Exception;
 
     public String encrypt(String password);
 
     public UserModel getUserByUsername(String name);
-    
+
     public String getPassword(UserModel user);
 
     UserModel findByUsername(String username);

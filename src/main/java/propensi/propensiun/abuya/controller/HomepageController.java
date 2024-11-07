@@ -37,14 +37,13 @@ public class HomepageController {
 
     @GetMapping("/redirectHomepage")
     public ModelAndView redirectHomepage(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication(); // fetch auth
 
         if (auth != null && auth.getAuthorities() != null) {
-            logged_user = auth.getName();
-            UserModel user = userService.getUserByUsername(logged_user);
+            logged_user = auth.getName(); // get user-name
+            UserModel user = userService.getUserByUsername(logged_user); // find UserModel based on logged user
 
-            if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_Admin"))) {
-
+            if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_Admin"))) { // role checker on logged user based on UserModel
                 System.out.println("admin login");
                 return new ModelAndView("redirect:/adminlanding");
             } else {
