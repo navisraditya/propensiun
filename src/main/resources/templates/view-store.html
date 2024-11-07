@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Almaz | Gerai</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .add-button {
+            background-color: #ff671f; /* Background color */
+            color: white; /* Text color */
+            border: none; /* Remove border */
+            border-radius: 20px; /* Rounded corners */
+            padding: 10px 20px; /* Padding */
+            text-decoration: none; /* Remove underline */
+            font-size: 16px; /* Font size */
+            text-align: center; /* Center text */
+            transition: transform 0.2s ease; /* Smooth transform on hover */
+        }
+        .add-button:hover {
+            transform: scale(1.2); /* Slightly enlarge on hover */
+            opacity: 0.9; /* Slightly change opacity on hover */
+            color: white;
+        }
+
+        .modal-dialog {
+            width: 500px;
+        }
+
+        .modal-content {
+            border-radius: 25px;
+        }
+
+        .modal-body {
+            font-family: Inter;
+        }
+
+        .modal-title {
+            color: #ff671f;
+            font-weight: 700;
+        }
+        .card {
+            border-radius: 30px;
+        }
+        .card-title {
+            color: #ff671f;
+            font-weight: 700;
+        }
+        .edit-button,
+        .delete-button {
+            color: #ff671f; /* Change color for edit button */
+            text-decoration: none;
+            margin-left: 10px; /* Space between buttons */
+            transition: transform 0.2s ease; /* Smooth transform */
+        }
+        .edit-button:hover,
+        .delete-button:hover {
+            transform: scale(1.2); /* Enlarge on hover */
+        }
+        .delete-button {
+            color: red; /* Make delete button red */
+        }
+        .map-embed {
+            border: 0;
+            border-radius: 30px;
+            width: 100%;
+            height: 250px; /* Adjust height as needed */
+        }
+
+        .d-flex-align {
+            display: flex;
+            justify-content: space-between; /* Align items at both ends */
+            align-items: center; /* Center vertically */
+        }
+
+        /* Custom notification box */
+        .notification-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none; /* Hidden by default */
+            z-index: 1000;
+            text-align: center;
+            font-family: Inter;
+            color: black;
+        }
+
+        /* Overlay to darken background */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        /* Button styles in notification box */
+        .confirm-button, .cancel-button {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 16px;
+            margin: 10px 5px;
+            cursor: pointer;
+        }
+
+        .confirm-button {
+            background-color: #ff671f; /* Background color */
+            color: white; /* Text color */
+            border: none; /* Remove border */
+        }
+
+         /* Success Notification Box */
+        .success-notification {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            padding: 20px;
+            background-color: #d4edda; /* Light green for success */
+            color: #155724; /* Dark green text */
+            border-radius: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none; /* Hidden by default */
+            z-index: 1000;
+            text-align: center;
+            font-family: Inter;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Almaz</a>
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+            <a class="btn btn-outline-primary" href="/user/ubah-password" th:classappend="${onevar == 'ubahPassword'} ? active">Change Password</a>
+            <a class="btn btn-outline-primary" href="/logout" th:classappend="${onevar == 'logout'} ? active">Logout</a>
+            <a class="btn btn-outline-primary" href="/user/profile" th:classappend="${onevar == 'profile'} ? active">View Profile</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-4">
+    <h1 class="text-center mb-4">Gerai</h1>
+
+    <div class="text-center mb-4">
+        <button class="add-button" data-bs-toggle="modal" data-bs-target="#addStoreModal">Tambah</button> <!-- Button to trigger modal -->
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" th:each="store : ${stores}">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex-align"> <!-- Flex container for title and icons -->
+                        <h5 class="card-title" th:text="${store.storeName}">Store Name</h5>
+                        <div>
+                            <form th:action="@{/gerai/hapus/{idGerai}(idGerai=${store.uuid})}"
+                                  method="post"
+                                  onsubmit="return handleSubmit(event)">
+                                <input type="hidden" name="_method" value="DELETE" />
+                                <button type="submit" class="delete-button" style="background: none; border: none; color: red; padding: 0;">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                            <a th:href="@{/gerai/ubah/{idGerai}(idGerai=${store.uuid})}" class="edit-button">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <p class="card-text">
+                        <strong>Address:</strong> <span th:text="${store.storeAddr}">Store Address</span><br>
+                        <strong>Phone:</strong> <span th:text="${store.storePhone}">Store Phone</span><br>
+                    </p>
+                    <embed
+                            th:src="'https://www.google.com/maps/embed/v1/view?key=AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao&amp;center=' + ${store.latitude} + ',' + ${store.longitude} + '&amp;zoom=20'"
+                            class="map-embed"
+                            allowfullscreen
+                            loading="lazy"
+                            type="text/html"
+                            width="100%"
+                            height="250px" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Adding Store -->
+<div class="modal fade" id="addStoreModal" tabindex="-1" aria-labelledby="addStoreModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addStoreModalLabel">Tambah Gerai</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/gerai/tambah}" th:object="${store}" method="POST">
+                    <div class="mb-3">
+                        <label for="storeName" class="form-label">Nama Gerai:</label>
+                        <input class="form-control" type="text" id="create-storeName" name="storeName" required minlength="5" />
+                        <div class="text-danger" id="create-storeNameError"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="storeAddr" class="form-label">Alamat:</label>
+                        <input class="form-control" type="text" id="create-storeAddr" name="storeAddr" required minlength="7" />
+                        <div class="text-danger" id="create-storeAddrError"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="storeAddrLink" class="form-label">Lokasi:</label>
+                        <input class="form-control" type="url" id="storeAddrLink" name="storeAddrLink" required />
+                        <div class="text-danger" id="storeAddrLinkError"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="storePhone" class="form-label">Telepon:</label>
+                        <input class="form-control" type="text" id="storePhone" name="storePhone" required pattern="[0-9]+" minlength="10" maxlength="13" />
+                        <div class="text-danger" id="storePhoneError"></div>
+                    </div>
+                    <div class="text-center mb-4">
+                        <button type="submit" class="confirm-button">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Notification Box -->
+<div class="notification-box" id="notificationBox">
+    <p id="notificationMessage"></p>
+    <button class="confirm-button" onclick="confirmDeletion()">Ya</button>
+    <button class="cancel-button" onclick="cancelDeletion()">Batal</button>
+</div>
+
+<div class="success-notification" id="successNotification">
+    <p>Gerai berhasil dihapus!</p>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<script>
+    let currentForm; // Store reference to the form for deletion
+
+    function handleSubmit(event) {
+        event.preventDefault(); // Prevent default form submission
+        currentForm = event.target; // Store the current form for later use
+        showNotification("Apakah Anda yakin ingin menghapus gerai?");
+    }
+
+    function showNotification(message) {
+        document.getElementById('notificationMessage').innerText = message; // Set message
+        document.getElementById('notificationBox').style.display = 'block'; // Show notification
+        document.getElementById('overlay').style.display = 'block'; // Show overlay
+    }
+
+    function confirmDeletion() {
+        hideNotification();
+        showSuccessNotification();
+
+        setTimeout(() => {
+                currentForm.submit();
+            }, 5000); // Submit after 5 seconds
+
+
+<!--        if (currentForm) {-->
+<!--            currentForm.submit(); // Submit the stored form-->
+<!--        }-->
+<!--        hideNotification(); // Hide notification after submission-->
+    }
+
+    function cancelDeletion() {
+        hideNotification(); // Simply hide notification
+    }
+
+    function hideNotification() {
+        document.getElementById('notificationBox').style.display = 'none'; // Hide notification
+        document.getElementById('overlay').style.display = 'none'; // Hide overlay
+    }
+
+    // Function to show the success notification briefly
+        function showSuccessNotification() {
+            const successNotification = document.getElementById('successNotification');
+            successNotification.style.display = 'block';
+
+            setTimeout(() => {
+                successNotification.style.display = 'none';
+            }, 3000); // Hide after 3 seconds
+        }
+
+    // Add Bootstrap's JS via CDN
+    const script = document.createElement('script');
+    script.src = "https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js";
+    document.body.appendChild(script);
+</script>
+</body>
+</html>

@@ -111,7 +111,7 @@ public class HomepageController {
     @GetMapping("/promo/add")
     public String addPromoPage(Model model) {
         PromoModel promo = new PromoModel();
-        List<StoreModel> listStore = storeService.findAll();
+        List<StoreModel> listStore = storeService.getAllStores();
         model.addAttribute("new_promo", promo);
         model.addAttribute("listStore", listStore);
         return "form-add-promo";
