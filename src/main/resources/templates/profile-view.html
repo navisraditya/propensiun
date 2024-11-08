@@ -12,6 +12,7 @@
     <p><strong>Username:</strong> <span th:text="${user.username}">user.username</span></p>
     <p><strong>Company ID:</strong> <span th:text="${user.companyid}">user.companyid</span></p>
     <p><strong>Role:</strong> <span th:text="${user.peran.name}">user.peran.name</span></p>
+    <p><strong>Nomor Telefon:</strong> <span th:text="${user.phoneNumber}">user.phoneNumber</span></p>
 </div>
 
 <!-- Display Edit and Delete buttons for Members -->
@@ -26,15 +27,6 @@
     <a href="/user/store-manager" class="btn btn-info">View Store Managers</a>
 </div>
 
-<!-- Display specific content for COO and Managers -->
-<div th:if="${cooAndManagers}">
-    <h2>COO and Managers List</h2>
-    <ul>
-        <li th:each="manager : ${cooAndManagers}">
-            <span th:text="${manager.name}">Manager Name</span> - <span th:text="${manager.peran.name}">Manager Role</span>
-        </li>
-    </ul>
-</div>
 
 <!-- Display specific content for Regional Manager role -->
 <div th:if="${storeManagers}">

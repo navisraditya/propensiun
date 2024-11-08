@@ -30,4 +30,8 @@ public interface UserService {
 
     @Transactional
     void deleteUser(UserModel user);
+
+    List<UserModel> findMarketing();
+
+    List<UserModel> findCOO();
 }
