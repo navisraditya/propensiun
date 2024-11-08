@@ -23,7 +23,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/js/**").permitAll()
                         .requestMatchers("/resources/**").permitAll()
                         .requestMatchers("/user/login").permitAll()
-                        // below, dev purpose only
+                        // below, dev purpose onlz
                         .requestMatchers("/user/add").permitAll()
                         .requestMatchers("/user/logout").permitAll()
                         .requestMatchers("/user/ubah-password").permitAll()

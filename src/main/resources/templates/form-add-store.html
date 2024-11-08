@@ -3,8 +3,103 @@
 <head>
     <title>Abuya</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: white;
+        }
+
+        h2 {
+            font-weight: 700;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card.m-4.p-4 {
+            background: linear-gradient(90deg, #ff7e5f, #ff671f);
+            width: 640px;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+        }
+
+        .btn-primary {
+            background-color: white;
+            color: #ff671f;
+            border-color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #F8F7F3;
+            color: #ff671f;
+            border-color: white;
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <!-- Logo or Brand -->
+        <a class="navbar-brand" href="#">Almaz</a>
+
+        <!-- Toggler for mobile view -->
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Links in navbar -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+
+            <!-- Login button aligned right -->
+            <a
+                    class="btn btn-outline-primary"
+                    href="/user/ubah-password"
+                    th:classappend="${onevar == 'ubahPassword'} ? active"
+            >Change Password</a
+            >
+            <br />
+            <a
+                    class="btn btn-outline-primary"
+                    href="/logout"
+                    th:classappend="${onevar == 'logout'} ? active"
+            >Logout</a
+            >
+            <a class="btn btn-outline-primary" href="/user/profile" th:classappend="${onevar == 'profile'} ? active">View Profile</a>
+        </div>
+    </div>
+</nav>
+<!-- User Icon for Logged-in User -->
+<a href="/user-profile" class="user-icon" title="View Profile">
+    <i class="bi bi-person-circle"></i>
+    <!-- Bootstrap icon -->
+</a>
+
 <div class="container">
     <div class="card m-4 p-4">
         <div class="card-body">
@@ -35,8 +130,9 @@
                         <div class="text-danger" id="storePhoneError"></div>
                     </div>
 
-                    <button class="btn btn-primary" type="submit">Submit</button>
-                    <a class="btn btn-secondary" href="/">Home</a>
+                    <div class="text-center">
+                        <button class="btn btn-primary" type="submit">Tambah</button>
+                    </div>
                 </form>
             </div>
         </div>

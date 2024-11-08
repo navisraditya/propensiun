@@ -1,21 +1,13 @@
 package propensi.propensiun.abuya.controller;
 
 import java.util.*;
-
-//Import Models
-
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 import propensi.propensiun.abuya.model.StoreModel;
-//import propensi.propensiun.abuya.model.StoreManagerModel;
-
-//Import Libraries
 import propensi.propensiun.abuya.service.StoreService;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-
 
 @Controller
 public class StoreController {
@@ -23,7 +15,7 @@ public class StoreController {
     @Autowired
     StoreService storeService;
 
-    //CREATE STORE
+    // CREATE STORE
     @GetMapping("/gerai/tambah")
     public String viewAddStoreForm(Model model) {
         StoreModel store = new StoreModel();
@@ -33,14 +25,24 @@ public class StoreController {
 
     @PostMapping("/gerai/tambah")
     public String viewAddStoreSubmit(@ModelAttribute StoreModel storeModel, Model model) {
+        // Extract coordinates from the store address link before adding the store
+        storeModel.extractCoordinatesFromLink();
         storeService.addStore(storeModel);
-        model.addAttribute("storeName", storeModel.getId());
-        return "redirect:/gerai/tambah";
+        model.addAttribute("storeName", storeModel.getStoreName());
+        return "redirect:/gerai/";
     }
 
-    //UPDATE STORE
+    // READ STORE
+    @GetMapping("/gerai/")
+    public String viewStoreList(Model model) {
+        List<StoreModel> stores = storeService.getAllStores();
+        model.addAttribute("stores", stores);
+        return "view-store";
+    }
+
+    // UPDATE STORE
     @GetMapping("/gerai/ubah/{idGerai}")
-    public String  viewUpdateStoreForm(@PathVariable String idGerai, Model model) {
+    public String viewUpdateStoreForm(@PathVariable String idGerai, Model model) {
         StoreModel store = storeService.getStoreById(idGerai);
         model.addAttribute("store", store);
         return "form-update-store";
@@ -52,14 +54,23 @@ public class StoreController {
         StoreModel existingStore = storeService.getStoreById(idGerai);
 
         // Update the store details
-        storeService.updateStore(store);
-        return "redirect:/gerai/tambah";
+        existingStore.setStoreName(store.getStoreName());
+        existingStore.setStoreAddr(store.getStoreAddr());
+        existingStore.setStoreAddrLink(store.getStoreAddrLink());
+        existingStore.setStorePhone(store.getStorePhone());
+
+        // Extract coordinates from the new store address link
+        existingStore.extractCoordinatesFromLink();
+
+        storeService.updateStore(existingStore);
+        return "redirect:/gerai/";
     }
 
-    //DELETE STORE
-    @GetMapping("/gerai/delete")
-    public String deleteStore(@RequestParam("id") String id) {
-        storeService.deleteStore(id);
-        return "redirect:/gerai/tambah";
+    // DELETE STORE
+    @PostMapping("/gerai/hapus/{idGerai}")
+    public String deleteStore(@PathVariable String idGerai) {
+        storeService.deleteStore(idGerai);
+        return "redirect:/gerai/";
     }
+
 }
