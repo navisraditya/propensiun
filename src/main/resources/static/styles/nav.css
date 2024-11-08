@@ -1,10 +1,25 @@
+.navbar {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    font-family: Inter;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 a.nav-link {
-    color: white;
+    color: white !important;
 }
 
 /* .navbar-nav a.nav-link.active {
     color: white;
 } */
+
+.nav-item {
+    color: white
+}
 
 a.nav-button{
     color: #FF671F;
