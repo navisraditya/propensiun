@@ -46,5 +46,4 @@ public class PromoServiceImpl implements PromoService {
             }
         }
     }
-
 }
