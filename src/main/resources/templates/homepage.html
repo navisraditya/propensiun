@@ -15,6 +15,7 @@
         flex-direction: column;
         min-height: 200vh;
         font-family: Arial, sans-serif;
+        padding-top: 80px;
       }
       .content {
         flex: 1;
@@ -137,10 +138,10 @@
         </div>
       </section>
     </div>
-
-    <footer class="footer">
-      <p>Developed with passion by navisraditya</p>
+    <footer>
+      <div th:insert="fragments/footer :: footer"></div>
     </footer>
+
 
     <!-- Bootstrap JS and Icons -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
