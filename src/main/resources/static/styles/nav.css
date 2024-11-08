@@ -1,0 +1,16 @@
+a.nav-link {
+    color: white;
+}
+
+/* .navbar-nav a.nav-link.active {
+    color: white;
+} */
+
+a.nav-button{
+    color: #FF671F;
+    background-color: white;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    margin-right: 10px;
+}
