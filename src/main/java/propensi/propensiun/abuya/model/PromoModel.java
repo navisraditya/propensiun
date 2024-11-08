@@ -3,17 +3,10 @@ package propensi.propensiun.abuya.model;
 import java.time.LocalDate;
 import java.util.Set;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +19,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "promo")
 public class PromoModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "uuid", updatable = false, nullable = false)
@@ -34,7 +28,7 @@ public class PromoModel {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description", nullable = true) // renamed from 'desc'
+    @Column(name = "description", nullable = true)
     private String description;
 
     @Column(name = "code", nullable = false, unique = true)
@@ -51,7 +45,17 @@ public class PromoModel {
     @Column(name = "is_valid", nullable = false)
     private boolean isValid;
 
-    @ManyToMany
-    @JoinTable(name = "promo_store", joinColumns = @JoinColumn(name = "uuid"), inverseJoinColumns = @JoinColumn(name = "id"))
+    // @ManyToOne(fetch = FetchType.EAGER)
+    // @JoinColumn(name = "store_id", nullable = false)
+    // private StoreModel store;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "promo_store",
+        joinColumns = @JoinColumn(name = "promo_id"),
+        inverseJoinColumns = @JoinColumn(name = "store_id")
+    )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<StoreModel> storeList;
+
 }
