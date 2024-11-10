@@ -105,6 +105,46 @@ public class UserController {
         return "add-user";
     }
 
+    @GetMapping(value = "/addMember")
+    private String addUserMemberFormPage(Model model) {
+        UserModel user = new UserModel();
+        List<PeranModel> listRole = peranService.findAll();
+
+        List<String> securityQuestions = Arrays.asList(
+                "Dimana anda lahir?",
+                "Siapa nama ibu kandung anda?",
+                "Berapa saudara yang anda miliki?"
+        );
+
+        Random random = new Random();
+        int index = random.nextInt(securityQuestions.size());
+        model.addAttribute("security_question", securityQuestions.get(index));
+
+        model.addAttribute("user", user);
+        model.addAttribute("listRole", listRole);
+
+        return "form-add-user-member";
+    }
+
+    @PostMapping(value = "/addMember")
+    private String addUserMemberSubmit(@ModelAttribute UserModel user, @RequestParam String passwordConfirmation, Model model) {
+        try {
+            System.out.println(passwordConfirmation);
+            if (!user.getPassword().equals(passwordConfirmation)) {
+                throw new Exception("Confirmation password does not match.");
+            }
+            userService.addUser(user);
+            model.addAttribute("username", user.getUsername());
+            model.addAttribute("message", "User added successfully!");
+        }
+        catch (Exception e) {
+            System.out.println(e.toString());
+            model.addAttribute("error", e.getMessage());
+        }
+
+        return "add-user-member";
+    }
+
     // @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/profile")
     public String viewProfile(Model model, Principal principal) {

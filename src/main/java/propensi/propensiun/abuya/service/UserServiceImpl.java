@@ -51,6 +51,61 @@ public class UserServiceImpl implements UserService {
         if (!user.getPassword().matches(".*[A-Z].*")) {
             throw new Exception("Password must consist at least 1 uppercase character.");
         }
+        if (user.getSecurityAnswer().isEmpty()) {
+            throw new Exception("Security answer must be inputed.");
+        }
+
+
+        String pass = encrypt(user.getPassword());
+        user.setPassword(pass);
+        try {
+            return userDb.save(user);
+        }
+        catch (ConstraintViolationException e) {
+            Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
+            String errorMessage = violations.stream()
+                    .map(violation -> violation.getMessage())
+                    .collect(Collectors.joining(", "));
+            throw new Exception(errorMessage);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new Exception("The username must be unique. Please try another username.");
+        }
+
+    }
+
+    @Override
+    public UserModel addUserMember(UserModel user) throws Exception {
+        if (user.getPeran() == null) {
+            throw new Exception("Please choose peran.");
+        }
+        if (user.getSecurityAnswer() == null) {
+            throw new Exception("Please answer the security question.");
+        }
+        if (user.getName().length() < 3) {
+            throw new Exception("Name must consist at least 3 characters.");
+        }
+        if (user.getName().matches(".*\\d.*")) {
+            throw new Exception("Name shouldn't contain numeric character.");
+        }
+        if (user.getUsername().length() < 6) {
+            throw new Exception("Username must consist at least 6 characters.");
+        }
+        if (user.getPassword().length() < 8) {
+            throw new Exception("Password must consist at least 8 characters.");
+        }
+        if (user.getPhoneNumber().length() < 10 || user.getPhoneNumber().length() > 13) {
+            throw new Exception("Phone number must consist 10-13 digits.");
+        }
+        if (!user.getPassword().matches(".*\\d.*")) {
+            throw new Exception("Password must consist at least 1 numeric character.");
+        }
+        if (!user.getPassword().matches(".*[A-Z].*")) {
+            throw new Exception("Password must consist at least 1 uppercase character.");
+        }
+        if (user.getSecurityAnswer().isEmpty()) {
+            throw new Exception("Security answer must be inputed.");
+        }
 
         String pass = encrypt(user.getPassword());
         user.setPassword(pass);
