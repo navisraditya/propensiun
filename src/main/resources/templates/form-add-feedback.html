@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background-color: #FF671F; /* Orange color */
+            padding: 20px;
+            border-radius: 15px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h2 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .form-container label {
+            display: block;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .form-container select,
+        .form-container textarea {
+            width: 100%;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .form-container textarea {
+            padding: 10px;
+            resize: vertical;
+            height: 80px;
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #000; /* Black background */
+            color: #fff; /* White text */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .form-container button:hover {
+            background-color: #333; /* Darker black on hover */
+        }
+
+        .back-home-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #FF671F; /* Orange color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .back-home-btn:hover {
+            background-color: #e65c00; /* Darker orange on hover */
+        }
+
+        .range-container {
+            margin-bottom: 15px;
+        }
+
+        .range-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #000; /* Black background */
+            outline: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #FFFFFF; /* Orange thumb */
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .range-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #FF671F;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .range-label {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .range-scale {
+            display: flex;
+            justify-content: space-between;
+            color: #fff;
+            margin-top: -10px;
+            font-size: 14px;
+        }
+        
+        select {
+            padding: 10px;
+            appearance: none; /* Hapus gaya bawaan */
+            -webkit-appearance: none; /* Untuk Safari */
+            -moz-appearance: none; /* Untuk Firefox */
+            background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"><path fill="black" d="M0 0l5 6 5-6z"/></svg>') no-repeat right 10px center; 
+            background-size: 10px 6px; /* Ukuran panah */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            
+        }
+
+select:focus {
+    outline: none;
+    border-color: #FF671F; /* Warna border saat fokus */
+}
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Feedback Form</h2>
+        
+        <form th:action="@{/feedback/submit}" method="post">
+            <!-- Dropdown for branch selection -->
+            <div class="dropdown-cabang">
+                <label for="cabang">Cabang:</label>
+                <select id="cabang" name="cabang" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+            
+            <!-- Slider for service rating -->
+            <div class="range-container">
+                <label for="pelayanan">Pelayanan:</label>
+                <input type="range" id="pelayanan" class="range-slider" name="pelayanan" min="1" max="5" step="1" value="3" oninput="updateLabel(this, 'pelayanan-label')">
+                <div class="range-label" id="pelayanan-label">3</div>
+                <div class="range-scale">
+                </div>
+            </div>
+            
+            <!-- Slider for menu rating -->
+            <div class="range-container">
+                <label for="menu">Menu:</label>
+                <input type="range" id="menu" class="range-slider" name="menu" min="1" max="5" step="1" value="3" oninput="updateLabel(this, 'menu-label')">
+                <div class="range-label" id="menu-label">3</div>
+                <div class="range-scale">
+                </div>
+            </div>
+            
+            <!-- Slider for facilities rating -->
+            <div class="range-container">
+                <label for="fasilitas">Fasilitas:</label>
+                <input type="range" id="fasilitas" class="range-slider" name="fasilitas" min="1" max="5" step="1" value="3" oninput="updateLabel(this, 'fasilitas-label')">
+                <div class="range-label" id="fasilitas-label">3</div>
+                <div class="range-scale">
+                </div>
+            </div>
+            
+            <!-- Textarea for suggestions -->
+            <div>
+                <label for="kotakSaran">Kotak Saran:</label>
+                <textarea id="kotakSaran" name="kotakSaran" placeholder="Tulis saran Anda di sini..."></textarea>
+            </div>
+            
+            <!-- Submit and back to homepage button -->
+            <div>
+                <button type="submit">Kirim</button>
+            </div>
+            <div>
+                <button type="button" class="back-home-btn" 
+                th:onclick="'window.location.href=\'' + @{/memberlanding} + '\';'">Back to Homepage</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function updateLabel(rangeInput, labelId) {
+            document.getElementById(labelId).innerText = rangeInput.value;
+        }
+    </script>
+
+</body>
+</html>

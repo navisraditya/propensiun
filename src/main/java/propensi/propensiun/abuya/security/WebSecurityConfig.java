@@ -23,7 +23,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/js/**").permitAll()
                         .requestMatchers("/resources/**").permitAll()
-                        .requestMatchers("/user/login").permitAll()
+                        .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/styles/**").permitAll()
                         // below, dev purpose onlz
                         .requestMatchers(HttpMethod.GET, "/user/addMember").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/addMember").permitAll()
