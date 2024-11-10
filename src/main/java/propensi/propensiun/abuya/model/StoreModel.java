@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Set;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;
@@ -58,4 +61,7 @@ public class StoreModel {
             }
         }
     }
+
+    @OneToMany(mappedBy = "storeList", cascade = CascadeType.ALL)
+    private Set<PromoModel> promos; 
 }

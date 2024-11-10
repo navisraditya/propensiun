@@ -107,7 +107,7 @@ public class HomepageController {
         return "homepage-sm";
     }
 
-    @PreAuthorize("hasRole('Chief Operating Officer')")
+    @PreAuthorize("hasRole('Marketing')")
     @GetMapping("/promo/add")
     public String addPromoPage(Model model) {
         PromoModel promo = new PromoModel();

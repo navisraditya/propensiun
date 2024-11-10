@@ -39,15 +39,15 @@
       <br /><br />
 
       <!-- Store List Field -->
-      <label for="storeList">Store:</label>
-      <select id="storeList" name="store" required>
-        <option value="" disabled selected>Select a Store</option>
-        <option
-          th:each="store : ${listStore}"
-          th:value="${store.id}"
-          th:text="${store.storeName}"
-        ></option>
-      </select>
+<label for="listStore">Store:</label>
+<select id="listStore" name="store" required>
+  <option value="" disabled selected>Select a Store</option>
+  <option
+    th:each="store : ${listStore}"
+    th:value="${store.id}"
+    th:text="${store.storeName}">
+  </option>
+</select>
       <br /><br />
 
       <!-- Submit Button -->
