@@ -9,6 +9,8 @@ import java.util.List;
 public interface UserService {
     UserModel addUser(UserModel user) throws Exception;
 
+    UserModel addUserMember(UserModel user) throws Exception;
+
     public String encrypt(String password);
 
     public UserModel getUserByUsername(String name);
