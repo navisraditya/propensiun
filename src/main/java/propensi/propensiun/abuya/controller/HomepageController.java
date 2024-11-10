@@ -107,7 +107,7 @@ public class HomepageController {
         return "homepage-sm";
     }
 
-    @PreAuthorize("hasRole('Marketing')")
+    @PreAuthorize("hasRole('ROLE_Marketing')")
     @GetMapping("/promo/add")
     public String addPromoPage(Model model) {
         PromoModel promo = new PromoModel();
@@ -117,6 +117,7 @@ public class HomepageController {
         return "form-add-promo";
     }
 
+    @PreAuthorize("hasRole('ROLE_Marketing')")
     @PostMapping("/promo/add")
     public ModelAndView addPromoPageSubmit(@ModelAttribute PromoModel promo, Model model) {
         promoService.addPromo(promo);

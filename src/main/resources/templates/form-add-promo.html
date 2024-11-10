@@ -1,57 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add Promo</title>
-  </head>
-  <body>
+</head>
+<body>
     <h2>Add Promo</h2>
-    <form action="/add-promo" method="post">
-      <!-- Name Field -->
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" required />
-      <br /><br />
+    <form action="/promo/add" method="post" th:action="@{/promo/add}" th:object="${promo}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <!-- Name Field -->
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required />
+        <br /><br />
 
-      <!-- Description Field -->
-      <label for="desc">Description:</label>
-      <textarea id="desc" name="desc"></textarea>
-      <br /><br />
+        <!-- Description Field -->
+        <label for="desc">Description:</label>
+        <textarea id="desc" name="desc"></textarea>
+        <br /><br />
 
-      <!-- Code Field -->
-      <label for="code">Code:</label>
-      <input type="text" id="code" name="code" required />
-      <br /><br />
+        <!-- Code Field -->
+        <label for="code">Code:</label>
+        <input type="text" id="code" name="code" required />
+        <br /><br />
 
-      <!-- Start Date Field -->
-      <label for="startDate">Start Date:</label>
-      <input type="date" id="startDate" name="startDate" required />
-      <br /><br />
+        <!-- Start Date Field -->
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" required />
+        <br /><br />
 
-      <!-- End Date Field -->
-      <label for="endDate">End Date:</label>
-      <input type="date" id="endDate" name="endDate" required />
-      <br /><br />
+        <!-- End Date Field -->
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate" required />
+        <br /><br />
 
-      <!-- Is Valid Field -->
-      <label for="isValid">Is Valid:</label>
-      <input type="checkbox" id="isValid" name="isValid" />
-      <br /><br />
+        <!-- Is Valid Field -->
+        <label for="isValid">Is Valid:</label>
+        <input type="checkbox" id="isValid" name="isValid" />
+        <br /><br />
 
-      <!-- Store List Field -->
-<label for="listStore">Store:</label>
-<select id="listStore" name="store" required>
-  <option value="" disabled selected>Select a Store</option>
-  <option
-    th:each="store : ${listStore}"
-    th:value="${store.id}"
-    th:text="${store.storeName}">
-  </option>
-</select>
-      <br /><br />
+        <!-- Store List Field -->
+        <label for="listStore">Store:</label>
+        <select id="listStore" name="store" required>
+            <option value="" disabled selected>Select a Store</option>
+            <option th:each="store : ${listStore}" th:value="${store.uuid}" th:text="${store.storeName}"></option>
+        </select>
+        <br /><br />
 
-      <!-- Submit Button -->
-      <button type="submit">Add Promo</button>
+        <!-- Submit Button -->
+        <button type="submit">Add Promo</button>
     </form>
-  </body>
+</body>
 </html>
