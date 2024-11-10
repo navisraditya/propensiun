@@ -91,6 +91,7 @@
                 <th>End Date</th>
                 <th>Is Valid</th>
                 <th>Edit</th>
+                <th>Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -107,6 +108,9 @@
                 <td th:text="${promo.isValid}"></td>
                 <td>
                   <a th:href="@{${TODO}}" class="btn btn-primary">Edit</a>
+                </td>
+                <td>
+                  <a th:href="@{${TODO}}" class="btn btn-danger">Delete</a>
                 </td>
               </tr>
             </tbody>
