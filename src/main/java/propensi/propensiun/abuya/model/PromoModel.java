@@ -1,8 +1,7 @@
 package propensi.propensiun.abuya.model;
 
 import java.time.LocalDate;
-import java.util.Set;
-
+import java.util.List;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -49,13 +48,13 @@ public class PromoModel {
     // @JoinColumn(name = "store_id", nullable = false)
     // private StoreModel store;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "promo_store",
         joinColumns = @JoinColumn(name = "promo_id"),
         inverseJoinColumns = @JoinColumn(name = "store_id")
     )
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Set<StoreModel> storeList;
+    private List<StoreModel> storeList;
 
 }
