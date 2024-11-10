@@ -15,6 +15,7 @@
         flex-direction: column;
         min-height: 200vh;
         font-family: Arial, sans-serif;
+        padding-top: 80px;
       }
       .content {
         flex: 1;
@@ -59,44 +60,7 @@
     </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <!-- Logo or Brand -->
-        <a class="navbar-brand" href="#">Almaz</a>
-
-        <!-- Toggler for mobile view -->
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Links in navbar -->
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Contact</a>
-            </li>
-          </ul>
-
-          <!-- Login button aligned right -->
-          <a class="btn btn-outline-primary" href="/login">Login</a>
-          <a class="btn btn-outline-primary" href="/user/addMember">Register</a>
-        </div>
-      </div>
-    </nav>
+    <div th:insert="fragments/navbar-guest :: nav"></div>
 
     <!-- Banner for Menus in carousel -->
     <section
@@ -174,10 +138,10 @@
         </div>
       </section>
     </div>
-
-    <footer class="footer">
-      <p>Developed with passion by navisraditya</p>
+    <footer>
+      <div th:insert="fragments/footer :: footer"></div>
     </footer>
+
 
     <!-- Bootstrap JS and Icons -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>

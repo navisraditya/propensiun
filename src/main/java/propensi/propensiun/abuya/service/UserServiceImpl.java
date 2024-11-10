@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.Null;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -163,6 +164,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserModel> findCOOAndManagers() {
         return userDb.findByRoleNames(Arrays.asList("COO", "Regional Manager", "Store Manager"));
+    }
+
+    @Override
+    public List<UserModel> findMarketing(){
+        return userDb.findMarketing();
+    }
+
+    @Override
+    public List<UserModel> findCOO(){
+        return userDb.findCOO();
     }
 
     @Override

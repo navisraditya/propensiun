@@ -19,4 +19,10 @@ public interface UserDb extends JpaRepository<UserModel, Integer> {
 
     @Query("SELECT u FROM UserModel u WHERE u.peran.name = 'Store Manager'")
     List<UserModel> findStoreManagers();
+
+    @Query("SELECT u FROM UserModel u WHERE u.peran.name = 'Marketing'")
+    List<UserModel> findMarketing();
+
+    @Query("SELECT u FROM UserModel u WHERE u.peran.name = 'Chief Operating Officer'")
+    List<UserModel> findCOO();
 }

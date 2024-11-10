@@ -37,13 +37,21 @@ public class UserController {
             if (principal instanceof UserDetails) {
                 UserDetails userDetails = (UserDetails) principal;
                 String username = userDetails.getUsername();
-                System.out.println(username);
-                return userService.findByUsername(username).getUuid();
+
+                UserModel user = userService.findByUsername(username);
+                if (user != null) {
+                    return user.getUuid();
+                }
+
+                // Jika user tidak ditemukan di database dan username adalah "admin"
+                if (username.equals("admin")) {
+                    return -1; // ID tetap untuk admin hardcoded
+                }
             }
         }
-        // Return nilai default
         return null;
     }
+
 
     private UserModel getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -53,10 +61,32 @@ public class UserController {
             if (principal instanceof UserDetails) {
                 UserDetails userDetails = (UserDetails) principal;
                 String username = userDetails.getUsername();
-                return userService.findByUsername(username);
+
+                // Coba cari user di database terlebih dahulu
+                UserModel user = userService.findByUsername(username);
+                if (user != null) {
+                    return user;
+                }
+
+                // Jika user tidak ditemukan di database dan username adalah "admin"
+                if (username.equals("admin")) {
+                    // Buat objek UserModel untuk akun admin hardcoded
+                    UserModel hardcodedAdmin = new UserModel();
+                    hardcodedAdmin.setUsername("admin");
+                    hardcodedAdmin.setName("Admin");
+
+                    // Set role admin secara manual
+                    PeranModel adminRole = new PeranModel();
+                    adminRole.setName("Admin");
+                    hardcodedAdmin.setPeran(adminRole);
+
+                    // Set UUID atau ID lainnya yang diperlukan
+                    hardcodedAdmin.setUuid(-1); // Gunakan ID spesial untuk membedakan admin hardcoded
+
+                    return hardcodedAdmin;
+                }
             }
         }
-        // return null; // Jika pengguna tidak ditemukan, kembalikan null
         return null;
     }
 
@@ -149,16 +179,15 @@ public class UserController {
     @GetMapping(value = "/profile")
     public String viewProfile(Model model, Principal principal) {
         UserModel user = getUser();
-        model.addAttribute("user", user);
-        model.addAttribute("isCOO", user.getPeran().getName().equals("Chief Operating Officer"));
-
         if (user == null || user.getPeran() == null) {
             model.addAttribute("error", "User or role not found. Please log in.");
             return "redirect:/login"; // Arahkan ke halaman login jika user atau role tidak ditemukan
         }
 
-        String role = user.getPeran().getName();
+        model.addAttribute("user", user);
+        model.addAttribute("isCOO", user.getPeran().getName().equals("Chief Operating Officer"));
 
+        String role = user.getPeran().getName();
         if (role.equals("Member") || role.equals("Admin") || role.equals("Marketing") || role.equals("Store Manager")
                 || role.equals("Chief Operating Officer")) {
             model.addAttribute("showEditButton", true);
@@ -273,6 +302,18 @@ public class UserController {
         List<UserModel> storeManagers = userService.findStoreManagers();
         model.addAttribute("storeManagers", storeManagers);
         return "store-manager-view";
+    }
+
+    @GetMapping(value = "/user-view-by-admin")
+    public String viewUser(Model model) {
+        List<UserModel> COO = userService.findCOO();
+        model.addAttribute("COO", COO);
+        List<UserModel> storeManagers = userService.findStoreManagers();
+        model.addAttribute("storeManagers", storeManagers);
+        List<UserModel> marketing = userService.findMarketing();
+        model.addAttribute("marketing", marketing);
+
+        return "admin-view-user";
     }
 
     @GetMapping(value = "/ubah-password")
