@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -122,5 +123,12 @@ public class HomepageController {
     public ModelAndView addPromoPageSubmit(@ModelAttribute PromoModel promo, Model model) {
         promoService.addPromo(promo);
         return new ModelAndView("redirect:/marketinglanding");
+    }
+
+    @PreAuthorize("hasRole('ROLE_Marketing')")
+    @PostMapping("/promo/delete/{id}")
+    public String deleteInTable(@PathVariable Integer id){
+        promoService.deletePromoById(id);
+        return "redirect:/marketinglanding";
     }
 }
