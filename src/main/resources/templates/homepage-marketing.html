@@ -86,7 +86,7 @@
                 <th>List Store</th>
                 <th>Start Date</th>
                 <th>End Date</th>
-                <th>Is Valid</th>
+                <!-- <th>Is Valid</th> -->
                 <th>Edit</th>
                 <th>Delete</th>
               </tr>
@@ -100,7 +100,7 @@
                 <td th:text="${#strings.arrayJoin(promo.storeList, ', ')}"></td>
                 <td th:text="${promo.startDate}"></td>
                 <td th:text="${promo.endDate}"></td>
-                <td th:text="${promo.isValid}"></td>
+                <!-- <td th:text="${promo.isValid}"></td> -->
                 <td>
                   <a th:href="@{/promo/edit/{id}(id=${promo.uuid})}" class="btn btn-primary">Edit</a>
                 </td>
@@ -139,8 +139,8 @@
                   <br />
 
                   <!-- Description Field -->
-                  <label for="desc">Description:</label>
-                  <textarea id="desc" name="desc" class="form-control"></textarea>
+                  <label for="description">Description:</label>
+                  <textarea id="desc" name="description" class="form-control"></textarea>
                   <br />
 
                   <!-- Code Field -->
