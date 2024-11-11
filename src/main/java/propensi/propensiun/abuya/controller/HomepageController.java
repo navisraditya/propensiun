@@ -98,6 +98,11 @@ public class HomepageController {
     @GetMapping("/marketinglanding")
     public String marketingLanding(Model model) {
         List<PromoModel> listPromo = promoService.getPromoList(0);
+        PromoModel promo = new PromoModel();
+        List<StoreModel> listStore = storeService.getAllStores();
+        
+        model.addAttribute("new_promo", promo);
+        model.addAttribute("listStore", listStore);
         model.addAttribute("promos", listPromo);
         model.addAttribute("logged_username", logged_user);
         return "homepage-marketing";
@@ -106,16 +111,6 @@ public class HomepageController {
     @GetMapping("/smlanding")
     public String storemanagerLanding(Model model) {
         return "homepage-sm";
-    }
-
-    @PreAuthorize("hasRole('ROLE_Marketing')")
-    @GetMapping("/promo/add")
-    public String addPromoPage(Model model) {
-        PromoModel promo = new PromoModel();
-        List<StoreModel> listStore = storeService.getAllStores();
-        model.addAttribute("new_promo", promo);
-        model.addAttribute("listStore", listStore);
-        return "form-add-promo";
     }
 
     @PreAuthorize("hasRole('ROLE_Marketing')")

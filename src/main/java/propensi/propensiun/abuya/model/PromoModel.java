@@ -41,8 +41,8 @@ public class PromoModel {
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate endDate;
 
-    @Column(name = "is_valid", nullable = false)
-    private boolean isValid;
+    // @Column(name = "is_valid", nullable = false)
+    // private boolean isValid;
 
     // @ManyToOne(fetch = FetchType.EAGER)
     // @JoinColumn(name = "store_id", nullable = false)
