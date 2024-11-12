@@ -140,15 +140,8 @@ public class HomepageController {
 
     @PreAuthorize("hasRole('ROLE_Marketing')")
     @PostMapping("/promo/edit/{id}")
-    public String editPromo(@PathVariable String id, RedirectAttributes redirectAttributes) {
-        PromoModel promo = promoService.findPromoById(Integer.parseInt(id));
-        
-        if (promo.getUuid() != null) {
-            promoService.updatePromo(promo); // Finds and updates promo by uuid
-            redirectAttributes.addFlashAttribute("successMessage", "Promo updated successfully!");
-        } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Promo ID is missing. Cannot update.");
-        }
+    public String editPromo(@PathVariable String id, @ModelAttribute PromoModel sourceModel) {
+        promoService.updatePromo(Integer.parseInt(id), sourceModel);
         return "redirect:/marketinglanding";
     }
 

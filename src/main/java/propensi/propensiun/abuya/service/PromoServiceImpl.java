@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -49,24 +50,16 @@ public class PromoServiceImpl implements PromoService {
     }
 
     @Override
-    public void updatePromo(PromoModel promo) {
-        Optional<PromoModel> existingPromo = promoDb.findById(promo.getUuid());
-        if (existingPromo.isPresent()) {
-            PromoModel updatedPromo = existingPromo.get();
-            updatedPromo.setName(promo.getName());
-            updatedPromo.setDescription(promo.getDescription());
-            updatedPromo.setCode(promo.getCode());
-            updatedPromo.setStartDate(promo.getStartDate());
-            updatedPromo.setEndDate(promo.getEndDate());
-            updatedPromo.setStores(promo.getStores());
-            
-            promoDb.save(updatedPromo);
-        }
+    public PromoModel updatePromo(Integer id, PromoModel sourcePromo) {
+        PromoModel targetPromo = findPromoById(id);
+        BeanUtils.copyProperties(sourcePromo, targetPromo);
+
+        return promoDb.save(targetPromo);
     }
 
     @Override
     public PromoModel findPromoById(Integer promoUuid) {
-        return promoDb.getReferenceById(promoUuid);
+        return promoDb.findById(promoUuid).orElse(null);
     }
     
 }

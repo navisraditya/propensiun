@@ -1,6 +1,7 @@
 package propensi.propensiun.abuya.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import propensi.propensiun.abuya.model.PromoModel;
 
@@ -15,5 +16,5 @@ public interface PromoService {
 
     void deletePromoOnDate();
     
-    void updatePromo(PromoModel promo);
+    PromoModel updatePromo(Integer id, PromoModel sourcePromo);
 }
