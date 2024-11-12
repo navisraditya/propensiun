@@ -48,6 +48,7 @@ public class PromoServiceImpl implements PromoService {
             }
         }
     }
+<<<<<<< HEAD
 
     @Override
     public PromoModel updatePromo(Integer id, PromoModel sourcePromo) {
@@ -62,4 +63,6 @@ public class PromoServiceImpl implements PromoService {
         return promoDb.findById(promoUuid).orElse(null);
     }
     
+=======
+>>>>>>> af3b03fb56ff261428b9e23b738abd8d5900141e
 }
