@@ -3,8 +3,6 @@ package propensi.propensiun.abuya.controller;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -18,8 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import propensi.propensiun.abuya.model.*;
 import propensi.propensiun.abuya.service.*;
 
@@ -90,6 +86,10 @@ public class HomepageController {
 
     @GetMapping("/memberlanding")
     public String memberLanding(Model model) {
+        List<PromoModel> listPromo = promoService.getPromoList(0);
+        listPromo.sort(Comparator.comparing(PromoModel::getUuid));
+
+        model.addAttribute("promotions",listPromo);
         return "homepage-member";
 
     }

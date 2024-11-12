@@ -1,8 +1,6 @@
 package propensi.propensiun.abuya.service;
 
 import java.util.List;
-import java.util.Optional;
-
 import propensi.propensiun.abuya.model.PromoModel;
 
 public interface PromoService {

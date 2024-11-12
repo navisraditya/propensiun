@@ -2,8 +2,6 @@ package propensi.propensiun.abuya.service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -48,7 +46,6 @@ public class PromoServiceImpl implements PromoService {
             }
         }
     }
-<<<<<<< HEAD
 
     @Override
     public PromoModel updatePromo(Integer id, PromoModel sourcePromo) {
@@ -63,6 +60,4 @@ public class PromoServiceImpl implements PromoService {
         return promoDb.findById(promoUuid).orElse(null);
     }
     
-=======
->>>>>>> af3b03fb56ff261428b9e23b738abd8d5900141e
 }
