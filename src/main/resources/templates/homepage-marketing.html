@@ -113,7 +113,7 @@
                                    data-code=${promo.code}, 
                                    data-start-date=${promo.startDate}, 
                                    data-end-date=${promo.endDate}"
-                          onclick="openPromoModal('edit',this)">
+                                   onclick="openPromoModal('edit',this)">
                     Edit
                   </button>
                 </td>
@@ -221,6 +221,18 @@
           document.getElementById('code').value = button.dataset.code || '';
           document.getElementById('startDate').value = button.dataset.startDate || '';
           document.getElementById('endDate').value = button.dataset.endDate || '';
+          // Pre-select the stores from the promo.stores data-attribute
+          // const selectedStoreUUIDs = button.dataset.stores.split(','); // Convert string of UUIDs into an array
+          // const storeSelect = document.getElementById('listStore');
+          
+          // // Loop through each option and select the ones that match the selected store UUIDs
+          // for (let option of storeSelect.options) {
+          //   if (selectedStoreUUIDs.includes(option.value)) {
+          //     option.selected = true;
+          //   } else {
+          //     option.selected = false;
+          //   }
+          // }
 
         } else {
           modalLabel.innerText = 'Add Promo';

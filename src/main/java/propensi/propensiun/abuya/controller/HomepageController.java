@@ -1,5 +1,6 @@
 package propensi.propensiun.abuya.controller;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -103,6 +104,7 @@ public class HomepageController {
     public String marketingLanding(Model model) {
         // for data fetching
         List<PromoModel> listPromo = promoService.getPromoList(0);
+        listPromo.sort(Comparator.comparing(PromoModel::getUuid));
 
         // for adding new promo
         PromoModel promo = new PromoModel();
@@ -140,10 +142,16 @@ public class HomepageController {
 
     @PreAuthorize("hasRole('ROLE_Marketing')")
     @PostMapping("/promo/edit/{id}")
-    public String editPromo(@PathVariable String id, @ModelAttribute PromoModel sourceModel) {
+    public String editPromo(@PathVariable String id, @ModelAttribute PromoModel sourceModel, @RequestParam List<Integer> storeList) {
+        if(!storeList.isEmpty()) {
+            List<StoreModel> selecStoreModels = storeService.getAllStoreByIds(storeList);
+            
+            if(!selecStoreModels.isEmpty()) {
+                sourceModel.setStores(new HashSet<>(selecStoreModels));
+            }
+        }
+
         promoService.updatePromo(Integer.parseInt(id), sourceModel);
         return "redirect:/marketinglanding";
     }
-
-
 }
