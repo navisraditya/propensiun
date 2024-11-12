@@ -7,5 +7,6 @@ import propensi.propensiun.abuya.model.StoreModel;
 
 @Repository
 public interface StoreDB extends JpaRepository<StoreModel, Integer> {
-
+    boolean existsByStoreName(String storeName);
+    boolean existsByStorePhone(String storePhone);
 }

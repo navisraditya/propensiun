@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Null;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import propensi.propensiun.abuya.model.UserModel;
@@ -139,6 +141,16 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUser(UserModel user) {
         userDb.delete(user);
+    }
+
+    // Method to get currently authenticated user
+    public UserModel getCurrentAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            String username = authentication.getName(); // Get the username from the authentication
+            return userDb.findByUsername(username); // Return the UserModel associated with the username
+        }
+        return null; // Or throw an exception depending on your requirement
     }
 
 }

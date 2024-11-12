@@ -25,6 +25,16 @@ public class StoreServiceImpl implements StoreService {
     public void deleteStore(String id) { storeDB.deleteById(Integer.valueOf(id));}
 
     @Override
+    public boolean existsByStoreName(String storeName) {
+        return storeDB.existsByStoreName(storeName);
+    }
+
+    @Override
+    public boolean existsByStorePhone(String storePhone){
+        return storeDB.existsByStorePhone(storePhone);
+    }
+
+    @Override
     public List<StoreModel> getAllStoreByIds(List<Integer> listStore) {
         List<StoreModel> selectedStores = storeDB.findAllById(listStore);
 

@@ -34,4 +34,6 @@ public interface UserService {
     List<UserModel> findMarketing();
 
     List<UserModel> findCOO();
+
+    UserModel getCurrentAuthenticatedUser();
 }

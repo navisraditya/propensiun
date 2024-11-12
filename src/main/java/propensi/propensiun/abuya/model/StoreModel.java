@@ -62,7 +62,11 @@ public class StoreModel {
             }
         }
     }
-    
+
+    @OneToOne (fetch=FetchType.EAGER)
+    @JoinColumn(name = "id_storemanager", referencedColumnName = "uuid", nullable = true)
+    private UserModel storeManager;
+
     @ManyToMany(mappedBy = "stores")
     private Set<PromoModel> promos = new HashSet<>();
 }

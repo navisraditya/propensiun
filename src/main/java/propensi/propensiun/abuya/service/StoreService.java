@@ -14,5 +14,8 @@ public interface StoreService {
 
     void deleteStore(String id);
 
+    boolean existsByStoreName(String storeName);
+    boolean existsByStorePhone(String storePhone);
+
     List<StoreModel> getAllStoreByIds(List<Integer> listStore);
 }
