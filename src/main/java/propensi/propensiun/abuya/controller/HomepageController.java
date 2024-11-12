@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import propensi.propensiun.abuya.model.*;
 import propensi.propensiun.abuya.service.*;
@@ -136,4 +137,20 @@ public class HomepageController {
         promoService.deletePromoById(id);
         return "redirect:/marketinglanding";
     }
+
+    @PreAuthorize("hasRole('ROLE_Marketing')")
+    @PostMapping("/promo/edit/{id}")
+    public String editPromo(@PathVariable String id, RedirectAttributes redirectAttributes) {
+        PromoModel promo = promoService.findPromoById(Integer.parseInt(id));
+        
+        if (promo.getUuid() != null) {
+            promoService.updatePromo(promo); // Finds and updates promo by uuid
+            redirectAttributes.addFlashAttribute("successMessage", "Promo updated successfully!");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Promo ID is missing. Cannot update.");
+        }
+        return "redirect:/marketinglanding";
+    }
+
+
 }

@@ -2,10 +2,12 @@ package propensi.propensiun.abuya.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
 import propensi.propensiun.abuya.model.PromoModel;
 import propensi.propensiun.abuya.repository.PromoDb;
 
@@ -45,4 +47,26 @@ public class PromoServiceImpl implements PromoService {
             }
         }
     }
+
+    @Override
+    public void updatePromo(PromoModel promo) {
+        Optional<PromoModel> existingPromo = promoDb.findById(promo.getUuid());
+        if (existingPromo.isPresent()) {
+            PromoModel updatedPromo = existingPromo.get();
+            updatedPromo.setName(promo.getName());
+            updatedPromo.setDescription(promo.getDescription());
+            updatedPromo.setCode(promo.getCode());
+            updatedPromo.setStartDate(promo.getStartDate());
+            updatedPromo.setEndDate(promo.getEndDate());
+            updatedPromo.setStores(promo.getStores());
+            
+            promoDb.save(updatedPromo);
+        }
+    }
+
+    @Override
+    public PromoModel findPromoById(Integer promoUuid) {
+        return promoDb.getReferenceById(promoUuid);
+    }
+    
 }
