@@ -43,16 +43,41 @@
       .user-icon:hover {
         color: #007bff;
       }
-      .footer {
-        position: relative;
-        bottom: 0;
-        min-height: 250px;
-        width: 100%;
-        text-align: center;
-        padding-top: 50px;
-        background-color: #f8f9fa;
-        font-size: 16px;
+      .promo-card {
+        margin-bottom: 20px;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s; width: 300px;
+        height: 400px;
       }
+        .promo-card:hover { 
+        transform: scale(1.05); 
+      }
+        .promo-card img { 
+        height: 150px;
+        object-fit: cover;
+      }
+        .promo-card .card-body 
+        { 
+        background-color: #f8f9fa; 
+        padding: 20px; 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: space-between;  
+      } 
+        .promo-card .card-title { 
+        font-size: 24px; 
+        font-weight: bold; 
+        color: #343a40; 
+      } 
+        .promo-card .card-text { 
+        font-size: 16px; 
+        color: #6c757d; 
+      } 
+        .promo-card .collapse { 
+        margin-top: 15px; 
+      }    
     </style>
 </head>
 <body>
@@ -112,12 +137,17 @@ th:if="${menus != null}"
       <div class="row">
           <div class="col-md-4" th:each="promo, iterStat : ${promotions}">
               <div class="card promo-card">
-                  <!-- <img th:src="@{${promo.imageUrl}}" class="card-img-top" alt="Promo Image"/> -->
-                  <div class="card-body">
+                <img src="https://drive.google.com/uc?export=view&id=1ZwUOdk9EeQozFiJ-hr95_mazf2areyTA" class="card-img-top" alt="Promo Image"/><div class="card-body">
                       <h5 class="card-title" th:text="${promo.name}">Promo Title</h5>
                       <p class="card-text" th:text="${promo.description}">Promo Description</p>
+                      <p class="card-text" th:text="'Berlaku hingga: ' + ${promo.endDate}">Start Date</p>
+                      <!-- <p class="card-text" th:text="">End Date</p> -->
                       <div th:id="'collapsePromo' + ${iterStat.index}" class="collapse">
-                        <p th:text="'Additional details about ' + ${promo.code}"></p>
+                        <p th:text="'Kode Promo: ' + ${promo.code}"></p>
+                        <p>
+                          <span th:each="store : ${promo.stores}" th:text="'Store yang berlaku: ' + ${store.storeName}"></span>
+                          <span th:if="${promo.stores == null or promo.stores.isEmpty()}">&nbsp;</span>    
+                          </p>
                       </div>
                       <a class="btn btn-primary" data-bs-toggle="collapse" th:href="'#collapsePromo' + ${iterStat.index}" role="button" aria-expanded="false" aria-controls="collapsePromo">Claim Now</a>
                   </div>
