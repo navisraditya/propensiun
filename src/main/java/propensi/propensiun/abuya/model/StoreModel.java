@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;
@@ -58,4 +62,7 @@ public class StoreModel {
             }
         }
     }
+    
+    @ManyToMany(mappedBy = "stores")
+    private Set<PromoModel> promos = new HashSet<>();
 }

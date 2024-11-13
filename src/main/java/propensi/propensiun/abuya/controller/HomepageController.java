@@ -1,7 +1,8 @@
 package propensi.propensiun.abuya.controller;
 
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -11,9 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
 import propensi.propensiun.abuya.model.*;
 import propensi.propensiun.abuya.service.*;
 
@@ -84,6 +86,10 @@ public class HomepageController {
 
     @GetMapping("/memberlanding")
     public String memberLanding(Model model) {
+        List<PromoModel> listPromo = promoService.getPromoList(0);
+        listPromo.sort(Comparator.comparing(PromoModel::getUuid));
+
+        model.addAttribute("promotions",listPromo);
         return "homepage-member";
 
     }
@@ -96,7 +102,17 @@ public class HomepageController {
 
     @GetMapping("/marketinglanding")
     public String marketingLanding(Model model) {
+        // for data fetching
         List<PromoModel> listPromo = promoService.getPromoList(0);
+        listPromo.sort(Comparator.comparing(PromoModel::getUuid));
+
+        // for adding new promo
+        PromoModel promo = new PromoModel();
+        List<StoreModel> listStore = storeService.getAllStores();
+        
+
+        model.addAttribute("new_promo", promo);
+        model.addAttribute("listStore", listStore);
         model.addAttribute("promos", listPromo);
         model.addAttribute("logged_username", logged_user);
         return "homepage-marketing";
@@ -107,18 +123,12 @@ public class HomepageController {
         return "homepage-sm";
     }
 
-    @PreAuthorize("hasRole('Chief Operating Officer')")
-    @GetMapping("/promo/add")
-    public String addPromoPage(Model model) {
-        PromoModel promo = new PromoModel();
-        List<StoreModel> listStore = storeService.getAllStores();
-        model.addAttribute("new_promo", promo);
-        model.addAttribute("listStore", listStore);
-        return "form-add-promo";
-    }
-
+    @PreAuthorize("hasRole('ROLE_Marketing')")
     @PostMapping("/promo/add")
-    public ModelAndView addPromoPageSubmit(@ModelAttribute PromoModel promo, Model model) {
+    public ModelAndView addPromoPageSubmit(@ModelAttribute PromoModel promo, @RequestParam List<Integer> storeList, Model model) {
+        List<StoreModel> selectedStoreModels = storeService.getAllStoreByIds(storeList);
+
+        promo.setStores(new HashSet<>(selectedStoreModels));
         promoService.addPromo(promo);
         return new ModelAndView("redirect:/marketinglanding");
     }
