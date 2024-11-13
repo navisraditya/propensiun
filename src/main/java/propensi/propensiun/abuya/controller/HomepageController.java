@@ -122,4 +122,17 @@ public class HomepageController {
         promoService.addPromo(promo);
         return new ModelAndView("redirect:/marketinglanding");
     }
+
+    @GetMapping("/access-denied")
+    public String accessDeniedPage(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null && auth.isAuthenticated()) {
+            String username = auth.getName();
+            UserModel user = userService.getUserByUsername(username);
+            model.addAttribute("user", user);
+        }
+
+        return "access-denied";
+    }
 }
