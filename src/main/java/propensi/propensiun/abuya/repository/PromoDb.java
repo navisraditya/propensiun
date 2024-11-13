@@ -13,10 +13,9 @@ import propensi.propensiun.abuya.model.PromoModel;
 @Repository
 public interface PromoDb extends JpaRepository<PromoModel, Integer> {
 
-    @Query("SELECT promo FROM PromoModel promo WHERE :uuid MEMBER OF promo.storeList")
+    @Query("SELECT promo FROM PromoModel promo WHERE :uuid MEMBER OF promo.stores")
     List<PromoModel> findPromo(@Param("uuid") Integer uuid);
 
     @Query("SELECT promo FROM PromoModel promo WHERE promo.endDate = :today")
     List<PromoModel> findByEndDate(@Param("today") LocalDate today);
-
 }

@@ -23,4 +23,11 @@ public class StoreServiceImpl implements StoreService {
     public void updateStore(StoreModel store) { storeDB.save(store); }
 
     public void deleteStore(String id) { storeDB.deleteById(Integer.valueOf(id));}
+
+    @Override
+    public List<StoreModel> getAllStoreByIds(List<Integer> listStore) {
+        List<StoreModel> selectedStores = storeDB.findAllById(listStore);
+
+        return selectedStores;
+    }
 }

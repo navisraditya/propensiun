@@ -13,4 +13,6 @@ public interface StoreService {
     void updateStore(StoreModel store);
 
     void deleteStore(String id);
+
+    List<StoreModel> getAllStoreByIds(List<Integer> listStore);
 }

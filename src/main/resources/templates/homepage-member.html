@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hello, Member!</title>
     <!-- Bootstrap CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
       body {
         display: flex;
@@ -46,98 +43,127 @@
       .user-icon:hover {
         color: #007bff;
       }
-      .footer {
-        position: relative;
-        bottom: 0;
-        min-height: 250px;
-        width: 100%;
-        text-align: center;
-        padding-top: 50px;
-        background-color: #f8f9fa;
-        font-size: 16px;
+      .promo-card {
+        margin-bottom: 20px;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s; width: 300px;
+        height: 400px;
       }
+        .promo-card:hover { 
+        transform: scale(1.05); 
+      }
+        .promo-card img { 
+        height: 150px;
+        object-fit: cover;
+      }
+        .promo-card .card-body 
+        { 
+        background-color: #f8f9fa; 
+        padding: 20px; 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: space-between;  
+      } 
+        .promo-card .card-title { 
+        font-size: 24px; 
+        font-weight: bold; 
+        color: #343a40; 
+      } 
+        .promo-card .card-text { 
+        font-size: 16px; 
+        color: #6c757d; 
+      } 
+        .promo-card .collapse { 
+        margin-top: 15px; 
+      }    
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <div th:insert="fragments/navbar-member :: nav"></div>
+<!-- Banner for Menus in carousel -->
+<section
+id="menuCarousel"
+class="carousel slide"
+data-bs-ride="carousel"
+th:if="${menus != null}"
+>
+<div class="carousel-inner">
+  <!-- Dynamically load menu items in the carousel -->
+  <div
+    th:each="menu, iterStat : ${menus}"
+    th:classappend="${iterStat.index == 0} ? 'active' : ''"
+    class="carousel-item"
+  >
+    <div>
+      <h1 th:text="${menu.title}">Menu Title</h1>
+      <p th:text="${menu.description}">Menu Description</p>
+    </div>
+  </div>
+</div>
+<!-- Carousel controls -->
+<button
+  class="carousel-control-prev"
+  type="button"
+  data-bs-target="#menuCarousel"
+  data-bs-slide="prev"
+>
+  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+  <span class="visually-hidden">Previous</span>
+</button>
+<button
+  class="carousel-control-next"
+  type="button"
+  data-bs-target="#menuCarousel"
+  data-bs-slide="next"
+>
+  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+  <span class="visually-hidden">Next</span>
+</button>
+</section>
 
-    <!-- User Icon for Logged-in User -->
-    <a href="/user-profile" class="user-icon" title="View Profile">
-      <i class="bi bi-person-circle"></i>
-      <!-- Bootstrap icon -->
-    </a>
+<section id="menuCarousel" class="carousel slide" data-bs-ride="carousel">
+<div class="carousel-inner">
+  <div class="carousel-item">
+    <h1>Almaz Fried Chicken</h1>
+  </div>
+</div>
+</section>
 
-    <!-- Banner for Menus in carousel -->
-    <section id="menuCarousel" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <!-- Dynamically load menu items in the carousel -->
-        <div
-          th:each="menu, iterStat : ${menus}"
-          th:classappend="${iterStat.index == 0} ? 'active' : ''"
-          class="carousel-item"
-        >
-          <div>
-            <h1 th:text="${menu.title}">Menu Title</h1>
-            <p th:text="${menu.description}">Menu Description</p>
-          </div>
-        </div>
-      </div>
-      <!-- Carousel controls -->
-      <button
-        class="carousel-control-prev"
-        type="button"
-        data-bs-target="#menuCarousel"
-        data-bs-slide="prev"
-      >
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button
-        class="carousel-control-next"
-        type="button"
-        data-bs-target="#menuCarousel"
-        data-bs-slide="next"
-      >
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </section>
-
-    <div class="content">
-      <!-- promo card -->
-      <section class="promos-section container">
-        <h2 class="text-center mb-4">Available Promotions</h2>
-        <div class="row">
-          <!-- Promo Cards: Dynamically load promotions -->
-          <div class="col-md-4" th:each="promo : ${promotions}">
-            <div class="card promo-card">
-              <img
-                th:src="@{${promo.imageUrl}}"
-                class="card-img-top"
-                alt="Promo Image"
-              />
-              <div class="card-body">
-                <h5 class="card-title" th:text="${promo.title}">Promo Title</h5>
-                <p class="card-text" th:text="${promo.description}">
-                  Promo Description
-                </p>
-                <a th:href="@{${promo.link}}" class="btn btn-primary"
-                  >Claim Now</a
-                >
+<div class="content">
+  <section class="promos-section container">
+      <h2 class="text-center mb-4">Available Promotions</h2>
+      <div class="row">
+          <div class="col-md-4" th:each="promo, iterStat : ${promotions}">
+              <div class="card promo-card">
+                <img src="https://drive.google.com/uc?export=view&id=1ZwUOdk9EeQozFiJ-hr95_mazf2areyTA" class="card-img-top" alt="Promo Image"/><div class="card-body">
+                      <h5 class="card-title" th:text="${promo.name}">Promo Title</h5>
+                      <p class="card-text" th:text="${promo.description}">Promo Description</p>
+                      <p class="card-text" th:text="'Berlaku hingga: ' + ${promo.endDate}">Start Date</p>
+                      <!-- <p class="card-text" th:text="">End Date</p> -->
+                      <div th:id="'collapsePromo' + ${iterStat.index}" class="collapse">
+                        <p th:text="'Kode Promo: ' + ${promo.code}"></p>
+                        <p>
+                          <span th:each="store : ${promo.stores}" th:text="'Store yang berlaku: ' + ${store.storeName}"></span>
+                          <span th:if="${promo.stores == null or promo.stores.isEmpty()}">&nbsp;</span>    
+                          </p>
+                      </div>
+                      <a class="btn btn-primary" data-bs-toggle="collapse" th:href="'#collapsePromo' + ${iterStat.index}" role="button" aria-expanded="false" aria-controls="collapsePromo">Claim Now</a>
+                  </div>
               </div>
-            </div>
           </div>
-        </div>
-      </section>
-    </div>
+      </div>
+  </section>
+</div>
+</section>
+</div>
+<footer>
+<div th:insert="fragments/footer :: footer"></div>
+</footer>
 
-    <div class="footer">
-      <p>Developed with passion by navisraditya</p>
-    </div>
-
-    <!-- Bootstrap JS and Icons -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
-  </body>
+</body>
 </html>
