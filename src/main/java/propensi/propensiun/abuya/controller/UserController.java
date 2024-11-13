@@ -3,6 +3,7 @@ package propensi.propensiun.abuya.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import propensi.propensiun.abuya.model.PeranModel;
 import propensi.propensiun.abuya.model.UserModel;
 import propensi.propensiun.abuya.service.PeranService;
@@ -62,26 +64,26 @@ public class UserController {
                 UserDetails userDetails = (UserDetails) principal;
                 String username = userDetails.getUsername();
 
-                // Coba cari user di database terlebih dahulu
+
                 UserModel user = userService.findByUsername(username);
                 if (user != null) {
                     return user;
                 }
 
-                // Jika user tidak ditemukan di database dan username adalah "admin"
+
                 if (username.equals("admin")) {
-                    // Buat objek UserModel untuk akun admin hardcoded
+                    // Buat objek UserModel
                     UserModel hardcodedAdmin = new UserModel();
                     hardcodedAdmin.setUsername("admin");
                     hardcodedAdmin.setName("Admin");
 
-                    // Set role admin secara manual
+                    // Set role
                     PeranModel adminRole = new PeranModel();
                     adminRole.setName("Admin");
                     hardcodedAdmin.setPeran(adminRole);
 
-                    // Set UUID atau ID lainnya yang diperlukan
-                    hardcodedAdmin.setUuid(-1); // Gunakan ID spesial untuk membedakan admin hardcoded
+                    // Set UUID
+                    hardcodedAdmin.setUuid(-1);
 
                     return hardcodedAdmin;
                 }
@@ -179,10 +181,6 @@ public class UserController {
     @GetMapping(value = "/profile")
     public String viewProfile(Model model, Principal principal) {
         UserModel user = getUser();
-        if (user == null || user.getPeran() == null) {
-            model.addAttribute("error", "User or role not found. Please log in.");
-            return "redirect:/login"; // Arahkan ke halaman login jika user atau role tidak ditemukan
-        }
 
         model.addAttribute("user", user);
         model.addAttribute("isCOO", user.getPeran().getName().equals("Chief Operating Officer"));
@@ -208,50 +206,52 @@ public class UserController {
     @GetMapping(value = "/edit")
     public String editProfileForm(Model model) {
         UserModel user = getUser();
-        // if (user == null) {
-        // model.addAttribute("error", "User not found.");
-        // return "redirect:/login";
-        // }
-        List<PeranModel> listRole = peranService.findAll(); // Tambahkan peran yang tersedia
+        List<PeranModel> listRole = peranService.findAll();
         model.addAttribute("listRole", listRole);
-        model.addAttribute("user", user); // Tambahkan user ke dalam model
-        return "form-edit-profile"; // Template untuk edit profile
+        model.addAttribute("user", user);
+        return "form-edit-profile";
     }
 
+
     @PostMapping(value = "/edit")
-    public String editProfileSubmit(@ModelAttribute UserModel user, Model model) {
+    public String editProfileSubmit(@ModelAttribute UserModel user, Model model, RedirectAttributes redirectAttributes) {
         UserModel currentUser = getUser();
-        if (currentUser == null || currentUser.getPeran() == null) {
-            model.addAttribute("error", "User or role not found.");
-            model.addAttribute("user", user); // Tambahkan kembali user jika terjadi error
-            return "form-edit-profile"; // Kembali ke form jika user atau role tidak ditemukan
-        }
 
-        user.setPeran(currentUser.getPeran());
-
-        if (user.getPassword() == null || user.getPassword().isEmpty()) {
-            user.setPassword(currentUser.getPassword());
-        }
-
-        if (user.getCompanyid() == null) {
-            user.setCompanyid(currentUser.getCompanyid());
-        }
-
-        user.setUuid(currentUser.getUuid()); // Menetapkan ID pengguna saat ini
-
-        // Validasi data input
-        String errorMessage = validateUserInput(user);
-        if (errorMessage != null) {
-            model.addAttribute("error", errorMessage);
-            model.addAttribute("user", user);
+        String validationError = validateUserInput(user);
+        if (validationError != null) {
+            model.addAttribute("error", validationError);
+            model.addAttribute("user", currentUser);
             return "form-edit-profile";
         }
 
-        // Update profil
-        userService.updateUser(user);
-        model.addAttribute("success", "Profile has been updated.");
-        return "redirect:/user/profile"; // Redirect ke halaman profil
+        if (user.getUsername() != null && !user.getUsername().isEmpty()) {
+            currentUser.setUsername(user.getUsername());
+        }
+        if (user.getName() != null && !user.getName().isEmpty()) {
+            currentUser.setName(user.getName());
+        }
+        if (user.getPhoneNumber() != null && !user.getPhoneNumber().isEmpty()) {
+            currentUser.setPhoneNumber(user.getPhoneNumber());
+        }
+        if (user.getSecurityQuestion() != null && !user.getSecurityQuestion().isEmpty()) {
+            currentUser.setSecurityQuestion(user.getSecurityQuestion());
+        }
+        if (user.getSecurityAnswer() != null && !user.getSecurityAnswer().isEmpty()) {
+            currentUser.setSecurityAnswer(user.getSecurityAnswer());
+        }
+
+        userService.updateUser(currentUser);
+
+        UserModel updatedUser = userService.getUserByUsername(currentUser.getUsername());
+        model.addAttribute("user", updatedUser);
+//        model.addAttribute("message", "Data anda berhasil diganti.");
+        redirectAttributes.addFlashAttribute("message", "User updated successfully!");
+
+
+        return "redirect:/user/edit?success=true";
+//        return "redirect:/user/profile?success=true";
     }
+
 
     // Metode validasi input
     private String validateUserInput(UserModel user) {
@@ -297,6 +297,7 @@ public class UserController {
         return "form-delete";
     }
 
+    @PreAuthorize("hasRole('Store Manager')")
     @GetMapping(value = "/store-manager")
     public String viewStoreManagersPage(Model model) {
         List<UserModel> storeManagers = userService.findStoreManagers();
@@ -304,6 +305,7 @@ public class UserController {
         return "store-manager-view";
     }
 
+    @PreAuthorize("hasRole('Admin')")
     @GetMapping(value = "/user-view-by-admin")
     public String viewUser(Model model) {
         List<UserModel> COO = userService.findCOO();
@@ -353,5 +355,57 @@ public class UserController {
         model.addAttribute("success", "Password has been changed");
         return "ubah-password";
     }
+
+    @GetMapping("/edit-role/{userId}")
+    public String editUserRoleForm(@PathVariable Integer userId, Model model) {
+        UserModel user = userService.findById(userId);
+        if (user == null) {
+            model.addAttribute("error", "User not found.");
+            return "redirect:/user/user-view-by-admin";
+        }
+
+        List<PeranModel> listRole = peranService.findAll();
+        model.addAttribute("user", user);
+        model.addAttribute("listRole", listRole);
+        return "form-edit-role";
+    }
+
+
+    @PostMapping("/edit-role/{userId}")
+    public String editUserRoleSubmit(@PathVariable Integer userId, @RequestParam("roleId") Integer roleId, Model model) {
+        UserModel user = userService.findById(userId);
+        if (user == null) {
+            model.addAttribute("error", "User not found.");
+            return "redirect:/user/user-view-by-admin";
+        }
+
+        PeranModel newRole = peranService.findById(roleId);
+        if (newRole == null) {
+            model.addAttribute("error", "Role not found.");
+            return "redirect:/user/edit-role/" + userId;
+        }
+
+        user.setPeran(newRole);
+        userService.updateUser(user);
+
+        model.addAttribute("success", "Role updated successfully.");
+        return "redirect:/user/user-view-by-admin";
+    }
+
+    @PostMapping("/delete-user/{userId}")
+    public String deleteUser(@PathVariable Integer userId, Model model) {
+        UserModel user = userService.findById(userId);
+        if (user == null) {
+            model.addAttribute("error", "User not found.");
+            return "redirect:/user/user-view-by-admin";
+        }
+
+
+        userService.deleteUser(user);
+
+        model.addAttribute("success", "User deleted successfully.");
+        return "redirect:/user/user-view-by-admin";
+    }
+
 
 }
