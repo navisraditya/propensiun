@@ -304,7 +304,7 @@ public class UserController {
         return "form-delete";
     }
 
-    @PreAuthorize("hasRole('Store Manager')")
+//    @PreAuthorize("hasRole('Store Manager')")
     @GetMapping(value = "/store-manager")
     public String viewStoreManagersPage(Model model) {
         List<UserModel> storeManagers = userService.findStoreManagers();
@@ -312,7 +312,7 @@ public class UserController {
         return "store-manager-view";
     }
 
-    @PreAuthorize("hasRole('Admin')")
+//    @PreAuthorize("hasRole('Admin')")
     @GetMapping(value = "/user-view-by-admin")
     public String viewUser(Model model) {
         List<UserModel> COO = userService.findCOO();

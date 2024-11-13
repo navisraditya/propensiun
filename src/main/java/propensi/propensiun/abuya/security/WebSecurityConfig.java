@@ -32,8 +32,8 @@ import org.springframework.http.HttpMethod;
                         .requestMatchers(HttpMethod.POST, "/user/addMember").permitAll()
                             .requestMatchers("/user/logout").permitAll()
                             .requestMatchers("/user/ubah-password").permitAll()
-                        .requestMatchers("/user/user-view-by-admin").hasRole("Admin")
-                        .requestMatchers("/user/store-manager").hasRole("Store Manager")
+//                        .requestMatchers("/user/user-view-by-admin").hasRole("Admin")
+//                        .requestMatchers("/user/store-manager").hasRole("Store Manager")
                             
                             // Feedback
                             // Anonymous dapat mengakses
@@ -52,10 +52,10 @@ import org.springframework.http.HttpMethod;
                             .permitAll())
                     .logout(logout -> logout
                             .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                            .logoutSuccessUrl("/redirectHomepage").permitAll())
-                .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .accessDeniedPage("/access-denied")
-                );
+                            .logoutSuccessUrl("/redirectHomepage").permitAll());
+//                .exceptionHandling(exceptionHandling -> exceptionHandling
+//                        .accessDeniedPage("/access-denied")
+//                );
             return http.build();
         }
 
