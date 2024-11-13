@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -37,14 +38,13 @@ public class HomepageController {
 
     @GetMapping("/redirectHomepage")
     public ModelAndView redirectHomepage(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication(); // fetch auth
 
         if (auth != null && auth.getAuthorities() != null) {
-            logged_user = auth.getName();
-            UserModel user = userService.getUserByUsername(logged_user);
+            logged_user = auth.getName(); // get user-name
+            UserModel user = userService.getUserByUsername(logged_user); // find UserModel based on logged user
 
-            if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_Admin"))) {
-
+            if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_Admin"))) { // role checker on logged user based on UserModel
                 System.out.println("admin login");
                 return new ModelAndView("redirect:/adminlanding");
             } else {
@@ -98,6 +98,11 @@ public class HomepageController {
     @GetMapping("/marketinglanding")
     public String marketingLanding(Model model) {
         List<PromoModel> listPromo = promoService.getPromoList(0);
+        PromoModel promo = new PromoModel();
+        List<StoreModel> listStore = storeService.getAllStores();
+        
+        model.addAttribute("new_promo", promo);
+        model.addAttribute("listStore", listStore);
         model.addAttribute("promos", listPromo);
         model.addAttribute("logged_username", logged_user);
         return "homepage-marketing";
@@ -108,19 +113,17 @@ public class HomepageController {
         return "homepage-sm";
     }
 
-    @PreAuthorize("hasRole('Chief Operating Officer')")
-    @GetMapping("/promo/add")
-    public String addPromoPage(Model model) {
-        PromoModel promo = new PromoModel();
-        List<StoreModel> listStore = storeService.findAll();
-        model.addAttribute("new_promo", promo);
-        model.addAttribute("listStore", listStore);
-        return "form-add-promo";
-    }
-
+    @PreAuthorize("hasRole('ROLE_Marketing')")
     @PostMapping("/promo/add")
     public ModelAndView addPromoPageSubmit(@ModelAttribute PromoModel promo, Model model) {
         promoService.addPromo(promo);
         return new ModelAndView("redirect:/marketinglanding");
+    }
+
+    @PreAuthorize("hasRole('ROLE_Marketing')")
+    @PostMapping("/promo/delete/{id}")
+    public String deleteInTable(@PathVariable Integer id){
+        promoService.deletePromoById(id);
+        return "redirect:/marketinglanding";
     }
 }

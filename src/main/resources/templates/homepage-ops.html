@@ -59,56 +59,8 @@
     </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <!-- Logo or Brand -->
-        <a class="navbar-brand" href="#">Almaz</a>
+    <div th:insert="fragments/navbar-ops :: nav"></div>
 
-        <!-- Toggler for mobile view -->
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Links in navbar -->
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Contact</a>
-            </li>
-          </ul>
-
-          <!-- Login button aligned right -->
-          <a
-            class="btn btn-outline-primary"
-            href="/user/ubah-password"
-            th:classappend="${onevar == 'ubahPassword'} ? active"
-            >Change Password</a
-          >
-          <br />
-          <a
-            class="btn btn-outline-primary"
-            href="/logout"
-            th:classappend="${onevar == 'logout'} ? active"
-            >Logout</a
-          >
-          <a class="btn btn-outline-primary" href="/user/profile" th:classappend="${onevar == 'profile'} ? active">View Profile</a>
-        </div>
-      </div>
-    </nav>
     <!-- <a
       class="nav-link"
       th:href="@{/logout}"
@@ -145,7 +97,7 @@
                   Gunakan section ini untuk melihat list akun yang ada di
                   perusahaan
                 </p>
-                <a th:href="@{${}}" class="btn btn-primary">Lihat List Akun</a>
+                <a th:href="@{/user/store-manager}" class="btn btn-primary">Lihat List Akun</a>
               </div>
             </div>
           </div>
@@ -166,9 +118,8 @@
       </section>
     </div>
 
-    <footer class="footer">
-      <p>Developed with passion by navisraditya</p>
-    </footer>
+    <!-- Footer Fragment -->
+    <div th:insert="fragments/footer :: footer"></div>
 
     <!-- Bootstrap JS and Icons -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>

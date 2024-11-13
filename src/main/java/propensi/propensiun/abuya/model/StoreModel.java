@@ -5,10 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import java.util.List;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.Set;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;
@@ -19,21 +18,16 @@ import jakarta.validation.constraints.Pattern;
 @NoArgsConstructor
 @Entity
 @Table(name = "store")
-// @Table(name = "admin", uniqueConstraints = {
-// @UniqueConstraint(columnNames = "username"),
-// @UniqueConstraint(columnNames = "email")
-// })
 public class StoreModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer uuid;
 
     @NotNull
     @Column(name = "storeName", nullable = false, unique = true)
     @Size(min = 5, message = "Nama Gerai harus minimal 5 karakter")
     private String storeName;
-    // private Integer managerId;
 
     @NotNull
     @Column(name = "storeAddr", nullable = false)
@@ -41,17 +35,33 @@ public class StoreModel {
     private String storeAddr;
 
     @NotNull
-    @Column(name = "storeAddrLink", nullable = false)
+    @Column(name = "storeAddrLink", nullable = false, length=10000)
     private String storeAddrLink;
 
     @NotNull
     @Column(name = "storePhone", nullable = false, unique = true)
     @Pattern(regexp = "\\d{10,13}", message = "Nomor telefon harus memiliki 10-13 digit")
     private String storePhone;
-    // private Integer rating;
-    // private List<FeedbackModel> feedbackList;
 
-    @ManyToMany(mappedBy = "storeList")
-    private List<PromoModel> listPromo;
+    // New fields for latitude and longitude
+    @Column(name = "latitude")
+    private Double latitude;
 
+    @Column(name = "longitude")
+    private Double longitude;
+
+    // Optional: Method to extract latitude and longitude from storeAddrLink
+    public void extractCoordinatesFromLink() {
+        String[] parts = storeAddrLink.split("@");
+        if (parts.length > 1) {
+            String[] coords = parts[1].split(",");
+            if (coords.length >= 2) {
+                this.latitude = Double.parseDouble(coords[0]);
+                this.longitude = Double.parseDouble(coords[1]);
+            }
+        }
+    }
+
+    @OneToMany(mappedBy = "storeList", cascade = CascadeType.ALL)
+    private Set<PromoModel> promos; 
 }
