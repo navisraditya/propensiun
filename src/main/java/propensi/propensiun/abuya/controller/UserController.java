@@ -5,6 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,11 +13,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import propensi.propensiun.abuya.model.FeedbackModel;
 import propensi.propensiun.abuya.model.PeranModel;
+import propensi.propensiun.abuya.model.StoreModel;
 import propensi.propensiun.abuya.model.UserModel;
+import propensi.propensiun.abuya.service.FeedbackService;
 import propensi.propensiun.abuya.service.PeranService;
+import propensi.propensiun.abuya.service.StoreService;
 import propensi.propensiun.abuya.service.UserService;
 
+import java.lang.reflect.Member;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
@@ -328,6 +335,8 @@ public class UserController {
 
     @PostMapping(value = "/ubah-password")
     private String ubahPasswordPost(
+        
+
             @RequestParam("oldPassword") String oldPassword,
             @RequestParam("newPassword") String newPassword,
             @RequestParam("confirmPassword") String confirmPassword,
@@ -408,4 +417,90 @@ public class UserController {
     }
 
 
+    @Autowired
+    StoreService storeService;
+
+    @Autowired
+    FeedbackService feedbackService;
+
+    @GetMapping(value = "/form-add-feedback")
+    private String getFormAddFeedback(Model model) {  
+        List<StoreModel> stores = storeService.getAllStores();
+        model.addAttribute("stores", stores);
+        return "form-add-feedback";
+    }
+
+    
+    @PostMapping(value = "/form-add-feedback")
+    private String postFormAddFeedback (
+        @RequestParam("cabang") String storeId,
+        @RequestParam("pelayanan") float pelayanan,
+        @RequestParam("menu") float menu,
+        @RequestParam("fasilitas") float fasilitas,
+        @RequestParam("kotakSaran") String kotakSaran,
+        RedirectAttributes redirectAttributes,
+        Model model) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        UserModel user;
+
+        if (auth.isAuthenticated()){
+            user = getUser();
+        } else {
+            user = null;
+        }
+
+        StoreModel store = storeService.getStoreById(storeId);
+
+        FeedbackModel feedback = new FeedbackModel(null, store, user, pelayanan, menu, fasilitas, kotakSaran);
+        System.out.println("Store ID"+store);
+        feedbackService.saveFeedback(feedback);
+        redirectAttributes.addFlashAttribute("success", "Feedback berhasil ditambahkan");
+
+        return "redirect:/user/form-add-feedback";
+    }
+
+    @GetMapping(value = "/feedback-view")
+    private String getFeedbackView(Model model) {  
+        List<FeedbackModel> feedbacks = feedbackService.getAllFeedback();
+        model.addAttribute("feedbacks", feedbacks);  
+        return "feedback-view";
+    }
+
+    @PostMapping(value = "/feedback-view")
+    private String feedbackView (Model model) {
+        return "feedback-view";
+    }
+
+    @GetMapping(value = "/lupa-password-verif")
+    private String verifLupaPassword(Model model) {
+        return "lupa-password-verif";
+    }
+
+    @PostMapping(value = "/lupa-password-verif")
+    private String verifLupaPassword(
+            @RequestParam("username") String username,
+            Model model) {
+
+        UserModel user = getUser();
+        System.out.println(username);
+
+        if (userService.isUsernameTaken(username)) {
+            if (user.getPeran().getUuid() == 4){
+                return "lupa-password-verif";
+            } else {
+                model.addAttribute("error", "Fitur Lupa Password hanya bisa diakses untuk member");
+                return "lupa-password-verif";
+            }
+        } else {
+            model.addAttribute("error", "Username tidak ditemukan");
+            return "lupa-password-verif";
+        }
+    }
+
+    @GetMapping(value = "/lupa-password")
+    private String lupaPassword(Model model) {
+        return "lupa-password";
+    }
 }
