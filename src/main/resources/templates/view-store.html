@@ -7,7 +7,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            padding-top: 80px;
+            padding-top: 120px;
+            font-family: Inter;
+        }
+
+        .h1 {
+            font-weight: 700px;
         }
         .add-button {
             background-color: #ff671f; /* Background color */
@@ -45,9 +50,13 @@
         .card {
             border-radius: 30px;
         }
+
+        .card-body {
+            padding: 25px;
+        }
         .card-title {
             color: #ff671f;
-            font-weight: 700;
+            font-weight: 1000;
         }
         .edit-button,
         .delete-button {
@@ -55,10 +64,13 @@
             text-decoration: none;
             margin-left: 10px; /* Space between buttons */
             transition: transform 0.2s ease; /* Smooth transform */
+            text-decoration: none;
         }
         .edit-button:hover,
         .delete-button:hover {
             transform: scale(1.2); /* Enlarge on hover */
+            text-decoration: none;
+            transition: transform 0.2s ease; /* Smooth transform */
         }
         .delete-button {
             color: red; /* Make delete button red */
@@ -106,20 +118,31 @@
             z-index: 999;
         }
 
-        /* Button styles in notification box */
-        .confirm-button, .cancel-button {
+        /* General button styles */
+        .confirm-button, .cancel-button, .btn {
             padding: 8px 20px;
             border: none;
             border-radius: 20px;
             font-size: 16px;
-            margin: 10px 5px;
             cursor: pointer;
         }
 
-        .confirm-button {
+        /* Button styles in notification box */
+        .confirm-button, .cancel-button, .btn {
+            margin: 10px 5px;
+        }
+
+        .confirm-button, .btn-primary {
             background-color: #ff671f; /* Background color */
             color: white; /* Text color */
             border: none; /* Remove border */
+        }
+
+        .confirm-button:hover, .confirm-button:active, .btn-primary:hover, .btn-primary:active {
+            background-color: #ff671f; /* Background color */
+            color: white; /* Text color */
+            border: none; /* Remove border */
+            text-decoration: none;
         }
 
          /* Success Notification Box */
@@ -129,59 +152,153 @@
             left: 50%;
             transform: translateX(-50%);
             width: 300px;
-            padding: 20px;
             background-color: #d4edda; /* Light green for success */
             color: #155724; /* Dark green text */
             border-radius: 25px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             display: none; /* Hidden by default */
-            z-index: 1000;
+            z-index: 9999;
             text-align: center;
             font-family: Inter;
+        }
+
+        /* Error Notification Box */
+        .error-notification {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            background-color: #f8d7da; /* Light red for error */
+            color: #721c24; /* Dark red text */
+            border-radius: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none; /* Hidden by default */
+            z-index: 9999;
+            text-align: center;
+            font-family: Inter;
+        }
+
+
+        .success-notification p, .error-notification p {
+            margin: 10px;
+            padding: 0; /* Remove padding if there's any */
+            line-height: 1.5; /* Adjust line height to center text */
+            display: inline-block; /* Ensure text is treated as an inline block */
+            vertical-align: middle; /* Align the text in the middle */
+        }
+
+        #errorMessage {
+            white-space: pre-line; /* Ensures line breaks from innerHTML are respected */
         }
     </style>
 </head>
 <body>
 <div th:insert="fragments/navbar-guest :: nav"></div>
 <div class="container my-4">
-    <h1 class="text-center mb-4">Gerai</h1>
+    <h1 class="text-center mb-4">
+        <span th:if="${user.peran.uuid == 1 or user.peran.uuid == 2}">Manajemen Gerai</span>
+        <span th:if="${user.peran.uuid == 5}">Temukan Gerai Kami</span>
+    </h1>
 
     <div class="text-center mb-4">
-        <button class="add-button" data-bs-toggle="modal" data-bs-target="#addStoreModal">Tambah</button> <!-- Button to trigger modal -->
+        <button class="add-button" data-bs-toggle="modal" data-bs-target="#addStoreModal"
+                th:if="${user.peran.uuid == 1}">
+                Tambah
+        </button> <!-- Button to trigger modal -->
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger">
+        <p th:text="${errorMessage}"></p>
     </div>
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col" th:each="store : ${stores}">
             <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex-align"> <!-- Flex container for title and icons -->
+                <div class="card-body" id="store-card-${store.uuid}">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <!-- Static Store Display -->
                         <h5 class="card-title" th:text="${store.storeName}">Store Name</h5>
                         <div>
+                            <button class="btn btn-link edit-button" onclick="toggleEditForm('${store.uuid}')" th:if="${user.peran.uuid == 1 or user.peran.uuid == 2}"
+                                    style="background: none; border: none; color: #ff671f; padding: 0;">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
                             <form th:action="@{/gerai/hapus/{idGerai}(idGerai=${store.uuid})}"
+                                  th:if="${user.peran.uuid == 1}"
                                   method="post"
-                                  onsubmit="return handleSubmit(event)">
+                                  onsubmit="return handleSubmit(event)"
+                                  style="display:inline;">
                                 <input type="hidden" name="_method" value="DELETE" />
                                 <button type="submit" class="delete-button" style="background: none; border: none; color: red; padding: 0;">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </form>
-                            <a th:href="@{/gerai/ubah/{idGerai}(idGerai=${store.uuid})}" class="edit-button">
-                                <i class="fas fa-pencil-alt"></i>
-                            </a>
                         </div>
                     </div>
-                    <p class="card-text">
-                        <strong>Address:</strong> <span th:text="${store.storeAddr}">Store Address</span><br>
-                        <strong>Phone:</strong> <span th:text="${store.storePhone}">Store Phone</span><br>
-                    </p>
-                    <embed
-                            th:src="'https://www.google.com/maps/embed/v1/view?key=AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao&amp;center=' + ${store.latitude} + ',' + ${store.longitude} + '&amp;zoom=20'"
-                            class="map-embed"
-                            allowfullscreen
-                            loading="lazy"
-                            type="text/html"
-                            width="100%"
-                            height="250px" />
+                    <!-- Display Mode -->
+                    <div id="display-mode-${store.uuid}">
+                        <p class="card-text">
+                        <div class="d-flex flex-column align-items-start">
+                            <div class="d-flex align-items-start mb-2">
+                                <i class="fa-solid fa-store"></i>
+                                <span class="ms-2" th:text="${store.storeAddr}" style="text-align: justify; flex: 1;">Lokasi</span> <!-- Add margin start, justify text, and flex-grow to ensure alignment -->
+                            </div>
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-phone"></i>
+                                <span class="ms-2" th:text="${store.storePhone}" style="text-align: justify; flex: 1;">Telefon</span> <!-- Add margin start, justify text, and flex-grow -->
+                            </div>
+                        </div>
+                        </p>
+
+                        <embed th:src="'https://www.google.com/maps/embed/v1/view?key=AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao&amp;center=' + ${store.latitude} + ',' + ${store.longitude} + '&amp;zoom=20'"
+                               class="map-embed"
+                               allowfullscreen
+                               loading="lazy"
+                               width="100%"
+                               height="250px" />
+
+                        <p class="card-text text-center" th:if="${user.peran.uuid == 1 or user.peran.uuid == 2}" style="background-color: #f1f1f1; border-radius: 15px; padding: 1px; margin-top: 15px;">
+                            <i class="fa-solid fa-user-tie"></i>
+                            <span class="ms-2" th:text="${store.storeManager != null ? store.storeManager.name : 'Belum dipilih'}">Store Manager</span><!-- Add margin start -->
+                        </p>
+                    </div>
+
+                    <!-- Edit Mode (hidden by default) -->
+                    <div id="edit-mode-${store.uuid}" style="display: none;">
+                        <form th:action="@{/gerai/ubah/{idGerai}(idGerai=${store.uuid})}" th:object="${store}" method="POST">
+                            <div class="mb-3">
+                                <label for="storeName-${store.uuid}" class="form-label"><strong>Nama Gerai:</strong></label>
+                                <input class="form-control" type="text" id="storeName-${store.uuid}" name="storeName" th:value="${store.storeName}" required minlength="5" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="storeAddr-${store.uuid}" class="form-label"><Strong>Alamat:</Strong></label>
+                                <input class="form-control" type="text" id="storeAddr-${store.uuid}" name="storeAddr" th:value="${store.storeAddr}" required minlength="7" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="storeAddrLink" class="form-label"><strong>Lokasi (Google Maps):</strong></label>
+                                <input class="form-control" type="text" id="storeAddrLink-${store.uuid}" name="storeAddrLink" th:value="${store.storeAddrLink}" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="storePhone-${store.uuid}" class="form-label"><strong>Nomor Telefon:</strong></label>
+                                <input class="form-control" type="tel" id="storePhone-${store.uuid}" name="storePhone" th:value="${store.storePhone}" required pattern="^\d{10,13}$" title="Nomor telefon harus 10-13 digit" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="storeManager-${store.uuid}" class="form-label">Store Manager:</label>
+                                <select name="storeManager" class="form-select">
+                                    <option th:value="${store.storeManager?.uuid}" th:text="${store.storeManager?.name ?: 'Pilih Store Manager'}" selected>
+                                    <option th:each="user : ${listStoreManager}"
+                                            th:value="${user.uuid}"
+                                            th:text="${user.name}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="text-center">
+                                <button class="btn btn-primary" type="submit" onclick="return handleUbah(event)">Simpan</button>
+                                <button class="btn btn-secondary" type="button" onclick="toggleEditForm('${store.uuid}')">Batal</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -197,30 +314,48 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form th:action="@{/gerai/tambah}" th:object="${store}" method="POST">
+                <form th:action="@{/gerai/tambah}" th:object="${store}" method="post" onsubmit="return handleTambah(event)">
+                    <!-- Store Name -->
                     <div class="mb-3">
                         <label for="storeName" class="form-label">Nama Gerai:</label>
-                        <input class="form-control" type="text" id="create-storeName" name="storeName" required minlength="5" />
-                        <div class="text-danger" id="create-storeNameError"></div>
+                        <input class="form-control" type="text" id="storeName" th:field="*{storeName}" required minlength="5" oninput="checkStoreName()" />
+                        <p id="storeNameError" style="color: red; display: none;">Nama Gerai sudah digunakan! Harap pilih nama lain.</p>
                     </div>
 
+                    <!-- Store Address -->
                     <div class="mb-3">
                         <label for="storeAddr" class="form-label">Alamat:</label>
-                        <input class="form-control" type="text" id="create-storeAddr" name="storeAddr" required minlength="7" />
+                        <input class="form-control" type="text" id="storeAddr" name="storeAddr" required minlength="7" oninput="checkStoreAddr(this.value)" />
                         <div class="text-danger" id="create-storeAddrError"></div>
                     </div>
 
+                    <!-- Store Address Link -->
                     <div class="mb-3">
                         <label for="storeAddrLink" class="form-label">Lokasi:</label>
-                        <input class="form-control" type="url" id="storeAddrLink" name="storeAddrLink" required />
+                        <input class="form-control" type="url" id="storeAddrLink" name="storeAddrLink" required oninput="checkStoreAddrLink(this.value)" />
                         <div class="text-danger" id="storeAddrLinkError"></div>
                     </div>
 
+                    <!-- Store Phone -->
                     <div class="mb-3">
                         <label for="storePhone" class="form-label">Telepon:</label>
-                        <input class="form-control" type="text" id="storePhone" name="storePhone" required pattern="[0-9]+" minlength="10" maxlength="13" />
-                        <div class="text-danger" id="storePhoneError"></div>
+                        <input class="form-control" type="text" id="storePhone" name="storePhone" required pattern="[0-9]+" minlength="10" maxlength="13" oninput="checkStorePhone()" />
+                        <div class="text-danger" id="storePhoneError" style="display: none;"></div> <!-- Error will appear here -->
                     </div>
+
+                    <!-- Store Manager -->
+                    <div class="mb-3">
+                        <label for="storeManager" class="form-label">Store Manager:</label>
+                        <select name="storeManager" class="form-select">
+                            <option selected value="">Pilih Store Manager</option>
+                            <option th:each="user : ${listStoreManager}"
+                                    th:value="${user.uuid}"
+                                    th:text="${user.name}">
+                            </option>
+                        </select>
+                    </div>
+                    <!-- Submit Button -->
+                    <br>
                     <div class="text-center mb-4">
                         <button type="submit" class="confirm-button">Simpan</button>
                     </div>
@@ -239,7 +374,11 @@
 </div>
 
 <div class="success-notification" id="successNotification">
-    <p>Gerai berhasil dihapus!</p>
+    <p id="successMessage"></p>
+</div>
+
+<div class="error-notification" id="errorNotification">
+    <p id="errorMessage"></p>
 </div>
 
 <div class="overlay" id="overlay"></div>
@@ -247,6 +386,149 @@
 <footer>
     <div th:insert="fragments/footer :: footer"></div>
 </footer>
+
+<script>
+    // Function to check storeName
+    async function checkStoreName() {
+        const storeName = document.getElementById("storeName").value;
+        const errorElement = document.getElementById("storeNameError");
+
+        if (storeName.length >= 5) {
+            try {
+                const response = await fetch(`/gerai/check-store-name?storeName=${encodeURIComponent(storeName)}`);
+                const exists = await response.json();
+                if (exists) {
+                    errorElement.style.display = "block";
+                    errorElement.innerText = "Nama Gerai sudah dipakai.";
+                    return false; // Name exists
+                } else {
+                    errorElement.style.display = "none";
+                    return true; // Name is unique
+                }
+            } catch (error) {
+                console.error("Error checking store name:", error);
+                return false; // Error in check
+            }
+        } else {
+            errorElement.style.display = "block";
+            errorElement.innerText = "Nama Gerai minimal 5 karakter.";
+            return false; // Name too short
+        }
+    }
+
+    // Function to check storeAddr
+    function checkStoreAddr(storeAddr) {
+        const storeAddrError = document.getElementById("create-storeAddrError");
+        if (storeAddr.length >= 7) {
+            storeAddrError.style.display = "none"; // Hide error if valid
+            return true; // Valid address
+        } else {
+            storeAddrError.style.display = "block";
+            storeAddrError.innerText = "Alamat harus minimal 7 karakter.";
+            return false; // Invalid address
+        }
+    }
+
+    // Function to check storeAddrLink
+    function checkStoreAddrLink(storeAddrLink) {
+        const storeAddrLinkError = document.getElementById("storeAddrLinkError");
+        const urlPattern = /^https?:\/\/[^\s/$.?#].[^\s]*$/i; // Simple URL pattern
+        if (urlPattern.test(storeAddrLink)) {
+            storeAddrLinkError.style.display = "none"; // Hide error if valid
+            return true; // Valid URL
+        } else {
+            storeAddrLinkError.style.display = "block";
+            storeAddrLinkError.innerText = "Alamat URL tidak valid.";
+            return false; // Invalid URL
+        }
+    }
+
+    // Function to check storePhone
+    async function checkStorePhone() {
+        const storePhone = document.getElementById("storePhone").value;
+        const storePhoneError = document.getElementById("storePhoneError");
+        const phonePattern = /^[0-9]{10,13}$/; // Phone should be 10-13 digits
+
+        // Reset the error message
+        storePhoneError.style.display = "none";
+
+        // Check if the phone number matches the pattern
+        if (phonePattern.test(storePhone)) {
+            try {
+                const response = await fetch(`/gerai/check-store-phone?storePhone=${encodeURIComponent(storePhone)}`);
+                const exists = await response.json();
+                if (exists) {
+                    storePhoneError.style.display = "block";
+                    storePhoneError.innerText = "Nomor Telepon sudah digunakan. Harap pilih nomor lain.";
+                    return false; // Phone number already exists
+                }
+                return true; // Phone is valid and unique
+            } catch (error) {
+                console.error("Error checking store phone:", error);
+                return false; // Error in phone check
+            }
+        } else {
+            storePhoneError.style.display = "block";
+            storePhoneError.innerText = "Nomor Telepon harus terdiri dari 10-13 digit.";
+            return false; // Invalid phone format
+        }
+    }
+</script>
+
+<script>
+    let currentTambahForm;
+
+    async function handleTambah(event) {
+        event.preventDefault(); // Prevent default form submission
+        currentTambahForm = event.target; // Store the current form for later use
+
+        const storeName = document.getElementById("storeName").value;
+        const storeAddr = document.getElementById("storeAddr").value;
+        const storeAddrLink = document.getElementById("storeAddrLink").value;
+        const storePhone = document.getElementById("storePhone").value;
+
+        let isValid = true; // Track if the form is valid
+
+        // Check storeName
+        if (storeName.length < 5) {
+            showErrorNotification("Nama Gerai minimal 5 karakter.");
+            isValid = false;
+        } else {
+            try {
+                const storeNameExists = await fetch(`/gerai/check-store-name?storeName=${encodeURIComponent(storeName)}`)
+                    .then(response => response.json());
+
+                if (storeNameExists) {
+                    showErrorNotification("Penambahan gerai gagal. Nama Gerai sudah dipakai.");
+                    isValid = false;
+                }
+            } catch (error) {
+                console.error("Error checking store name:", error);
+                isValid = false;
+            }
+        }
+
+        // If storeName is valid, check other fields
+        if (isValid) {
+            checkStoreAddr(storeAddr);
+            checkStoreAddrLink(storeAddrLink);
+
+            // Check phone number uniqueness asynchronously
+            const phoneIsValid = await checkStorePhone(storePhone);
+            if (!phoneIsValid) {
+                isValid = false;
+            }
+        }
+
+        // Only submit if all checks pass
+        if (isValid) {
+            showSuccessNotification("Gerai berhasil ditambahkan!");
+            setTimeout(() => {
+                currentTambahForm.submit(); // Submit the form after all checks pass
+            }, 5000); // Optional delay before submission
+        }
+    }
+</script>
 
 <script>
     let currentForm; // Store reference to the form for deletion
@@ -265,7 +547,7 @@
 
     function confirmDeletion() {
         hideNotification();
-        showSuccessNotification();
+        showSuccessNotification("Gerai berhasil dihapus!");
 
         setTimeout(() => {
                 currentForm.submit();
@@ -288,19 +570,65 @@
     }
 
     // Function to show the success notification briefly
-        function showSuccessNotification() {
-            const successNotification = document.getElementById('successNotification');
-            successNotification.style.display = 'block';
+    function showSuccessNotification(message) {
+        document.getElementById('successMessage').innerText = message; // Set message
+        const successNotification = document.getElementById('successNotification');
+        successNotification.style.display = 'block';
 
-            setTimeout(() => {
-                successNotification.style.display = 'none';
-            }, 3000); // Hide after 3 seconds
-        }
+        setTimeout(() => {
+            successNotification.style.display = 'none'; // Hide after 3 seconds
+        }, 3000);
+    }
+
 
     // Add Bootstrap's JS via CDN
     const script = document.createElement('script');
     script.src = "https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js";
     document.body.appendChild(script);
 </script>
+
+<script>
+    let currentUbahForm; // Store reference to the form for submission
+
+    function handleUbah(event) {
+        event.preventDefault(); // Prevent default form submission
+        currentUbahForm = event.target.form; // Store the form instead of the button
+        showSuccessNotification("Data Gerai berhasil diubah!");
+        setTimeout(() => {
+            currentUbahForm.submit(); // Submit the form after 5 seconds
+        }, 5000);
+    }
+
+    // Function to show the success notification briefly
+    function showSuccessNotification(message) {
+        document.getElementById('successMessage').innerText = message; // Set message
+        const successNotification = document.getElementById('successNotification');
+        successNotification.style.display = 'block';
+
+        setTimeout(() => {
+            successNotification.style.display = 'none'; // Hide after 3 seconds
+        }, 3000);
+    }
+</script>
+
+<script>
+    function toggleEditForm(storeId) {
+        const displayMode = document.getElementById(`display-mode-${storeId}`);
+        const editMode = document.getElementById(`edit-mode-${storeId}`);
+
+        // Toggle visibility between display and edit modes
+        if (displayMode.style.display === 'none') {
+            displayMode.style.display = 'block';
+            editMode.style.display = 'none';
+        } else {
+            displayMode.style.display = 'none';
+            editMode.style.display = 'block';
+        }
+    }
+</script>
+<!-- Add Bootstrap's JS via CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js"></script>
+
 </body>
 </html>
