@@ -36,4 +36,6 @@ public interface UserService {
     List<UserModel> findMarketing();
 
     List<UserModel> findCOO();
+
+    UserModel findById(Integer id);
 }
