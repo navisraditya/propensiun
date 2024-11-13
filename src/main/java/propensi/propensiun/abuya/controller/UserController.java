@@ -289,8 +289,8 @@ public class UserController {
 
         if (role.equals("Member") || role.equals("Admin")) {
             userService.deleteUser(user);
-            SecurityContextHolder.clearContext(); // Logout setelah akun dihapus
-            return "redirect:/user/login";
+            SecurityContextHolder.clearContext();
+            return "redirect:/";
         }
 
         model.addAttribute("error", "Anda tidak memiliki izin untuk menghapus akun ini.");
