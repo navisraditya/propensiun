@@ -57,4 +57,7 @@ public class UserModel implements Serializable {
     @NotNull(message = "Security answer cannot be empty.")
     @Column(name = "securityAnswer", nullable = true)
     private String securityAnswer;
+
+    @OneToOne(mappedBy = "storeManager", fetch=FetchType.LAZY)
+    private StoreModel store;
 }

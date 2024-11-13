@@ -38,4 +38,5 @@ public interface UserService {
     List<UserModel> findCOO();
 
     UserModel findById(Integer id);
+    UserModel getCurrentAuthenticatedUser();
 }

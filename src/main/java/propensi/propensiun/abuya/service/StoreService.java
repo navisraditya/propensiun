@@ -13,4 +13,11 @@ public interface StoreService {
     void updateStore(StoreModel store);
 
     void deleteStore(String id);
+
+    boolean existsByStoreName(String storeName);
+    boolean existsByStorePhone(String storePhone);
+    boolean isStoreNameInUse(String storeName, Integer storeUuid);
+    boolean isStorePhoneInUse(String storePhone, Integer storeUuid);
+
+    List<StoreModel> getAllStoreByIds(List<Integer> listStore);
 }

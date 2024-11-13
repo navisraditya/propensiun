@@ -32,6 +32,9 @@
           <li class="nav-item">
             <a class="nav-link" href="#">Contact</a> 
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="user/form-add-feedback">Feedback</a> 
+          </li>
         </ul>
           
         <!-- Button aligned right -->
@@ -40,6 +43,10 @@
           href="/login"
           th:classappend="${onevar == 'login'} ? active"
           >Login</a>
+          
+        <a
+        class="btn btn-outline-light nav-button"
+        href="/user/addMember">Register</a>
 
       </div>
     </div>
