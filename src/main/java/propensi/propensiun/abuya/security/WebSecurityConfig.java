@@ -15,6 +15,7 @@ import org.springframework.http.HttpMethod;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -30,8 +31,9 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/user/addMember").permitAll()
                         .requestMatchers("/user/logout").permitAll()
                         .requestMatchers("/user/ubah-password").permitAll()
+                        .requestMatchers("/user/user-view-by-admin").hasRole("Admin")
+                        .requestMatchers("/user/store-manager").hasRole("Store Manager")
                         .anyRequest().authenticated()
-
                 )
                 .formLogin(formLogin -> formLogin
                         .loginProcessingUrl("/user/login")
@@ -39,7 +41,10 @@ public class WebSecurityConfig {
                         .permitAll())
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .logoutSuccessUrl("/redirectHomepage").permitAll());
+                        .logoutSuccessUrl("/redirectHomepage").permitAll())
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .accessDeniedPage("/access-denied")
+                );
         return http.build();
     }
 
