@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Role</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            margin-top: 80px; /* Pastikan konten tidak tertutup oleh navbar */
+        }
+        footer {
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 14px;
+        }
+        .btn-delete {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar Fragment -->
+<div th:insert="fragments/navbar-admin :: nav"></div>
+
+<div class="content container">
+    <h1>Editing <span th:text="${user.name}">User Name</span></h1>
+
+    <form th:action="@{/user/edit-role/{userId}(userId=${user.uuid})}" method="post">
+        <div class="mb-3">
+            <label for="role" class="form-label">Select New Role:</label>
+            <select id="role" name="roleId" class="form-select" required>
+                <option value="" disabled selected>Select Role</option>
+                <th:block th:each="role : ${listRole}">
+                    <option th:value="${role.uuid}" th:text="${role.name}"
+                            th:selected="${role.uuid == user.peran.uuid}"></option>
+                </th:block>
+            </select>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Update Role</button>
+            <a th:href="@{/user/user-view-by-admin}" class="btn btn-secondary">Cancel</a>
+            <!-- Tombol Delete -->
+            <button type="button" class="btn btn-danger btn-delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                Delete User
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Modal Konfirmasi Hapus -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this user? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form th:action="@{/user/delete-user/{userId}(userId=${user.uuid})}" method="post">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer Fragment -->
+<footer>
+    <div th:insert="fragments/footer :: footer"></div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

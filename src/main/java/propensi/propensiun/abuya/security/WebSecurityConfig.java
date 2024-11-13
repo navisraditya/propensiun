@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -22,9 +23,11 @@ public class WebSecurityConfig {
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/js/**").permitAll()
                         .requestMatchers("/resources/**").permitAll()
-                        .requestMatchers("/user/login").permitAll()
-                        // below, dev purpose only
-                        .requestMatchers("/user/add").permitAll()
+                        .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/styles/**").permitAll()
+                        // below, dev purpose onlz
+                        .requestMatchers(HttpMethod.GET, "/user/addMember").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user/addMember").permitAll()
                         .requestMatchers("/user/logout").permitAll()
                         .requestMatchers("/user/ubah-password").permitAll()
                         .anyRequest().authenticated()

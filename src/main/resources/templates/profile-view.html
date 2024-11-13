@@ -1,55 +1,114 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        .content {
+            flex: 1;
+            padding: 80px 20px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .profile-card {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        .profile-card h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .profile-card p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .profile-card .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .profile-card .actions a {
+            width: 48%;
+        }
+        .footer {
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            padding-top: 20px;
+            background-color: #f8f9fa;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Profile of <span th:text="${user.name}">User Name</span></h1>
-
-<div>
-    <p><strong>Username:</strong> <span th:text="${user.username}">user.username</span></p>
-    <p><strong>Company ID:</strong> <span th:text="${user.companyid}">user.companyid</span></p>
-    <p><strong>Role:</strong> <span th:text="${user.peran.name}">user.peran.name</span></p>
+<!-- Insert appropriate navbar based on user role -->
+<div th:switch="${user.peran.name}">
+    <div th:case="'Admin'" th:insert="fragments/navbar-admin :: navbar"></div>
+    <div th:case="'Marketing'" th:insert="fragments/navbar-marketing :: navbar"></div>
+    <div th:case="'Member'" th:insert="fragments/navbar-member :: navbar"></div>
+    <div th:case="'Chief Operating Officer'" th:insert="fragments/navbar-ops :: navbar"></div>
+    <div th:case="'Store Manager'" th:insert="fragments/navbar-sm :: navbar"></div>
 </div>
 
-<!-- Display Edit and Delete buttons for Members -->
-<div th:if="${showEditButton}">
-    <a href="/user/edit" class="btn btn-primary">Edit Profile</a>
-    <a href="/user/delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this account?');">Delete Account</a>
+<div class="content">
+    <div class="profile-card">
+        <h1>Profile of <span th:text="${user.name}">User Name</span></h1>
+
+        <p><strong>Username:</strong> <span th:text="${user.username}">user.username</span></p>
+        <p><strong>Company ID:</strong> <span th:text="${user.companyid}">user.companyid</span></p>
+        <p><strong>Role:</strong> <span th:text="${user.peran.name}">user.peran.name</span></p>
+        <p><strong>Phone Number:</strong> <span th:text="${user.phoneNumber}">user.phoneNumber</span></p>
+
+        <div class="actions">
+            <a href="/user/edit"
+               class="btn btn-primary"
+               th:classappend="${user.peran.name != 'Member' && user.peran.name != 'Admin'} ? 'w-100' : ''"
+               style="text-align: center;">
+                Edit Profile
+            </a>
+            <a href="/user/delete"
+               class="btn btn-danger"
+               th:if="${user.peran.name == 'Member' || user.peran.name == 'Admin'}"
+               onclick="return confirm('Are you sure you want to delete this account?');">
+                Delete Account
+            </a>
+        </div>
+
+        <!-- Tombol Kembali ke Homepage -->
+        <div class="mt-3">
+            <a th:href="${user.peran.name == 'Admin' ? '/adminlanding'
+                      : user.peran.name == 'Member' ? '/memberlanding'
+                      : user.peran.name == 'Marketing' ? '/marketinglanding'
+                      : user.peran.name == 'Store Manager' ? '/smlanding'
+                      : user.peran.name == 'Chief Operating Officer' ? '/opslanding'
+                      : '/'}"
+               class="btn btn-info w-100 mt-3">Back to Homepage</a>
+        </div>
+    </div>
 </div>
 
-<!-- Display COO-specific content: Link to Store Manager View -->
-<div th:if="${isCOO}">
-    <h2>COO Actions</h2>
-    <a href="/user/store-manager" class="btn btn-info">View Store Managers</a>
-</div>
+<div th:insert="fragments/footer :: footer"></div>
 
-<!-- Display specific content for COO and Managers -->
-<div th:if="${cooAndManagers}">
-    <h2>COO and Managers List</h2>
-    <ul>
-        <li th:each="manager : ${cooAndManagers}">
-            <span th:text="${manager.name}">Manager Name</span> - <span th:text="${manager.peran.name}">Manager Role</span>
-        </li>
-    </ul>
-</div>
-
-<!-- Display specific content for Regional Manager role -->
-<div th:if="${storeManagers}">
-    <h2>Store Managers List</h2>
-    <ul>
-        <li th:each="storeManager : ${storeManagers}">
-            <span th:text="${storeManager.name}">Store Manager Name</span> - <span th:text="${storeManager.peran.name}">Store Manager Role</span>
-        </li>
-    </ul>
-</div>
-
-<!-- Optional Logout Button -->
-<div>
-    <a href="/logout" class="btn btn-secondary">Logout</a>
-</div>
-
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

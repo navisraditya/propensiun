@@ -22,4 +22,9 @@ public class PeranServiceImpl implements PeranService {
     public void addPeran(PeranModel peran) {
         peranDb.save(peran);
     }
+
+    @Override
+    public PeranModel findById(Integer id) {
+        return  peranDb.findById((long)id).orElse(null);
+    }
 }
