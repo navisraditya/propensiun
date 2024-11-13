@@ -9,4 +9,6 @@ import java.util.List;
 public interface PeranService {
     List<PeranModel> findAll();
     void addPeran(PeranModel peran);
+
+    PeranModel findById(Integer id);
 }
