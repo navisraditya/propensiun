@@ -7,10 +7,14 @@ import jakarta.validation.constraints.Null;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import propensi.propensiun.abuya.model.UserModel;
 import propensi.propensiun.abuya.repository.UserDb;
+import propensi.propensiun.abuya.security.UserDetailsServiceImpl;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -181,8 +185,18 @@ public class UserServiceImpl implements UserService {
         return userDb.findStoreManagers();
     }
 
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
+    @Override
+    @Transactional
     public void updateUser(UserModel user) {
         userDb.save(user);
+
+        UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                updatedUserDetails, updatedUserDetails.getPassword(), updatedUserDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     public boolean isUsernameTaken(String username) {
@@ -195,5 +209,11 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(UserModel user) {
         userDb.delete(user);
     }
+
+    @Override
+    public UserModel findById(Integer id) {
+        return userDb.findById(id).orElse(null);
+    }
+
 
 }
