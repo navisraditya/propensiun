@@ -260,7 +260,7 @@
 
                         <p class="card-text text-center" th:if="${user.peran.uuid == 1 or user.peran.uuid == 2}" style="background-color: #f1f1f1; border-radius: 15px; padding: 1px; margin-top: 15px;">
                             <i class="fa-solid fa-user-tie"></i>
-                            <span class="ms-2" th:text="${store.storeManager.name}">Store Manager</span> <!-- Add margin start -->
+                            <span class="ms-2" th:text="${store.storeManager != null ? store.storeManager.name : 'Belum dipilih'}">Store Manager</span><!-- Add margin start -->
                         </p>
                     </div>
 
@@ -315,29 +315,35 @@
             </div>
             <div class="modal-body">
                 <form th:action="@{/gerai/tambah}" th:object="${store}" method="post" onsubmit="return handleTambah(event)">
+                    <!-- Store Name -->
                     <div class="mb-3">
                         <label for="storeName" class="form-label">Nama Gerai:</label>
-                        <input class="form-control" type="text" th:field="*{storeName}" required minlength="5" oninput="checkStoreName()" />
+                        <input class="form-control" type="text" id="storeName" th:field="*{storeName}" required minlength="5" oninput="checkStoreName()" />
                         <p id="storeNameError" style="color: red; display: none;">Nama Gerai sudah digunakan! Harap pilih nama lain.</p>
                     </div>
 
+                    <!-- Store Address -->
                     <div class="mb-3">
                         <label for="storeAddr" class="form-label">Alamat:</label>
-                        <input class="form-control" type="text" id="create-storeAddr" name="storeAddr" required minlength="7" />
+                        <input class="form-control" type="text" id="storeAddr" name="storeAddr" required minlength="7" oninput="checkStoreAddr(this.value)" />
                         <div class="text-danger" id="create-storeAddrError"></div>
                     </div>
 
+                    <!-- Store Address Link -->
                     <div class="mb-3">
                         <label for="storeAddrLink" class="form-label">Lokasi:</label>
-                        <input class="form-control" type="url" id="storeAddrLink" name="storeAddrLink" required />
+                        <input class="form-control" type="url" id="storeAddrLink" name="storeAddrLink" required oninput="checkStoreAddrLink(this.value)" />
                         <div class="text-danger" id="storeAddrLinkError"></div>
                     </div>
 
+                    <!-- Store Phone -->
                     <div class="mb-3">
                         <label for="storePhone" class="form-label">Telepon:</label>
-                        <input class="form-control" type="text" id="storePhone" name="storePhone" required pattern="[0-9]+" minlength="10" maxlength="13" />
-                        <div class="text-danger" th:if="${storePhoneError}" th:text="${storePhoneError}"></div>
+                        <input class="form-control" type="text" id="storePhone" name="storePhone" required pattern="[0-9]+" minlength="10" maxlength="13" oninput="checkStorePhone()" />
+                        <div class="text-danger" id="storePhoneError" style="display: none;"></div> <!-- Error will appear here -->
                     </div>
+
+                    <!-- Store Manager -->
                     <div class="mb-3">
                         <label for="storeManager" class="form-label">Store Manager:</label>
                         <select name="storeManager" class="form-select">
@@ -348,6 +354,7 @@
                             </option>
                         </select>
                     </div>
+                    <!-- Submit Button -->
                     <br>
                     <div class="text-center mb-4">
                         <button type="submit" class="confirm-button">Simpan</button>
@@ -381,74 +388,145 @@
 </footer>
 
 <script>
-    function checkStoreName() {
+    // Function to check storeName
+    async function checkStoreName() {
         const storeName = document.getElementById("storeName").value;
         const errorElement = document.getElementById("storeNameError");
 
-        if(storeName.length >= 5) {
-            fetch(`/gerai/check-store-name?storeName=${encodeURIComponent(storeName)}`)
-                .then(response => response.json())
-                .then(exists => {
-                    if (exists) {
-                        errorElement.style.display = "block";
-                    } else {
-                        errorElement.style.display = "none";
-                    }
-                })
-                .catch(error => console.error("Error checking store name:", error));
+        if (storeName.length >= 5) {
+            try {
+                const response = await fetch(`/gerai/check-store-name?storeName=${encodeURIComponent(storeName)}`);
+                const exists = await response.json();
+                if (exists) {
+                    errorElement.style.display = "block";
+                    errorElement.innerText = "Nama Gerai sudah dipakai.";
+                    return false; // Name exists
+                } else {
+                    errorElement.style.display = "none";
+                    return true; // Name is unique
+                }
+            } catch (error) {
+                console.error("Error checking store name:", error);
+                return false; // Error in check
+            }
         } else {
-            errorElement.style.display = "none"; // Hide the error if input is too short
+            errorElement.style.display = "block";
+            errorElement.innerText = "Nama Gerai minimal 5 karakter.";
+            return false; // Name too short
+        }
+    }
+
+    // Function to check storeAddr
+    function checkStoreAddr(storeAddr) {
+        const storeAddrError = document.getElementById("create-storeAddrError");
+        if (storeAddr.length >= 7) {
+            storeAddrError.style.display = "none"; // Hide error if valid
+            return true; // Valid address
+        } else {
+            storeAddrError.style.display = "block";
+            storeAddrError.innerText = "Alamat harus minimal 7 karakter.";
+            return false; // Invalid address
+        }
+    }
+
+    // Function to check storeAddrLink
+    function checkStoreAddrLink(storeAddrLink) {
+        const storeAddrLinkError = document.getElementById("storeAddrLinkError");
+        const urlPattern = /^https?:\/\/[^\s/$.?#].[^\s]*$/i; // Simple URL pattern
+        if (urlPattern.test(storeAddrLink)) {
+            storeAddrLinkError.style.display = "none"; // Hide error if valid
+            return true; // Valid URL
+        } else {
+            storeAddrLinkError.style.display = "block";
+            storeAddrLinkError.innerText = "Alamat URL tidak valid.";
+            return false; // Invalid URL
+        }
+    }
+
+    // Function to check storePhone
+    async function checkStorePhone() {
+        const storePhone = document.getElementById("storePhone").value;
+        const storePhoneError = document.getElementById("storePhoneError");
+        const phonePattern = /^[0-9]{10,13}$/; // Phone should be 10-13 digits
+
+        // Reset the error message
+        storePhoneError.style.display = "none";
+
+        // Check if the phone number matches the pattern
+        if (phonePattern.test(storePhone)) {
+            try {
+                const response = await fetch(`/gerai/check-store-phone?storePhone=${encodeURIComponent(storePhone)}`);
+                const exists = await response.json();
+                if (exists) {
+                    storePhoneError.style.display = "block";
+                    storePhoneError.innerText = "Nomor Telepon sudah digunakan. Harap pilih nomor lain.";
+                    return false; // Phone number already exists
+                }
+                return true; // Phone is valid and unique
+            } catch (error) {
+                console.error("Error checking store phone:", error);
+                return false; // Error in phone check
+            }
+        } else {
+            storePhoneError.style.display = "block";
+            storePhoneError.innerText = "Nomor Telepon harus terdiri dari 10-13 digit.";
+            return false; // Invalid phone format
         }
     }
 </script>
+
 <script>
     let currentTambahForm;
 
-    function handleTambah(event) {
-    event.preventDefault(); // Prevent default form submission
-    currentTambahForm = event.target; // Store the current form for later use
+    async function handleTambah(event) {
+        event.preventDefault(); // Prevent default form submission
+        currentTambahForm = event.target; // Store the current form for later use
 
-    // Check storeName
-    const storeName = document.getElementById("storeName").value;
+        const storeName = document.getElementById("storeName").value;
+        const storeAddr = document.getElementById("storeAddr").value;
+        const storeAddrLink = document.getElementById("storeAddrLink").value;
+        const storePhone = document.getElementById("storePhone").value;
 
-    if (storeName.length >= 5) {
-        fetch(`/gerai/check-store-name?storeName=${encodeURIComponent(storeName)}`)
-            .then(response => response.json())
-            .then(exists => {
-                if (exists) {
+        let isValid = true; // Track if the form is valid
+
+        // Check storeName
+        if (storeName.length < 5) {
+            showErrorNotification("Nama Gerai minimal 5 karakter.");
+            isValid = false;
+        } else {
+            try {
+                const storeNameExists = await fetch(`/gerai/check-store-name?storeName=${encodeURIComponent(storeName)}`)
+                    .then(response => response.json());
+
+                if (storeNameExists) {
                     showErrorNotification("Penambahan gerai gagal. Nama Gerai sudah dipakai.");
-                    return; // Stop further execution
-                } else {
-                    showSuccessNotification("Gerai berhasil ditambahkan!");
-                    setTimeout(() => {
-                        currentTambahForm.submit();
-                    }, 5000); // Submit after 5 seconds
+                    isValid = false;
                 }
-            })
-            .catch(error => console.error("Error checking store name:", error));
-    }
-}
+            } catch (error) {
+                console.error("Error checking store name:", error);
+                isValid = false;
+            }
+        }
 
-    // Function to show the error notification briefly
-    function showErrorNotification(message) {
-        const errorNotification = document.getElementById('errorNotification');
-        document.getElementById('errorMessage').innerText = message; // Set error message
-        errorNotification.style.display = 'block';
+        // If storeName is valid, check other fields
+        if (isValid) {
+            checkStoreAddr(storeAddr);
+            checkStoreAddrLink(storeAddrLink);
 
-        setTimeout(() => {
-            errorNotification.style.display = 'none'; // Hide after 3 seconds
-        }, 3000);
-    }
+            // Check phone number uniqueness asynchronously
+            const phoneIsValid = await checkStorePhone(storePhone);
+            if (!phoneIsValid) {
+                isValid = false;
+            }
+        }
 
-    // Function to show the success notification briefly
-    function showSuccessNotification(message) {
-        const successNotification = document.getElementById('successNotification');
-        document.getElementById('successMessage').innerText = message; // Set success message
-        successNotification.style.display = 'block';
-
-        setTimeout(() => {
-            successNotification.style.display = 'none'; // Hide after 3 seconds
-        }, 3000);
+        // Only submit if all checks pass
+        if (isValid) {
+            showSuccessNotification("Gerai berhasil ditambahkan!");
+            setTimeout(() => {
+                currentTambahForm.submit(); // Submit the form after all checks pass
+            }, 5000); // Optional delay before submission
+        }
     }
 </script>
 

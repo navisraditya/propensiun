@@ -67,6 +67,12 @@ public class StoreController {
         return storeService.existsByStoreName(storeName);
     }
 
+    @GetMapping("/gerai/check-store-phone")
+    @ResponseBody
+    public boolean checkPhoneNameExists(@RequestParam String storePhone) {
+        return storeService.existsByStorePhone(storePhone);
+    }
+
     // READ STORE
     @GetMapping("/gerai/")
     public String viewStoreList(Model model) {

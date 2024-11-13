@@ -34,6 +34,19 @@ public class StoreServiceImpl implements StoreService {
         return storeDB.existsByStorePhone(storePhone);
     }
 
+    public boolean isStoreNameInUse(String storeName, Integer storeUuid) {
+        return storeUuid == null
+                ? storeDB.existsByStoreName(storeName)
+                : storeDB.existsByStoreNameAndUuidNot(storeName, storeUuid);
+    }
+
+    public boolean isStorePhoneInUse(String storePhone, Integer storeUuid) {
+        return storeUuid == null
+                ? storeDB.existsByStorePhone(storePhone)
+                : storeDB.existsByStorePhoneAndUuidNot(storePhone, storeUuid);
+    }
+
+
     @Override
     public List<StoreModel> getAllStoreByIds(List<Integer> listStore) {
         List<StoreModel> selectedStores = storeDB.findAllById(listStore);
