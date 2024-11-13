@@ -1,10 +1,18 @@
 package propensi.propensiun.abuya.model;
 
 import java.time.LocalDate;
+<<<<<<< HEAD
 import java.util.List;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
+=======
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+>>>>>>> 64ff6566cad65f80dd67cfe58005c56dffa18b00
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,6 +55,7 @@ public class PromoModel {
     // @ManyToOne(fetch = FetchType.EAGER)
     // @JoinColumn(name = "store_id", nullable = false)
     // private StoreModel store;
+<<<<<<< HEAD
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -57,4 +66,15 @@ public class PromoModel {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<StoreModel> storeList;
 
+=======
+
+    @ManyToMany
+    @JoinTable(
+        name = "promo_store",
+        joinColumns = @JoinColumn(name="promo_uuid"),
+        inverseJoinColumns = @JoinColumn(name="store_uuid")
+    )
+    private Set<StoreModel> stores = new HashSet<>();
+
+>>>>>>> 64ff6566cad65f80dd67cfe58005c56dffa18b00
 }

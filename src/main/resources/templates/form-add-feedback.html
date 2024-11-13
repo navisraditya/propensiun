@@ -143,25 +143,59 @@
             
         }
 
-select:focus {
-    outline: none;
-    border-color: #FF671F; /* Warna border saat fokus */
-}
+        select:focus {
+            outline: none;
+            border-color: #FF671F; /* Warna border saat fokus */
+        }
+
+        /* Error message styling */
+        .error-message {
+            color: #b30000; /* Dark red text color */
+            background-color: #ffe6e6; /* Pale red background */
+            border: 2px solid #b30000; /* Dark red border */
+            padding: 10px; /* Padding inside the box */
+            border-radius: 5px; /* Rounded corners */
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold; /* Bold text */
+        }
+
+        /* Success message styling */
+        .success-message {
+            color: #006226; /* Dark red text color */
+            background-color: #85ffb4; /* Pale red background */
+            border: 2px solid #006226; /* Dark red border */
+            padding: 10px; /* Padding inside the box */
+            border-radius: 5px; /* Rounded corners */
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold; /* Bold text */
+        }
     </style>
 </head>
 <body>
 
     <div class="form-container">
         <h2>Feedback Form</h2>
+
+        <!-- Display the error message if it exists -->
+        <div th:if="${success != null}" class="success-message">
+            <p th:text="${success}"></p>
+        </div>
+        <div th:if="${error != null}" class="error-message">
+            <p th:text="${error}"></p>
+        </div>
         
-        <form th:action="@{/feedback/submit}" method="post">
+        <form th:action="@{/user/form-add-feedback}" method="post">
             <!-- Dropdown for branch selection -->
             <div class="dropdown-cabang">
                 <label for="cabang">Cabang:</label>
-                <select id="cabang" name="cabang" required>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
+                <select id="cabang" name="cabang" th:required="true">
+                    <!-- Dynamically populate options -->
+                    <option th:each="store : ${stores}" 
+                            th:value="${store.uuid}" 
+                            th:text="${store.storeName}"> 
+                    </option>
                 </select>
             </div>
             
@@ -195,7 +229,11 @@ select:focus {
             <!-- Textarea for suggestions -->
             <div>
                 <label for="kotakSaran">Kotak Saran:</label>
-                <textarea id="kotakSaran" name="kotakSaran" placeholder="Tulis saran Anda di sini..."></textarea>
+                <textarea
+                id="kotakSaran"
+                name="kotakSaran"   
+                placeholder="Tulis saran Anda di sini... /n (saran maksimal 20 karakter)"
+                minlength="20"></textarea>
             </div>
             
             <!-- Submit and back to homepage button -->

@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+<<<<<<< HEAD
+=======
+import java.util.HashSet;
+>>>>>>> 64ff6566cad65f80dd67cfe58005c56dffa18b00
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -61,7 +65,18 @@ public class StoreModel {
             }
         }
     }
+<<<<<<< HEAD
 
     @OneToMany(mappedBy = "storeList", cascade = CascadeType.ALL)
     private Set<PromoModel> promos; 
+=======
+    
+
+    @OneToOne (fetch=FetchType.EAGER)
+    @JoinColumn(name = "id_storemanager", referencedColumnName = "uuid", nullable = true)
+    private UserModel storeManager;
+
+    @ManyToMany(mappedBy = "stores")
+    private Set<PromoModel> promos = new HashSet<>();
+>>>>>>> 64ff6566cad65f80dd67cfe58005c56dffa18b00
 }

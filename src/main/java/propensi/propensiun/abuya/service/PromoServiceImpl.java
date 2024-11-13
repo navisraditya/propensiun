@@ -2,12 +2,10 @@ package propensi.propensiun.abuya.service;
 
 import java.time.LocalDate;
 import java.util.List;
-
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import propensi.propensiun.abuya.model.PromoModel;
 import propensi.propensiun.abuya.repository.PromoDb;
@@ -48,4 +46,18 @@ public class PromoServiceImpl implements PromoService {
             }
         }
     }
+
+    @Override
+    public PromoModel updatePromo(Integer id, PromoModel sourcePromo) {
+        PromoModel targetPromo = findPromoById(id);
+        BeanUtils.copyProperties(sourcePromo, targetPromo);
+
+        return promoDb.save(targetPromo);
+    }
+
+    @Override
+    public PromoModel findPromoById(Integer promoUuid) {
+        return promoDb.findById(promoUuid).orElse(null);
+    }
+    
 }

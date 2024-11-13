@@ -23,4 +23,34 @@ public class StoreServiceImpl implements StoreService {
     public void updateStore(StoreModel store) { storeDB.save(store); }
 
     public void deleteStore(String id) { storeDB.deleteById(Integer.valueOf(id));}
+
+    @Override
+    public boolean existsByStoreName(String storeName) {
+        return storeDB.existsByStoreName(storeName);
+    }
+
+    @Override
+    public boolean existsByStorePhone(String storePhone){
+        return storeDB.existsByStorePhone(storePhone);
+    }
+
+    public boolean isStoreNameInUse(String storeName, Integer storeUuid) {
+        return storeUuid == null
+                ? storeDB.existsByStoreName(storeName)
+                : storeDB.existsByStoreNameAndUuidNot(storeName, storeUuid);
+    }
+
+    public boolean isStorePhoneInUse(String storePhone, Integer storeUuid) {
+        return storeUuid == null
+                ? storeDB.existsByStorePhone(storePhone)
+                : storeDB.existsByStorePhoneAndUuidNot(storePhone, storeUuid);
+    }
+
+
+    @Override
+    public List<StoreModel> getAllStoreByIds(List<Integer> listStore) {
+        List<StoreModel> selectedStores = storeDB.findAllById(listStore);
+
+        return selectedStores;
+    }
 }
