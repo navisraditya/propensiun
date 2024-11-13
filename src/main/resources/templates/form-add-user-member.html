@@ -50,7 +50,7 @@
             <div class="justify-content-center">
                 <h2>Tambah User</h2>
                 <br>
-                <form th:action="@{/user/add}" th:object="${user}" method="POST">
+                <form th:action="@{/user/addMember}" th:object="${user}" method="POST">
                     Nama User: <br>
                     <input class="form-control" type="text" name="name"/>
                     <small class="text-danger">* Name must consist at least 3 characters & shouldn't contain numeric character.</small>
@@ -66,10 +66,7 @@
                     <small class="text-danger">* Phone number must consist 10-13 digits.</small>
                     <br>
 
-                    Company ID User: <br>
-                    <input class="form-control" type="number" name="companyid"/>
-                    <small class="text-danger">* Company ID consist of only numerical characters.</small>
-                    <br>
+                    <input type="hidden" name="companyid" value="0"/>
 
                     Password User: <br>
                     <input class="form-control" type="password" name="password"/>
@@ -80,15 +77,7 @@
                     <input class="form-control" type="password" name="passwordConfirmation"/>
                     <br>
 
-                    Role User:
-                    <select name="peran" class="form-control">
-                        <option selected value="">--Pilih Role--</option>
-                        <option th:each="role : ${listRole}"
-                                th:value="${role.uuid}"
-                                th:text="${role.name}">
-                        </option>
-                    </select>
-                    <br>
+                    <input type="hidden" name="peran" value="4"/>
 
                     <span th:text="${security_question}"></span>: <br>
                     <input class="form-control" type="text" name="securityAnswer"/>

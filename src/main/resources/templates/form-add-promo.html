@@ -39,9 +39,9 @@
       <br /><br />
 
       <!-- Store List Field -->
-      <label for="storeList">Store List:</label>
-      <select id="storeList" name="storeList[]" multiple required>
-        <option value="" disabled>Select a Store</option>
+      <label for="storeList">Store:</label>
+      <select id="storeList" name="store" required>
+        <option value="" disabled selected>Select a Store</option>
         <option
           th:each="store : ${listStore}"
           th:value="${store.id}"

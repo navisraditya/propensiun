@@ -7,12 +7,15 @@ import org.springframework.stereotype.Repository;
 import propensi.propensiun.abuya.model.UserModel;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserDb extends JpaRepository<UserModel, Integer> {
     UserModel findByUsername(String username);
 
     List<UserModel> findAll();
+
+    Optional<UserModel> findById(Integer id);
 
     @Query("SELECT u FROM UserModel u WHERE u.peran.name IN :roles")
     List<UserModel> findByRoleNames(@Param("roles") List<String> roles);
