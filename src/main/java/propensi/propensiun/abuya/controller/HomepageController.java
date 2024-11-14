@@ -133,6 +133,28 @@ public class HomepageController {
         return new ModelAndView("redirect:/marketinglanding");
     }
 
+    @PreAuthorize("hasRole('ROLE_Marketing')")
+    @PostMapping("/promo/delete/{id}")
+    public String deleteInTable(@PathVariable Integer id){
+        promoService.deletePromoById(id);
+        return "redirect:/marketinglanding";
+    }
+
+    @PreAuthorize("hasRole('ROLE_Marketing')")
+    @PostMapping("/promo/edit/{id}")
+    public String editPromo(@PathVariable String id, @ModelAttribute PromoModel sourceModel, @RequestParam List<Integer> storeList) {
+        if(!storeList.isEmpty()) {
+            List<StoreModel> selecStoreModels = storeService.getAllStoreByIds(storeList);
+            
+            if(!selecStoreModels.isEmpty()) {
+                sourceModel.setStores(new HashSet<>(selecStoreModels));
+            }
+        }
+
+        promoService.updatePromo(Integer.parseInt(id), sourceModel);
+        return "redirect:/marketinglanding";
+    }
+
     @GetMapping("/access-denied")
     public String accessDeniedPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
