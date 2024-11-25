@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access Denied</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      justify-content: center;
+      align-items: center;
+    }
+    .content {
+      max-width: 500px;
+      text-align: center;
+      background-color: #f8f9fa;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      font-size: 28px;
+      color: #dc3545;
+    }
+    p {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+
+<div class="content">
+  <h1>Access Denied</h1>
+  <p>You do not have permission to access this page.</p>
+
+  <!-- Tombol Kembali ke Homepage sesuai role -->
+  <div class="mt-3">
+    <a th:href="${user.peran.name == 'Admin' ? '/adminlanding'
+                      : user.peran.name == 'Member' ? '/memberlanding'
+                      : user.peran.name == 'Marketing' ? '/marketinglanding'
+                      : user.peran.name == 'Store Manager' ? '/smlanding'
+                      : user.peran.name == 'Chief Operating Officer' ? '/opslanding'
+                      : '/'}"
+       class="btn btn-info w-100 mt-3">Back to Homepage</a>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>

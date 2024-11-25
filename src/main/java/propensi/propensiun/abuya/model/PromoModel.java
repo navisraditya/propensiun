@@ -1,10 +1,11 @@
 package propensi.propensiun.abuya.model;
 
 import java.time.LocalDate;
-import java.util.List;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -48,13 +49,12 @@ public class PromoModel {
     // @JoinColumn(name = "store_id", nullable = false)
     // private StoreModel store;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(
         name = "promo_store",
-        joinColumns = @JoinColumn(name = "promo_id"),
-        inverseJoinColumns = @JoinColumn(name = "store_id")
+        joinColumns = @JoinColumn(name="promo_uuid"),
+        inverseJoinColumns = @JoinColumn(name="store_uuid")
     )
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<StoreModel> storeList;
+    private Set<StoreModel> stores = new HashSet<>();
 
 }
