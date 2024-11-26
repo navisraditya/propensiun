@@ -219,11 +219,20 @@
                     <div class="d-flex align-items-center justify-content-between">
                         <!-- Static Store Display -->
                         <h5 class="card-title" th:text="${store.storeName}">Store Name</h5>
-                        <div>
-                            <button class="btn btn-link edit-button" onclick="toggleEditForm('${store.uuid}')" th:if="${user.peran.uuid == 1 or user.peran.uuid == 2}"
-                                    style="background: none; border: none; color: #ff671f; padding: 0;">
+                        <div class="button-container" style="display: inline-flex; align-items: center;">
+                            <button type="button" class="btn btn-link edit-button"
+                                    th:attr="data-uuid=${store.uuid},
+                                    data-store-name=${store.storeName},
+                                    data-store-addr=${store.storeAddr},
+                                    data-store-addr-link=${store.storeAddrLink},
+                                    data-store-phone=${store.storePhone},
+                                    data-store-manager=${store.storeManager?.uuid}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editModal"
+                                    onclick="openEditModal(this)">
                                 <i class="fas fa-pencil-alt"></i>
                             </button>
+
                             <form th:action="@{/gerai/hapus/{idGerai}(idGerai=${store.uuid})}"
                                   th:if="${user.peran.uuid == 1}"
                                   method="post"
@@ -264,41 +273,41 @@
                         </p>
                     </div>
 
-                    <!-- Edit Mode (hidden by default) -->
-                    <div id="edit-mode-${store.uuid}" style="display: none;">
-                        <form th:action="@{/gerai/ubah/{idGerai}(idGerai=${store.uuid})}" th:object="${store}" method="POST">
-                            <div class="mb-3">
-                                <label for="storeName-${store.uuid}" class="form-label"><strong>Nama Gerai:</strong></label>
-                                <input class="form-control" type="text" id="storeName-${store.uuid}" name="storeName" th:value="${store.storeName}" required minlength="5" />
-                            </div>
-                            <div class="mb-3">
-                                <label for="storeAddr-${store.uuid}" class="form-label"><Strong>Alamat:</Strong></label>
-                                <input class="form-control" type="text" id="storeAddr-${store.uuid}" name="storeAddr" th:value="${store.storeAddr}" required minlength="7" />
-                            </div>
-                            <div class="mb-3">
-                                <label for="storeAddrLink" class="form-label"><strong>Lokasi (Google Maps):</strong></label>
-                                <input class="form-control" type="text" id="storeAddrLink-${store.uuid}" name="storeAddrLink" th:value="${store.storeAddrLink}" required />
-                            </div>
-                            <div class="mb-3">
-                                <label for="storePhone-${store.uuid}" class="form-label"><strong>Nomor Telefon:</strong></label>
-                                <input class="form-control" type="tel" id="storePhone-${store.uuid}" name="storePhone" th:value="${store.storePhone}" required pattern="^\d{10,13}$" title="Nomor telefon harus 10-13 digit" />
-                            </div>
-                            <div class="mb-3">
-                                <label for="storeManager-${store.uuid}" class="form-label">Store Manager:</label>
-                                <select name="storeManager" class="form-select">
-                                    <option th:value="${store.storeManager?.uuid}" th:text="${store.storeManager?.name ?: 'Pilih Store Manager'}" selected>
-                                    <option th:each="user : ${listStoreManager}"
-                                            th:value="${user.uuid}"
-                                            th:text="${user.name}">
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="text-center">
-                                <button class="btn btn-primary" type="submit" onclick="return handleUbah(event)">Simpan</button>
-                                <button class="btn btn-secondary" type="button" onclick="toggleEditForm('${store.uuid}')">Batal</button>
-                            </div>
-                        </form>
-                    </div>
+<!--                    &lt;!&ndash; Edit Mode (hidden by default) &ndash;&gt;-->
+<!--                    <div id="edit-mode-${store.uuid}" style="display: none;">-->
+<!--                        <form th:action="@{/gerai/ubah/{idGerai}(idGerai=${store.uuid})}" th:object="${store}" method="POST">-->
+<!--                            <div class="mb-3">-->
+<!--                                <label for="storeName-${store.uuid}" class="form-label"><strong>Nama Gerai:</strong></label>-->
+<!--                                <input class="form-control" type="text" id="storeName-${store.uuid}" name="storeName" th:value="${store.storeName}" required minlength="5" />-->
+<!--                            </div>-->
+<!--                            <div class="mb-3">-->
+<!--                                <label for="storeAddr-${store.uuid}" class="form-label"><Strong>Alamat:</Strong></label>-->
+<!--                                <input class="form-control" type="text" id="storeAddr-${store.uuid}" name="storeAddr" th:value="${store.storeAddr}" required minlength="7" />-->
+<!--                            </div>-->
+<!--                            <div class="mb-3">-->
+<!--                                <label for="storeAddrLink" class="form-label"><strong>Lokasi (Google Maps):</strong></label>-->
+<!--                                <input class="form-control" type="text" id="storeAddrLink-${store.uuid}" name="storeAddrLink" th:value="${store.storeAddrLink}" required />-->
+<!--                            </div>-->
+<!--                            <div class="mb-3">-->
+<!--                                <label for="storePhone-${store.uuid}" class="form-label"><strong>Nomor Telefon:</strong></label>-->
+<!--                                <input class="form-control" type="tel" id="storePhone-${store.uuid}" name="storePhone" th:value="${store.storePhone}" required pattern="^\d{10,13}$" title="Nomor telefon harus 10-13 digit" />-->
+<!--                            </div>-->
+<!--                            <div class="mb-3">-->
+<!--                                <label for="storeManager-${store.uuid}" class="form-label">Store Manager:</label>-->
+<!--                                <select name="storeManager" class="form-select">-->
+<!--                                    <option th:value="${store.storeManager?.uuid}" th:text="${store.storeManager?.name ?: 'Pilih Store Manager'}" selected>-->
+<!--                                    <option th:each="user : ${listStoreManager}"-->
+<!--                                            th:value="${user.uuid}"-->
+<!--                                            th:text="${user.name}">-->
+<!--                                    </option>-->
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                            <div class="text-center">-->
+<!--                                <button class="btn btn-primary" type="submit" onclick="return handleUbah(event)">Simpan</button>-->
+<!--                                <button class="btn btn-secondary" type="button" onclick="toggleEditForm('${store.uuid}')">Batal</button>-->
+<!--                            </div>-->
+<!--                        </form>-->
+<!--                    </div>-->
                 </div>
             </div>
         </div>
@@ -331,7 +340,7 @@
 
                     <!-- Store Address Link -->
                     <div class="mb-3">
-                        <label for="storeAddrLink" class="form-label">Lokasi:</label>
+                        <label for="storeAddrLink" class="form-label">Lokasi (Google Maps):</label>
                         <input class="form-control" type="url" id="storeAddrLink" name="storeAddrLink" required oninput="checkStoreAddrLink(this.value)" />
                         <div class="text-danger" id="storeAddrLinkError"></div>
                     </div>
@@ -476,6 +485,154 @@
 </script>
 
 <script>
+    let currentName = ""; // To hold the initial store name
+    let currentPhone = ""; // To hold the initial store phone
+
+    // Function to open the Edit Modal and populate the fields
+    function openEditModal(button) {
+        const uuid = button.getAttribute("data-uuid");
+        const name = button.getAttribute("data-store-name");
+        const addr = button.getAttribute("data-store-addr");
+        const addrLink = button.getAttribute("data-store-addr-link");
+        const phone = button.getAttribute("data-store-phone");
+        const manager = button.getAttribute("data-store-manager");
+
+        // Store the current name and phone for later comparison
+        currentName = name;
+        currentPhone = phone;
+
+        // Populate the fields in the modal
+        document.getElementById("edit-storeName").value = name;
+        document.getElementById("edit-storeAddr").value = addr;
+        document.getElementById("edit-storeAddrLink").value = addrLink;
+        document.getElementById("edit-storePhone").value = phone;
+
+        // Update the Store Manager dropdown selection if it exists
+        const managerSelect = document.getElementById("edit-storeManager");
+        if (managerSelect) {
+            managerSelect.value = manager || ""; // Set to empty if no manager is assigned
+        }
+
+        // Update the form action dynamically based on the store UUID
+        document.querySelector("#editModal form").action = `/gerai/ubah/${uuid}`;
+    }
+
+    // Function to check storeName (for editing)
+    async function checkEditStoreName() {
+        const storeName = document.getElementById("edit-storeName").value;
+        const errorElement = document.getElementById("edit-storeNameError");
+
+        // Only check if the store name has changed
+        if (storeName.length >= 5 && storeName !== currentName) {
+            try {
+                const response = await fetch(`/gerai/check-store-name?storeName=${encodeURIComponent(storeName)}`);
+                const exists = await response.json();
+                if (exists) {
+                    errorElement.style.display = "block";
+                    errorElement.innerText = "Nama Gerai sudah dipakai.";
+                    return false; // Name exists
+                } else {
+                    errorElement.style.display = "none";
+                    return true; // Name is unique
+                }
+            } catch (error) {
+                console.error("Error checking store name:", error);
+                return false; // Error in check
+            }
+        } else if (storeName.length < 5) {
+            errorElement.style.display = "block";
+            errorElement.innerText = "Nama Gerai minimal 5 karakter.";
+            return false; // Name too short
+        } else {
+            // No need to check, name is the same as before
+            errorElement.style.display = "none";
+            return true; // Name is valid
+        }
+    }
+
+    // Function to check storeAddr (for editing)
+    function checkEditStoreAddr(storeAddr) {
+        const storeAddrError = document.getElementById("edit-storeAddrError");
+        if (storeAddr.length >= 7) {
+            storeAddrError.style.display = "none"; // Hide error if valid
+            return true; // Valid address
+        } else {
+            storeAddrError.style.display = "block";
+            storeAddrError.innerText = "Alamat harus minimal 7 karakter.";
+            return false; // Invalid address
+        }
+    }
+
+    // Function to check storeAddrLink (for editing)
+    function checkEditStoreAddrLink(storeAddrLink) {
+        const storeAddrLinkError = document.getElementById("edit-storeAddrLinkError");
+        const urlPattern = /^https?:\/\/[^\s/$.?#].[^\s]*$/i; // Simple URL pattern
+        if (urlPattern.test(storeAddrLink)) {
+            storeAddrLinkError.style.display = "none"; // Hide error if valid
+            return true; // Valid URL
+        } else {
+            storeAddrLinkError.style.display = "block";
+            storeAddrLinkError.innerText = "Alamat URL tidak valid.";
+            return false; // Invalid URL
+        }
+    }
+
+    // Function to check storePhone (for editing)
+    async function checkEditStorePhone() {
+        const storePhone = document.getElementById("edit-storePhone").value;
+        const storePhoneError = document.getElementById("edit-storePhoneError");
+        const phonePattern = /^[0-9]{10,13}$/; // Phone should be 10-13 digits
+
+        storePhoneError.style.display = "none"; // Reset the error message
+
+        // Only check if the phone number has changed
+        if (phonePattern.test(storePhone) && storePhone !== currentPhone) {
+            try {
+                const response = await fetch(`/gerai/check-store-phone?storePhone=${encodeURIComponent(storePhone)}`);
+                const exists = await response.json();
+                if (exists) {
+                    storePhoneError.style.display = "block";
+                    storePhoneError.innerText = "Nomor Telepon sudah digunakan. Harap pilih nomor lain.";
+                    return false; // Phone number already exists
+                }
+                return true; // Phone is valid and unique
+            } catch (error) {
+                console.error("Error checking store phone:", error);
+                return false; // Error in phone check
+            }
+        } else if (!phonePattern.test(storePhone)) {
+            storePhoneError.style.display = "block";
+            storePhoneError.innerText = "Nomor Telepon harus terdiri dari 10-13 digit.";
+            return false; // Invalid phone format
+        } else {
+            // No need to check, phone number is the same as before
+            storePhoneError.style.display = "none";
+            return true; // Phone is valid
+        }
+    }
+
+    // Function to validate all fields before submitting the form
+    async function submitEditForm(event) {
+        event.preventDefault(); // Prevent form submission
+
+        const isStoreNameValid = await checkEditStoreName();
+        const isStoreAddrValid = checkEditStoreAddr(document.getElementById("edit-storeAddr").value);
+        const isStoreAddrLinkValid = checkEditStoreAddrLink(document.getElementById("edit-storeAddrLink").value);
+        const isStorePhoneValid = await checkEditStorePhone();
+
+        if (isStoreNameValid && isStoreAddrValid && isStoreAddrLinkValid && isStorePhoneValid) {
+            // Form is valid, submit it
+            showSuccessNotification("Detil gerai berhasil diubah!"); // Show success notification
+            setTimeout(() => {
+                document.querySelector("#editModal form").submit(); // Submit the form after all checks pass
+            }, 5000);
+        }
+    }
+</script>
+
+
+
+<script>
     let currentTambahForm;
 
     async function handleTambah(event) {
@@ -616,8 +773,8 @@
         const displayMode = document.getElementById(`display-mode-${storeId}`);
         const editMode = document.getElementById(`edit-mode-${storeId}`);
 
-        // Toggle visibility between display and edit modes
-        if (displayMode.style.display === 'none') {
+        // Toggle the display and edit modes independently for each store
+        if (displayMode.style.display === 'none' || displayMode.style.display === '') {
             displayMode.style.display = 'block';
             editMode.style.display = 'none';
         } else {
