@@ -48,42 +48,25 @@
     <div class="card m-4 p-4">
         <div class="card-body">
             <div class="justify-content-center">
-                <h2>Registrasi User Member</h2>
+                <h2>Daftar Sebagai Mitra</h2>
                 <br>
-                <form th:action="@{/user/addMember}" th:object="${user}" method="POST">
-                    Nama User: <br>
+                <form th:action="@{/mitra/add}" th:object="${mitra}" method="POST">
+                    Nama Mitra: <br>
                     <input class="form-control" type="text" name="name"/>
-                    <small class="text-danger">* Name must consist at least 3 characters & shouldn't contain numeric character.</small>
+                    <small class="text-danger">* Name cannot be empty.</small>
                     <br>
 
-                    Username User: <br>
-                    <input class="form-control" type="text" name="username"/>
-                    <small class="text-danger">* Username must be unique & must consist at least 6 characters.</small>
-                    <br>
 
-                    Nomor Telepon User: <br>
+                    Nomor Telepon Mitra: <br>
                     <input class="form-control" type="text" name="phoneNumber"/>
                     <small class="text-danger">* Phone number must consist 10-13 digits.</small>
                     <br>
 
-                    <input type="hidden" name="companyid" value="0"/>
-
-                    Password User: <br>
-                    <input class="form-control" type="password" name="password"/>
-                    <small class="text-danger">* Password must consist at least 8 characters, at least 1 numeric character and 1 uppercase character</small>
+                    Alasan Kenapa Ingin Bergabung Sebagai Mitra: <br>
+                    <textarea class="form-control" name="alasan" rows="5" cols="30"></textarea>
+                    <small class="text-danger">* Alasan cannot be empty.</small>
                     <br>
 
-                    Konfirmasi Password User: <br>
-                    <input class="form-control" type="password" name="passwordConfirmation"/>
-                    <br>
-
-                    <input type="hidden" name="peran" value="4"/>
-
-                    <span th:text="${security_question}"></span>: <br>
-                    <input class="form-control" type="text" name="securityAnswer"/>
-                    <br>
-
-                    <input name="securityQuestion" value="${security_question}" hidden/>
 
                     <br> <br>
 
