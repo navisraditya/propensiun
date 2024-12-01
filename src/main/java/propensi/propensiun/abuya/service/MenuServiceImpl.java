@@ -20,9 +20,13 @@ public class MenuServiceImpl implements MenuService {
     @Autowired
     private SupabaseService supabaseService;
 
+    public List<MenuModel> getAllMenus() {
+        return menuDb.findAll();
+    }
+
     @Override
     public MenuModel addMenu(MenuModel menu, MultipartFile image) throws Exception {
-        // Validasi apakah nama menu sudah ada
+
         Optional<MenuModel> existingMenu = menuDb.findByNama(menu.getNama());
         if (existingMenu.isPresent()) {
             throw new IllegalArgumentException("Nama menu sudah ada, silakan gunakan nama yang lain.");
@@ -32,9 +36,30 @@ public class MenuServiceImpl implements MenuService {
         String imageUrl = supabaseService.uploadImage(image);
         menu.setGambar(imageUrl);
 
-        // Simpan menu baru ke database
+
         return menuDb.save(menu);
     }
+
+    @Override
+    public MenuModel getMenuById(UUID uuid) {
+        return menuDb.findById(uuid).orElseThrow(() -> new IllegalArgumentException("Menu tidak ditemukan"));
+    }
+
+    @Override
+    public MenuModel updateMenu(MenuModel menu) {
+        return menuDb.save(menu);
+    }
+
+    @Override
+    public void deleteMenu(UUID uuid) {
+        menuDb.deleteById(uuid);
+    }
+
+    @Override
+    public String uploadImage(MultipartFile image) throws Exception {
+        return supabaseService.uploadImage(image);
+    }
+
 
 }
 

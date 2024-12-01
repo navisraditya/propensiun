@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu List</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 200vh;
+      font-family: Arial, sans-serif;
+    }
+    .content {
+      flex: 1;
+      padding: 20px;
+    }
+    .menu-card {
+      margin-bottom: 20px;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s;
+      height: 350px;
+      display: flex;
+      flex-direction: column;
+    }
+    .menu-card:hover {
+      transform: scale(1.05);
+    }
+    .menu-card img {
+      height: 150px;
+      object-fit: cover;
+    }
+    .menu-card .card-body {
+      background-color: #f8f9fa;
+      padding: 20px;
+      flex-grow: 1;
+    }
+    .menu-card .card-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #343a40;
+    }
+    .menu-card .card-text {
+      font-size: 16px;
+      color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+<div th:insert="fragments/navbar-admin :: nav"></div>
+
+<div class="content container">
+  <h2 class="text-center mb-4">Menu List</h2>
+
+  <!-- Menu List as Cards -->
+  <div class="row">
+    <div class="col-md-4" th:each="menu : ${menus}">
+      <div class="card menu-card">
+        <img src="https://via.placeholder.com/300x150" class="card-img-top" alt="Menu Image" />
+        <div class="card-body">
+          <h5 class="card-title" th:text="${menu.nama}">Menu Name</h5>
+          <p class="card-text" th:text="${menu.deskripsi}">Menu Description</p>
+          <p class="card-text">
+            <strong>Kategori:</strong> <span th:text="${menu.kategori}">Kategori</span>
+          </p>
+          <a href="/menu/form-edit-menu/{id}" th:href="@{/menu/form-edit-menu/{id}(id=${menu.uuid})}" class="btn btn-primary">Edit</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div th:insert="fragments/footer :: footer"></div>
+</footer>
+
+<!-- Bootstrap JS dan Popper -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
+</body>
+</html>

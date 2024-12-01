@@ -21,6 +21,15 @@ public class MenuController {
     private MenuService menuService;
 
 
+    @GetMapping("/menu-list")
+    public String showMenuList(Model model) {
+        List<MenuModel> menus = menuService.getAllMenus();
+        model.addAttribute("menus", menus);
+
+        return "menu-list";
+    }
+
+
     @GetMapping("/form-add-menu")
     public String showAddMenuForm(Model model) {
         return "form-add-menu";
@@ -49,7 +58,43 @@ public class MenuController {
     }
 
 
+    @PostMapping("/deleteMenu")
+    public String deleteMenu(@RequestParam("id") UUID id, RedirectAttributes redirectAttributes) {
 
+        menuService.deleteMenu(id);
+        RedirectAttributes message = redirectAttributes.addFlashAttribute("message", "Menu berhasil dihapus!");
+
+        return "redirect:/menu/menu-list";
+    }
+
+
+    @GetMapping("/form-edit-menu/{id}")
+    public String showEditMenuForm(@PathVariable("id") UUID id, Model model) {
+
+        MenuModel menu = menuService.getMenuById(id);
+        model.addAttribute("menu", menu);
+
+        return "form-edit-menu";
+    }
+
+
+    @PostMapping("/editMenu/{id}")
+    public String editMenu(@PathVariable("id") UUID id,
+                           @RequestParam("nama") String nama,
+                           @RequestParam("kategori") MenuModel.Kategori kategori,
+                           @RequestParam("deskripsi") String deskripsi,
+                           @RequestParam("imageFile") MultipartFile imageFile,
+                           RedirectAttributes redirectAttributes) {
+        try {
+            MenuModel menu = menuService.getMenuById(id);
+            menu.setNama(nama);
+            menu.setKategori(kategori);
+            menu.setDeskripsi(deskripsi);
+            MenuModel updatedMenu = menuService.updateMenu(menu);
+            redirectAttributes.addFlashAttribute("message", "Menu berhasil diubah!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Gagal mengubah menu: " + e.getMessage());
+        }
+        return "redirect:/menu/form-edit-menu/{id}";
+    }
 }
-
-

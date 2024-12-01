@@ -12,7 +12,15 @@ public interface MenuService {
     // Menambahkan menu baru
     MenuModel addMenu(MenuModel menu, MultipartFile image) throws Exception;
 
+    List<MenuModel> getAllMenus();
 
+    MenuModel getMenuById(UUID uuid);
+
+    MenuModel updateMenu(MenuModel menu);
+
+    void deleteMenu(UUID uuid);
+
+    String uploadImage(MultipartFile image) throws Exception;
 }
 
 
