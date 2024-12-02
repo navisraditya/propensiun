@@ -48,32 +48,32 @@
     <div class="card m-4 p-4">
         <div class="card-body">
             <div class="justify-content-center">
-                <h2>Tambah User</h2>
+                <h2>Registrasi User Internal</h2>
                 <br>
                 <form th:action="@{/user/add}" th:object="${user}" method="POST">
                     Nama User: <br>
                     <input class="form-control" type="text" name="name"/>
-                    <small class="text-danger">* Name must consist at least 3 characters & shouldn't contain numeric character.</small>
+                    <small class="text-danger">* Nama harus terdiri dari minimal 3 karakter & tidak boleh mengandung karakter numerik.</small>
                     <br>
 
                     Username User: <br>
                     <input class="form-control" type="text" name="username"/>
-                    <small class="text-danger">* Username must be unique & must consist at least 6 characters.</small>
+                    <small class="text-danger">* Username harus unik & minimal terdiri dari 6 karakter.</small>
                     <br>
 
                     Nomor Telepon User: <br>
                     <input class="form-control" type="text" name="phoneNumber"/>
-                    <small class="text-danger">* Phone number must consist 10-13 digits.</small>
+                    <small class="text-danger">* Nomor telepon harus terdiri dari 10-13 digit.</small>
                     <br>
 
                     Company ID User: <br>
                     <input class="form-control" type="number" name="companyid"/>
-                    <small class="text-danger">* Company ID consist of only numerical characters.</small>
+                    <small class="text-danger">* Company ID hanya terdiri dari karakter numerik.</small>
                     <br>
 
                     Password User: <br>
                     <input class="form-control" type="password" name="password"/>
-                    <small class="text-danger">* Password must consist at least 8 characters, at least 1 numeric character and 1 uppercase character</small>
+                    <small class="text-danger">* Password minimal harus terdiri dari 8 karakter, minimal 1 karakter angka dan 1 karakter huruf besar</small>
                     <br>
 
                     Konfirmasi Password User: <br>
@@ -99,7 +99,7 @@
                     <br> <br>
 
                     <button class="btn btn-primary" type="submit">Submit</button>
-                    <a class="btn btn-primary" href="/">Home</a>
+                    <a class="btn btn-primary" href="/adminlanding">Home</a>
                 </form>
             </div>
         </div>
