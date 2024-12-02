@@ -53,18 +53,18 @@
                 <form th:action="@{/mitra/addMitra}" th:object="${mitra}" method="POST">
                     Nama Mitra: <br>
                     <input class="form-control" type="text" name="name"/>
-                    <small class="text-danger">* Name cannot be empty.</small>
+                    <small class="text-danger">* Nama tidak boleh kosong.</small>
                     <br>
 
 
-                    Nomor Telepon MItra: <br>
+                    Nomor Telepon Mitra: <br>
                     <input class="form-control" type="text" name="phoneNumber"/>
-                    <small class="text-danger">* Phone number must consist 10-13 digits.</small>
+                    <small class="text-danger">* Nomor telepon harus di antara 10-13 angka.</small>
                     <br>
 
                     Alasan Kenapa Ingin Bergabung Sebagai Mitra: <br>
                     <textarea class="form-control" name="alasan" rows="5" cols="30"></textarea>
-                    <small class="text-danger">* Alasan cannot be empty.</small>
+                    <small class="text-danger">* Alasan tidak boleh kosong.</small>
                     <br>
 
 

@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import propensi.propensiun.abuya.model.MitraModel;
 import propensi.propensiun.abuya.repository.MitraDb;
 
+import java.util.List;
+
 @Service
 public class MitraServiceImpl implements MitraService {
 
@@ -51,5 +53,10 @@ public class MitraServiceImpl implements MitraService {
             mitra.setName(nam);
             return mitraDb.save(mitra);
         }
+    }
+
+    @Override
+    public List<MitraModel> getListMitra(){
+        return mitraDb.findAll();
     }
 }

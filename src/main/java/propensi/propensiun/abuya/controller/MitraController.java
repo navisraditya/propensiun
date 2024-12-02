@@ -70,4 +70,11 @@ public class MitraController {
 
         return "add-mitra-member";
     }
+
+    @GetMapping(value="")
+    public String mitraCourse(Model model) {
+        List<MitraModel> listMitra = mitraService.getListMitra();
+        model.addAttribute("listMitra", listMitra);
+        return "viewall-mitra";
+    }
 }
