@@ -47,16 +47,15 @@
     <div class="card m-4 p-4">
         <div class="card-body">
             <div class="justify-content-center">
-                <div th:if="${username != null}">
-                    <h2 th:text="'User dengan username ' + ${username} + ' berhasil ditambahkan.'"></h2>
+                <div th:if="${name != null}">
+                    <h2 th:text="'Pengajuan mitra berhasil dilakukan.'"></h2>
                 </div>
-                <div th:unless="${username != null}">
+                <div th:unless="${name != null}">
                     <h2 th:text="${error}"></h2>
                 </div>
                 <br>
-                <a class="btn btn-primary" href="/user/addMember">Kembali ke Form</a>
+                <a class="btn btn-primary" href="/mitra/add">Kembali ke Form</a>
                 <a class="btn btn-primary" href="/">Kembali ke Homepage</a>
-                <a class="btn btn-primary" href="/login">Login untuk Member</a>
             </div>
         </div>
     </div>
