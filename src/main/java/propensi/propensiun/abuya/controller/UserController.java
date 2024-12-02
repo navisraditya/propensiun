@@ -1,11 +1,8 @@
 package propensi.propensiun.abuya.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,7 +20,6 @@ import propensi.propensiun.abuya.service.PeranService;
 import propensi.propensiun.abuya.service.StoreService;
 import propensi.propensiun.abuya.service.UserService;
 
-import java.lang.reflect.Member;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;

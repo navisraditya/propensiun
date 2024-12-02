@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.http.HttpMethod;
 
     @Configuration
     @EnableWebSecurity
@@ -30,6 +29,9 @@ import org.springframework.http.HttpMethod;
                             // below, dev purpose onlz
                             .requestMatchers(HttpMethod.GET, "/user/addMember").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user/addMember").permitAll()
+                                    .requestMatchers(HttpMethod.GET, "/mitra/add").permitAll()
+                                    .requestMatchers(HttpMethod.POST, "/mitra/add").permitAll()
+                                    .requestMatchers("/mitra/addMitra").permitAll()
                             .requestMatchers("/user/logout").permitAll()
                             .requestMatchers("/user/ubah-password").permitAll()
 //                        .requestMatchers("/user/user-view-by-admin").hasRole("Admin")
