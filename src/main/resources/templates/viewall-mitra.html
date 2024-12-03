@@ -9,6 +9,19 @@
     <!-- Font Awesome for Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
     <style>
+        /* Ensure body and html take up the full height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Make the main content area take up all available space */
+        .content {
+            flex: 1;
+        }
+
         .table {
             margin-top: 20px;
             border-collapse: separate;
@@ -27,27 +40,26 @@
             max-width: 200px; /* Adjust as necessary */
         }
         .table th {
-            background-color: #007bff;
+            background-color: #ff7e5f; /* Orange color */
             color: white;
         }
         .table tbody tr:hover {
             background-color: #f1f1f1;
         }
+
         footer {
-      background-color: #f8f9fa;
-      padding: 10px 0;
-      text-align: center;
-      font-size: 14px;
-    }
-
-
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            text-align: left;
+            font-size: 14px;
+        }
     </style>
-
 </head>
 <body>
 <!-- Navbar Fragment -->
 <div th:insert="fragments/navbar-ops :: nav"></div>
 
+<!-- Main Content -->
 <div class="content container">
     <div class="header">
         <h1 class="text-center mt-4">Daftar List Mitra</h1>
