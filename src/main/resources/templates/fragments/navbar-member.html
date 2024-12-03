@@ -41,11 +41,42 @@
         </li>
       </ul>
 
+<<<<<<< HEAD
       <!-- Button aligned right -->
       <a class="btn btn-outline-light nav-button" href="/user/ubah-password" th:classappend="${onevar == 'ubahPassword'} ? active">Change Password</a>
       <a class="btn btn-outline-light nav-button" href="/logout" th:classappend="${onevar == 'logout'} ? active">Logout</a>
       <a class="btn btn-outline-light nav-button" href="/mitra/addMitra">Mitra</a>
       <a class="btn btn-outline-light nav-button" href="/user/profile" th:classappend="${onevar == 'profile'} ? active">View Profile</a>
+=======
+        <!-- Button aligned right -->
+        <a
+        class="btn btn-outline-light nav-button"
+          href="/user/ubah-password"
+          th:classappend="${onevar == 'ubahPassword'} ? active"
+          >Change Password</a
+        >
+        <br />
+        <a
+          class="btn btn-outline-light nav-button"
+          href="/logout"
+          th:classappend="${onevar == 'logout'} ? active"
+          >Logout</a
+        >
+
+        <a
+                class="btn btn-outline-light nav-button"
+                href="/mitra/addMitra">Mitra</a>
+
+        <br />
+        <a
+                class="btn btn-outline-light nav-button"
+                href="/user/profile"
+                th:classappend="${onevar == 'profile'} ? active"
+        >View Profile</a
+        >
+        
+      </div>
+>>>>>>> 4dd235f8a2bebe86f90bbf1e961ae02aece3b645
     </div>
   </div>
 </nav>
