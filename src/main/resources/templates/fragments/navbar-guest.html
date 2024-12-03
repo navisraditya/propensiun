@@ -1,24 +1,24 @@
 <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light" style="background-color: #FF671F; color: white">
   <link th:href="@{/styles/nav.css}" rel="stylesheet" />
-    <div class="container-fluid">
+  <div class="container-fluid">
 
-      <!-- Logo or Brand -->
-      <a class="navbar-brand" href="/">
-        <img src="/images/logo-almaz.png" alt="logo almaz" width="125px"  >
-      </a>
+    <!-- Logo or Brand -->
+    <a class="navbar-brand" href="/">
+      <img src="/images/logo-almaz.png" alt="logo almaz" width="125px">
+    </a>
 
-      <!-- Toggler for mobile view -->
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    <!-- Toggler for mobile view -->
+    <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
       <!-- Links in navbar -->
       <div class="collapse navbar-collapse" id="navbarNav">
@@ -34,6 +34,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="user/form-add-feedback">Feedback</a> 
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/menu/menu-list">Menu List</a>
           </li>
         </ul>
           
@@ -51,5 +54,7 @@
                 href="/mitra/add">Mitra</a>
 
       </div>
+
     </div>
+  </div>
 </nav>
