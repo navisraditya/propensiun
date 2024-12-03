@@ -21,7 +21,7 @@ public class MenuModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO) // UUID akan di-generate secara otomatis
-    private UUID uuid; // Pastikan ini bertipe UUID
+    private UUID uuid;
 
     @NotNull
     @Size(min = 5, message = "Nama menu harus memiliki minimal 5 karakter")
