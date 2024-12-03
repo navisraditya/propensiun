@@ -57,7 +57,10 @@ public class MenuController {
             menu.setDeskripsi(deskripsi);
 
             MenuModel savedMenu = menuService.addMenu(menu, imageFile);
+
             redirectAttributes.addFlashAttribute("message", "Menu berhasil ditambahkan!");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Gagal menambahkan menu: " + e.getMessage());
         }

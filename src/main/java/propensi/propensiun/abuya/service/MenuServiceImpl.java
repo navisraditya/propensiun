@@ -27,9 +27,17 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public MenuModel addMenu(MenuModel menu, MultipartFile image) throws Exception {
 
-        Optional<MenuModel> existingMenu = menuDb.findByNama(menu.getNama());
-        if (existingMenu.isPresent()) {
+        if (menuDb.existsByNamaIgnoreCase(menu.getNama())) {
             throw new IllegalArgumentException("Nama menu sudah ada, silakan gunakan nama yang lain.");
+        }
+
+
+        if (menu.getNama().length() < 5) {
+            throw new IllegalArgumentException("Nama menu harus memiliki minimal 5 karakter.");
+        }
+
+        if (menu.getDeskripsi() == null || menu.getDeskripsi().isEmpty()) {
+            throw new IllegalArgumentException("Deskripsi tidak boleh kosong.");
         }
 
         // Upload gambar menu ke Supabase dan ambil URL-nya

@@ -61,7 +61,7 @@
     </div>
   </div>
 
-  <!-- Menampilkan pesan sukses atau error -->
+  <!-- Menampilkan pesan error jika ada -->
   <div class="alert alert-danger" th:if="${error}" role="alert">
     <p th:text="${error}"></p>
   </div>
@@ -72,6 +72,11 @@
     <div class="form-group">
       <label for="nama">Nama Menu:</label>
       <input type="text" id="nama" name="nama" class="form-control" required>
+    </div>
+
+    <!-- Menampilkan pesan error jika ada -->
+    <div class="alert alert-danger" th:if="${error}" role="alert">
+      <p th:text="${error}"></p>
     </div>
 
     <!-- Input untuk Kategori Menu -->
@@ -103,9 +108,9 @@
       <a href="/menu" class="btn btn-secondary">Kembali ke Daftar Menu</a>
     </div>
   </form>
-</div>
 
-<div th:insert="fragments/footer :: footer"></div>
+
+  <div th:insert="fragments/footer :: footer"></div>
 
 <!-- Bootstrap JS dan Popper -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
