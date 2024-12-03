@@ -1,5 +1,7 @@
 package propensi.propensiun.abuya.controller;
 
+import org.springframework.security.core.Authentication;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,9 +24,14 @@ public class MenuController {
 
 
     @GetMapping("/menu-list")
-    public String showMenuList(Model model) {
+    public String showMenuList(Model model, Authentication authentication) {
         List<MenuModel> menus = menuService.getAllMenus();
         model.addAttribute("menus", menus);
+
+        if (authentication != null) {
+            String currentRole = authentication.getAuthorities().toString();
+            model.addAttribute("currentRole", currentRole);
+        }
 
         return "menu-list";
     }

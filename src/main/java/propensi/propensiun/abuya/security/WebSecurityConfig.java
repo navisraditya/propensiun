@@ -40,6 +40,8 @@ import org.springframework.http.HttpMethod;
                             .requestMatchers("/user/form-add-feedback").permitAll()
                             .requestMatchers(HttpMethod.POST, "/user/form-add-feedback").permitAll()
 
+                            
+
                             .anyRequest().authenticated()
                                             )
                     .csrf(csrf -> csrf

@@ -1,86 +1,83 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Menu List</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar Menu - Almaz</title>
   <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
       display: flex;
       flex-direction: column;
-      min-height: 200vh;
+      min-height: 100vh;
       font-family: Arial, sans-serif;
     }
     .content {
       flex: 1;
       padding: 20px;
+      margin-top: 60px; /* Memberikan jarak atas dari navbar */
     }
-    .menu-card {
-      margin-bottom: 20px;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.3s;
-      height: 350px;
-      display: flex;
-      flex-direction: column;
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px; /* Memberikan jarak antar card */
     }
-    .menu-card:hover {
-      transform: scale(1.05);
+    .card {
+      margin-bottom: 20px; /* Jarak bawah setiap card */
     }
-    .menu-card img {
-      height: 150px;
-      object-fit: cover;
-    }
-    .menu-card .card-body {
+    .footer {
+      position: relative;
+      bottom: 0;
+      min-height: 100px;
+      width: 100%;
+      text-align: center;
+      padding-top: 20px;
       background-color: #f8f9fa;
-      padding: 20px;
-      flex-grow: 1;
-    }
-    .menu-card .card-title {
-      font-size: 20px;
-      font-weight: bold;
-      color: #343a40;
-    }
-    .menu-card .card-text {
       font-size: 16px;
-      color: #6c757d;
     }
   </style>
 </head>
 <body>
+
+<!-- Insert Navbar -->
 <div th:insert="fragments/navbar-admin :: nav"></div>
 
 <div class="content container">
-  <h2 class="text-center mb-4">Menu List</h2>
+  <h1 class="text-center">Daftar Menu</h1>
 
-  <!-- Menu List as Cards -->
-  <div class="row">
-    <div class="col-md-4" th:each="menu : ${menus}">
-      <div class="card menu-card">
-        <img src="https://via.placeholder.com/300x150" class="card-img-top" alt="Menu Image" />
-        <div class="card-body">
-          <h5 class="card-title" th:text="${menu.nama}">Menu Name</h5>
-          <p class="card-text" th:text="${menu.deskripsi}">Menu Description</p>
-          <p class="card-text">
-            <strong>Kategori:</strong> <span th:text="${menu.kategori}">Kategori</span>
-          </p>
+  <!-- Notifikasi Pesan Sukses -->
+  <div class="alert alert-success" th:if="${message}" role="alert">
+    <p th:text="${message}"></p>
+  </div>
+
+  <div class="card-container">
+    <div class="card" th:each="menu : ${menus}">
+      <img th:src="${menu.gambar}" class="card-img-top" alt="Menu Image" />
+      <div class="card-body">
+        <h5 class="card-title" th:text="${menu.nama}">Nama Menu</h5>
+        <p class="card-text" th:text="${menu.deskripsi}">Deskripsi Menu</p>
+
+        <!-- Tombol Edit dan Delete hanya untuk Admin -->
+        <div th:if="${currentRole.contains('Admin')}">
           <a href="/menu/form-edit-menu/{id}" th:href="@{/menu/form-edit-menu/{id}(id=${menu.uuid})}" class="btn btn-primary">Edit</a>
+
+
+          <!-- Form untuk Hapus Menu -->
+          <form th:action="@{/menu/deleteMenu}" method="post" style="display:inline;">
+            <input type="hidden" name="id" th:value="${menu.uuid}" />
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus menu ini?')">Hapus</button>
+          </form>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<footer>
   <div th:insert="fragments/footer :: footer"></div>
-</footer>
 
-<!-- Bootstrap JS dan Popper -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
+  <!-- Bootstrap JS dan Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
 </body>
 </html>

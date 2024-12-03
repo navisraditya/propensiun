@@ -1,86 +1,150 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Menu List</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Menu - Almaz</title>
   <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
       display: flex;
       flex-direction: column;
-      min-height: 200vh;
+      min-height: 100vh;
       font-family: Arial, sans-serif;
     }
     .content {
       flex: 1;
       padding: 20px;
+      margin-top: 60px; /* Tambahkan margin-top untuk memberi jarak dari navbar */
     }
-    .menu-card {
-      margin-bottom: 20px;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      transition: transform 0.3s;
-      height: 350px;
-      display: flex;
-      flex-direction: column;
+    h1 {
+      margin-top: 20px;
     }
-    .menu-card:hover {
-      transform: scale(1.05);
+    .form-group {
+      margin-bottom: 15px;
     }
-    .menu-card img {
-      height: 150px;
-      object-fit: cover;
-    }
-    .menu-card .card-body {
+    .footer {
+      position: relative;
+      bottom: 0;
+      min-height: 100px;
+      width: 100%;
+      text-align: center;
+      padding-top: 20px;
       background-color: #f8f9fa;
-      padding: 20px;
-      flex-grow: 1;
-    }
-    .menu-card .card-title {
-      font-size: 20px;
-      font-weight: bold;
-      color: #343a40;
-    }
-    .menu-card .card-text {
       font-size: 16px;
-      color: #6c757d;
+    }
+    .form-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
   </style>
 </head>
 <body>
+
+<!-- Insert Navbar -->
 <div th:insert="fragments/navbar-admin :: nav"></div>
 
 <div class="content container">
-  <h2 class="text-center mb-4">Menu List</h2>
+  <div class="form-container">
+    <h1 class="text-center">Edit Menu</h1>
 
-  <!-- Menu List as Cards -->
-  <div class="row">
-    <div class="col-md-4" th:each="menu : ${menus}">
-      <div class="card menu-card">
-        <img src="https://via.placeholder.com/300x150" class="card-img-top" alt="Menu Image" />
-        <div class="card-body">
-          <h5 class="card-title" th:text="${menu.nama}">Menu Name</h5>
-          <p class="card-text" th:text="${menu.deskripsi}">Menu Description</p>
-          <p class="card-text">
-            <strong>Kategori:</strong> <span th:text="${menu.kategori}">Kategori</span>
-          </p>
-          <a href="/menu/form-edit-menu/{id}" th:href="@{/menu/form-edit-menu/{id}(id=${menu.uuid})}" class="btn btn-primary">Edit</a>
+    <!-- Modal untuk notifikasi sukses -->
+    <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="messageModalLabel">Notifikasi</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p th:text="${message}">Menu berhasil diedit!</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Menampilkan pesan sukses atau error -->
+    <div class="alert alert-danger" th:if="${error}" role="alert">
+      <p th:text="${error}"></p>
+    </div>
+
+    <!-- Form untuk mengedit menu beserta gambar -->
+    <form th:action="@{/menu/editMenu/{id}(id=${menu.uuid})}" method="post" enctype="multipart/form-data">
+      <!-- Input untuk Nama Menu -->
+      <div class="form-group">
+        <label for="nama">Nama Menu:</label>
+        <input type="text" id="nama" name="nama" class="form-control" th:value="${menu.nama}" required>
+      </div>
+
+      <!-- Input untuk Kategori Menu -->
+      <div class="form-group">
+        <label for="kategori">Kategori Menu:</label>
+        <select id="kategori" name="kategori" class="form-control" required>
+          <option th:each="kategori : ${T(propensi.propensiun.abuya.model.MenuModel.Kategori).values()}"
+                  th:value="${kategori.name()}" th:text="${kategori}" th:selected="${menu.kategori.name() == kategori.name()}">
+          </option>
+        </select>
+      </div>
+
+      <!-- Input untuk Deskripsi Menu -->
+      <div class="form-group">
+        <label for="deskripsi">Deskripsi Menu:</label>
+        <textarea id="deskripsi" name="deskripsi" class="form-control" rows="4" required th:text="${menu.deskripsi}"></textarea>
+      </div>
+
+      <!-- Input untuk memilih Gambar -->
+      <div class="form-group">
+        <label for="imageFile">Pilih Gambar:</label>
+        <input type="file" id="imageFile" name="imageFile" class="form-control" accept="image/*">
+        <div class="mt-2">
+          <!-- Menampilkan gambar yang sudah ada jika ada -->
+          <img th:src="${menu.gambar}" alt="Current Image" width="100" height="100"/>
+        </div>
+      </div>
+
+      <!-- Tombol untuk submit form -->
+      <div class="d-flex justify-content-between mt-3">
+        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+        <a href="/menu/menu-list" class="btn btn-secondary">Kembali ke Daftar Menu</a>
+      </div>
+    </form>
   </div>
 </div>
 
-<footer>
-  <div th:insert="fragments/footer :: footer"></div>
-</footer>
+<div th:insert="fragments/footer :: footer"></div>
 
 <!-- Bootstrap JS dan Popper -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var messageModal = document.getElementById('messageModal');
+    var urlParams = new URLSearchParams(window.location.search);
+
+    // Menampilkan modal jika menu berhasil diedit
+    if (messageModal && urlParams.get('success') === 'true') {
+      var modal = new bootstrap.Modal(messageModal);
+      modal.show();
+
+      messageModal.addEventListener('hidden.bs.modal', function () {
+        window.location.href = "/menu/form-edit-menu?success=true"; // Redirect ke halaman form edit menu setelah modal ditutup
+      });
+
+      setTimeout(function() {
+        window.location.href = "/menu/form-edit-menu?success=true"; // 3000 ms = 3 detik
+      }, 3000); // 3 detik sebelum redirect
+    }
+  });
+</script>
+
 </body>
 </html>
