@@ -9,6 +9,8 @@ import java.util.UUID;
 
 public interface MenuService {
 
+    List<MenuModel> getMenusByCategory(MenuModel.Kategori kategori);
+
     // Menambahkan menu baru
     MenuModel addMenu(MenuModel menu, MultipartFile image) throws Exception;
 
@@ -17,6 +19,8 @@ public interface MenuService {
     MenuModel getMenuById(UUID uuid);
 
     MenuModel updateMenu(MenuModel menu);
+
+    MenuModel updateMenu(MenuModel menu, MultipartFile image) throws Exception;
 
     void deleteMenu(UUID uuid);
 
