@@ -241,8 +241,20 @@
                 <button type="submit">Kirim</button>
             </div>
             <div>
-                <button type="button" class="back-home-btn" 
-                th:onclick="'window.location.href=\'' + @{/memberlanding} + '\';'">Back to Homepage</button>
+                <div>
+                    <!-- Button to go back to homepage -->
+                    <button type="button" class="back-home-btn" 
+                        th:if="${role == 'Member'}"
+                        th:onclick="'window.location.href=\'' + @{/memberlanding} + '\';'">
+                        Back to Homepage
+                    </button>
+    
+                    <button type="button" class="back-home-btn" 
+                        th:unless="${role == 'Member'}"
+                        th:onclick="'window.location.href=\'' + @{/} + '\';'">
+                        Back to Homepage
+                    </button>
+                </div>
             </div>
         </form>
     </div>
