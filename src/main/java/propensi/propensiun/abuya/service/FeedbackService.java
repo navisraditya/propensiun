@@ -10,7 +10,11 @@ public interface FeedbackService {
 
     List<FeedbackModel> getAllFeedback();
 
+    List<FeedbackModel> getFeedbacksbyStoreId(Integer storeId);
+
     float averageScoreFeedback(FeedbackModel feedback);
 
     float averageStore(String store);
+
+    float calculateCombinedAverage();
 }

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar Menu - Almaz</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+    .content {
+      flex: 1;
+      padding: 20px;
+      margin-top: 60px; /* Memberikan jarak atas dari navbar */
+    }
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px; /* Memberikan jarak antar card */
+    }
+    .card {
+      margin-bottom: 20px; /* Jarak bawah setiap card */
+    }
+    .footer {
+      position: relative;
+      bottom: 0;
+      min-height: 100px;
+      width: 100%;
+      text-align: center;
+      padding-top: 20px;
+      background-color: #f8f9fa;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Insert Navbar -->
+<div th:insert="fragments/navbar-admin :: nav"></div>
+
+<div class="content container">
+  <h1 class="text-center">Daftar Menu</h1>
+
+  <!-- Dropdown Filter -->
+  <form method="get" action="/menu/filtered-menu" class="mb-4">
+    <div class="row">
+      <div class="col-md-4">
+        <select name="kategori" class="form-select">
+          <option th:value="" th:selected="${selectedCategory == null}">Semua Kategori</option>
+          <option th:each="category : ${categories}"
+                  th:value="${category.name()}"
+                  th:text="${category}"
+                  th:selected="${selectedCategory != null and selectedCategory.name() == category.name()}">
+          </option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary">Filter</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Notifikasi Pesan Sukses -->
+  <div class="alert alert-success" th:if="${message}" role="alert">
+    <p th:text="${message}"></p>
+  </div>
+
+  <!-- Card Container -->
+  <div class="card-container">
+    <div class="card" th:each="menu : ${menus}">
+      <img th:src="${menu.gambar}" class="card-img-top" alt="Menu Image" />
+      <div class="card-body">
+        <h5 class="card-title" th:text="${menu.nama}">Nama Menu</h5>
+        <p class="card-text" th:text="${menu.deskripsi}">Deskripsi Menu</p>
+
+        <!-- Tombol Edit dan Delete hanya untuk Admin -->
+        <div th:if="${currentRole.contains('Admin')}">
+          <a th:href="@{/menu/form-edit-menu/{id}(id=${menu.uuid})}" class="btn btn-primary">Edit</a>
+
+          <form th:action="@{/menu/deleteMenu}" method="post" style="display:inline;">
+            <input type="hidden" name="id" th:value="${menu.uuid}" />
+            <button type="submit" class="btn btn-danger"
+                    onclick="return confirm('Apakah Anda yakin ingin menghapus menu ini?')">Hapus</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div th:insert="fragments/footer :: footer"></div>
+
+<!-- Bootstrap JS dan Popper -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>

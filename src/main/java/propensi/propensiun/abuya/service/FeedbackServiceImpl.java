@@ -26,6 +26,11 @@ public class FeedbackServiceImpl implements FeedbackService {
     public List<FeedbackModel> getAllFeedback() {return feedbackDb.findAll();}
 
     @Override
+    public List<FeedbackModel> getFeedbacksbyStoreId(Integer storeId) {
+        return feedbackDb.findByStoreUuid(storeId);
+    };
+
+    @Override
     public float averageScoreFeedback(FeedbackModel feedback){
         float fasilitas = feedback.getFasilitas();
         float menu = feedback.getMenu();
@@ -38,4 +43,24 @@ public class FeedbackServiceImpl implements FeedbackService {
     public float averageStore(String store){
         return 5;
     }
+
+    @Override
+    public float calculateCombinedAverage() {
+        List<FeedbackModel> feedbacks = feedbackDb.findAll(); // Get all feedback entries
+
+        float totalScore = 0.0f; // Sum of all scores across aspects
+        int totalFeedbacks = feedbacks.size();
+
+        // Sum up all scores for all feedbacks
+        for (FeedbackModel feedback : feedbacks) {
+            totalScore += feedback.getMenu();
+            totalScore += feedback.getPelayanan();
+            totalScore += feedback.getFasilitas();
+        }
+
+        // Calculate combined average
+        int totalScores = totalFeedbacks * 3; // Each feedback has 3 scores
+        return totalScores > 0 ? totalScore / totalScores : 0.0f;
+    }
 }
+
