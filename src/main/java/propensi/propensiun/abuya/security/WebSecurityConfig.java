@@ -46,6 +46,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
                             .requestMatchers("/user/lupa-password/**").permitAll()
                             .requestMatchers(HttpMethod.GET, "/user/lupa-password/**").permitAll()
                             .requestMatchers(HttpMethod.POST, "/user/lupa-password/**").permitAll()
+                                    .requestMatchers(HttpMethod.GET,"/menu/menu-list").permitAll()
                             .anyRequest().authenticated()
                                                                         )
                     .csrf(csrf -> csrf
