@@ -32,36 +32,43 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
                                     .requestMatchers(HttpMethod.GET, "/mitra/add").permitAll()
                                     .requestMatchers(HttpMethod.POST, "/mitra/add").permitAll()
                                     .requestMatchers("/mitra/addMitra").permitAll()
-                            .requestMatchers("/user/logout").permitAll()
-                            .requestMatchers("/user/ubah-password").permitAll()
+                                .requestMatchers("/user/logout").permitAll()
+                                .requestMatchers("/user/ubah-password").permitAll()
 //                        .requestMatchers("/user/user-view-by-admin").hasRole("Admin")
 //                        .requestMatchers("/user/store-manager").hasRole("Store Manager")
-                            
-                            // Feedback
-                            // Anonymous dapat mengakses
                             .requestMatchers("/user/form-add-feedback").permitAll()
                             .requestMatchers(HttpMethod.POST, "/user/form-add-feedback").permitAll()
-
+                            .requestMatchers(HttpMethod.GET, "/user/form-add-feedback").permitAll()
+                            .requestMatchers("/user/lupa-password-verif").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/user/lupa-password-verif").permitAll()
+                            .requestMatchers("/user/lupa-password").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/user/lupa-password").permitAll()
+                            .requestMatchers("/user/lupa-password/**").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/user/lupa-password/**").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/user/lupa-password/**").permitAll()
                             
 
                             .anyRequest().authenticated()
-                                            )
+                                                                        )
                     .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/user/form-add-feedback") // Nonaktifkan CSRF untuk endpoint ini jika diperlukan
                     )
 
+    
+
                     .formLogin(formLogin -> formLogin
+                                .loginPage("/user/login")
                             .loginProcessingUrl("/user/login")
-                            .defaultSuccessUrl("/redirectHomepage")
-                            .permitAll())
-                    .logout(logout -> logout
-                            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                            .logoutSuccessUrl("/redirectHomepage").permitAll());
+                                .defaultSuccessUrl("/redirectHomepage")
+                                .permitAll())
+                        .logout(logout -> logout
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                                .logoutSuccessUrl("/redirectHomepage").permitAll());
 //                .exceptionHandling(exceptionHandling -> exceptionHandling
 //                        .accessDeniedPage("/access-denied")
 //                );
-            return http.build();
-        }
+                return http.build();
+            }
 
         @Bean
         public BCryptPasswordEncoder encoder() {
