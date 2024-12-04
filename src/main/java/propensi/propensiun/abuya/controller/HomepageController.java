@@ -32,6 +32,9 @@ public class HomepageController {
     @Autowired
     StoreService storeService;
 
+    @Autowired
+    MenuService menuService;
+
     @GetMapping("/")
     public String guestLanding(Model model) {
         return "homepage";
@@ -88,8 +91,10 @@ public class HomepageController {
     public String memberLanding(Model model) {
         List<PromoModel> listPromo = promoService.getPromoList(0);
         listPromo.sort(Comparator.comparing(PromoModel::getUuid));
+        List<MenuModel> listMenu = menuService.getAllMenus();
 
         model.addAttribute("promotions",listPromo);
+        model.addAttribute("menus", listMenu);
         return "homepage-member";
 
     }

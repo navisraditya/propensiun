@@ -116,8 +116,8 @@ public class UserController {
     //     return "login";
     // }
 
-    @GetMapping(value =  "/login")
-    private String login() {
+    // @GetMapping(value =  "/login")
+    // private String login() {
     // @RequestMapping("/login")
     // public String login() {
     //     return "login";
