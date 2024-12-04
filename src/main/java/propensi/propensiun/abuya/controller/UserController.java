@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import propensi.propensiun.abuya.model.FeedbackModel;
 
 import propensi.propensiun.abuya.model.FeedbackModel;
 
@@ -108,6 +111,13 @@ public class UserController {
         return null;
     }
 
+    // @RequestMapping("/login")
+    // public String login() {
+    //     return "login";
+    // }
+
+    @GetMapping(value =  "/login")
+    private String login() {
     // @RequestMapping("/login")
     // public String login() {
     //     return "login";
@@ -539,8 +549,8 @@ public class UserController {
             String userPassword = userService.getPassword(user);
             String userSecAnswer = user.getSecurityAnswer();
 
-            if (passwordEncoder.matches(newPassword, userPassword)) {
-                redirectAttributes.addFlashAttribute("error", "You can't change the password to the same password.");
+            if (!userSecAnswer.equals(secAnswer)){
+                redirectAttributes.addFlashAttribute("error", "The Security Answer is false.");
                 return "redirect:/user/lupa-password/" + username;
             }
 
@@ -549,8 +559,8 @@ public class UserController {
                 return "redirect:/user/lupa-password/" + username;
             }
 
-            if (!userSecAnswer.equals(secAnswer)){
-                redirectAttributes.addFlashAttribute("error", "The Security Answer is false.");
+            if (passwordEncoder.matches(newPassword, userPassword)) {
+                redirectAttributes.addFlashAttribute("error", "You can't change the password to the same password.");
                 return "redirect:/user/lupa-password/" + username;
             }
 
