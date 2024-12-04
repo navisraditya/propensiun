@@ -1,62 +1,47 @@
 <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light" style="background-color: #FF671F; color: white">
   <link th:href="@{/styles/nav.css}" rel="stylesheet" />
-    <div class="container-fluid">
+  <div class="container-fluid">
 
-      <!-- Logo or Brand -->
-      <a class="navbar-brand" href="/">
-        <img src="/images/logo-almaz.png" alt="logo almaz" width="125px"  >
-      </a>
+    <!-- Logo or Brand -->
+    <a class="navbar-brand" href="/">
+      <img src="/images/logo-almaz.png" alt="logo almaz" width="125px">
+    </a>
 
-      <!-- Toggler for mobile view -->
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    <!-- Toggler for mobile view -->
+    <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <!-- Links in navbar -->
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="#">Home</a> 
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" >About</a> 
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a> 
-          </li>
-        </ul>
+    <!-- Links in navbar -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact</a>
+        </li>
+        <!-- Add Menu List link here -->
+        <li class="nav-item">
+          <a class="nav-link" href="/menu/menu-list">Menu List</a>
+        </li>
+      </ul>
 
-        <!-- Button aligned right -->
-        <a
-        class="btn btn-outline-light nav-button"
-          href="/user/ubah-password"
-          th:classappend="${onevar == 'ubahPassword'} ? active"
-          >Change Password</a
-        >
-        <br />
-        <a
-          class="btn btn-outline-light nav-button"
-          href="/logout"
-          th:classappend="${onevar == 'logout'} ? active"
-          >Logout</a
-        >
-
-        <br />
-        <a
-                class="btn btn-outline-light nav-button"
-                href="/user/profile"
-                th:classappend="${onevar == 'profile'} ? active"
-        >View Profile</a
-        >
-        
-      </div>
+      <!-- Button aligned right -->
+      <a class="btn btn-outline-light nav-button" href="/user/ubah-password" th:classappend="${onevar == 'ubahPassword'} ? active">Change Password</a>
+      <a class="btn btn-outline-light nav-button" href="/logout" th:classappend="${onevar == 'logout'} ? active">Logout</a>
+      <a class="btn btn-outline-light nav-button" href="/user/profile" th:classappend="${onevar == 'profile'} ? active">View Profile</a>
     </div>
+  </div>
 </nav>

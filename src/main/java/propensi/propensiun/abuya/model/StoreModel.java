@@ -62,6 +62,18 @@ public class StoreModel {
             }
         }
     }
+
+    @Column(name = "avg_menu", nullable = false, columnDefinition = "float default 0.0")
+    private float averageMenu = 0.0f;
+
+    @Column(name = "avg_pelayanan", nullable = false, columnDefinition = "float default 0.0")
+    private float averagePelayanan = 0.0f;
+
+    @Column(name = "avg_fasilitas", nullable = false, columnDefinition = "float default 0.0")
+    private float averageFasilitas = 0.0f;
+
+    @Column(name = "avg_total", nullable = false, columnDefinition = "float default 0.0")
+    private float averageTotal = 0.0f;
     
 
     @OneToOne (fetch=FetchType.EAGER)

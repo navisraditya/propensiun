@@ -1,8 +1,13 @@
 package propensi.propensiun.abuya.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,6 +15,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import propensi.propensiun.abuya.model.FeedbackModel;
+
+import propensi.propensiun.abuya.model.FeedbackModel;
 
 import propensi.propensiun.abuya.model.FeedbackModel;
 import propensi.propensiun.abuya.model.PeranModel;
@@ -20,7 +29,11 @@ import propensi.propensiun.abuya.service.PeranService;
 import propensi.propensiun.abuya.service.StoreService;
 import propensi.propensiun.abuya.service.UserService;
 
+import java.lang.reflect.Member;
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -33,6 +46,9 @@ public class UserController {
 
     @Autowired
     private PeranService peranService;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     private Integer getUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -95,8 +111,20 @@ public class UserController {
         return null;
     }
 
-    @RequestMapping("/login")
-    public String login() {
+    // @RequestMapping("/login")
+    // public String login() {
+    //     return "login";
+    // }
+
+    // @GetMapping(value =  "/login")
+    // private String login() {
+    // @RequestMapping("/login")
+    // public String login() {
+    //     return "login";
+    // }
+
+    @GetMapping(value =  "/login")
+    private String login() {
         return "login";
     }
 
@@ -323,16 +351,14 @@ public class UserController {
 
     @GetMapping(value = "/ubah-password")
     private String ubahPasswordForm(Model model) {
+        UserModel user = getUser();
+        String role = user.getPeran().getName();
+        model.addAttribute("role", role);
         return "ubah-password";
     }
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-
     @PostMapping(value = "/ubah-password")
     private String ubahPasswordPost(
-        
-
             @RequestParam("oldPassword") String oldPassword,
             @RequestParam("newPassword") String newPassword,
             @RequestParam("confirmPassword") String confirmPassword,
@@ -423,6 +449,17 @@ public class UserController {
     private String getFormAddFeedback(Model model) {  
         List<StoreModel> stores = storeService.getAllStores();
         model.addAttribute("stores", stores);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth instanceof AnonymousAuthenticationToken == false){
+            String role = "Member";
+            model.addAttribute("role", role);
+        } else {
+            String role = null;
+            model.addAttribute("role", role);
+        }
+        
         return "form-add-feedback";
     }
 
@@ -430,6 +467,8 @@ public class UserController {
     @PostMapping(value = "/form-add-feedback")
     private String postFormAddFeedback (
         @RequestParam("cabang") String storeId,
+        @RequestParam("tanggalKunjungan") @DateTimeFormat(pattern = "dd-MMM-yyyy")  LocalDate tanggalKunjungan,
+        @RequestParam("waktuPengisian") @DateTimeFormat(pattern = "dd-MMM-yyyy HH:mm:ss") LocalDateTime waktuPengisian,
         @RequestParam("pelayanan") float pelayanan,
         @RequestParam("menu") float menu,
         @RequestParam("fasilitas") float fasilitas,
@@ -449,7 +488,7 @@ public class UserController {
 
         StoreModel store = storeService.getStoreById(storeId);
 
-        FeedbackModel feedback = new FeedbackModel(null, store, user, pelayanan, menu, fasilitas, kotakSaran);
+        FeedbackModel feedback = new FeedbackModel(null, store, user, pelayanan, menu, fasilitas, kotakSaran, waktuPengisian, tanggalKunjungan);
         System.out.println("Store ID"+store);
         feedbackService.saveFeedback(feedback);
         redirectAttributes.addFlashAttribute("success", "Feedback berhasil ditambahkan");
@@ -479,24 +518,55 @@ public class UserController {
             @RequestParam("username") String username,
             Model model) {
 
-        UserModel user = getUser();
-        System.out.println(username);
-
-        if (userService.isUsernameTaken(username)) {
-            if (user.getPeran().getUuid() == 4){
-                return "lupa-password-verif";
-            } else {
-                model.addAttribute("error", "Fitur Lupa Password hanya bisa diakses untuk member");
-                return "lupa-password-verif";
-            }
+        if (userService.isUsernameTaken(username) && username != null && username != "") {
+            // Redirect to lupa-password with the username as a path variable
+            return "redirect:/user/lupa-password/" + username;
         } else {
             model.addAttribute("error", "Username tidak ditemukan");
             return "lupa-password-verif";
         }
     }
-
-    @GetMapping(value = "/lupa-password")
-    private String lupaPassword(Model model) {
+    
+    @GetMapping(value = "/lupa-password/{username}")
+    private String lupaPassword(@PathVariable("username") String username, Model model) {
+        String userSecQuestion = userService.getUserByUsername(username).getSecurityQuestion();
+        model.addAttribute("username", username);
+        model.addAttribute("userSecQuestion", userSecQuestion);
+        System.out.println("TEST SEC QUESTION: "+userSecQuestion);
         return "lupa-password";
+    }
+
+    @PostMapping(value = "/lupa-password")
+    private String lupaPassword(
+        @RequestParam("username") String username,
+        @RequestParam("secAnswer") String secAnswer,
+        @RequestParam("newPassword") String newPassword,
+        @RequestParam("confirmPassword") String confirmPassword,
+        Model model,
+        RedirectAttributes redirectAttributes
+        ){
+            UserModel user = userService.getUserByUsername(username);
+            String userPassword = userService.getPassword(user);
+            String userSecAnswer = user.getSecurityAnswer();
+
+            if (!userSecAnswer.equals(secAnswer)){
+                redirectAttributes.addFlashAttribute("error", "The Security Answer is false.");
+                return "redirect:/user/lupa-password/" + username;
+            }
+
+            if (!newPassword.equals(confirmPassword)) {
+                redirectAttributes.addFlashAttribute("error", "New password and confirm password do not match.");
+                return "redirect:/user/lupa-password/" + username;
+            }
+
+            if (passwordEncoder.matches(newPassword, userPassword)) {
+                redirectAttributes.addFlashAttribute("error", "You can't change the password to the same password.");
+                return "redirect:/user/lupa-password/" + username;
+            }
+
+            userService.changePassword(user, confirmPassword);
+            redirectAttributes.addFlashAttribute("success", "Password has been changed successfully.");
+
+            return "redirect:/user/lupa-password/" + username;  
     }
 }

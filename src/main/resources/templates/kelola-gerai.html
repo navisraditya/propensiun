@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengelolaan Gerai</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin: 20px 15px;
+        }
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 20px 0;
+            color: #333;
+            text-align: center;
+        }
+        .info-box {
+            border-radius: 1rem;
+            background-color: #ffffff;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            transition: box-shadow 0.3s ease;
+        }
+        .info-box:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        .info-box .number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #FF671F;
+            margin-bottom: 10px;
+        }
+        .info-box p {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0;
+            color: #666;
+        }
+        .rating-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0.5rem;
+            background-color: #ffffff;
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 0.9rem; /* Adjusted font size */
+        }
+        .rating-section .store {
+            font-weight: bold;
+            color: #333;
+        }
+        .rating-section .rating {
+            color: #FF671F;
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+        .rating-section .rating .star {
+            color: #FFD700;
+            font-size: 0.9rem; /* Adjusted font size */
+        }
+        .feedback-item {
+            border-radius: 1rem;
+            background-color: #ffffff;
+            padding: 1rem; /* Adjusted padding */
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .feedback-item p {
+            margin: 0;
+            font-size: 0.9rem; /* Adjusted font size */
+        }
+        .feedback-item .name {
+            font-weight: bold;
+            font-size: 0.9rem; /* Adjusted font size */
+            color: #333;
+            display: inline-block;
+        }
+        .feedback-item .date {
+            font-size: 0.8rem; /* Adjusted font size */
+            color: #777;
+            text-align: right;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .feedback-item .store-name {
+            font-size: 0.9rem; /* Adjusted font size */
+            font-weight: 300;
+            color: #333;
+            background-color: #f1f1f1;
+            padding: 0.5rem 0.5rem;
+            border-radius: 0.8rem;
+            display: inline-block;
+            margin-top: 0.8rem;
+            border: 1px solid #333333;
+        }
+        .feedback-item .message {
+            font-size: 0.9rem; /* Adjusted font size */
+            color: #555;
+            margin-top: 0.5rem;
+            font-weight: 300;
+        }
+        .feedback-item {
+            width: 100%;
+        }
+
+        .ratings {
+            display: flex;
+            justify-content: space-between;  /* Align to start and end */
+            align-items: center;  /* Center items vertically */
+            margin: 5px 0px 0px 0px;
+            padding: 0px;
+            font-weight: 300;
+        }
+
+        .rating-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 30%;  /* Adjust the width for equal distribution */
+            font-size: 14px;  /* Reduced font size to match saran paragraph */
+        }
+
+        .rating-label {
+            font-weight: bold;
+            margin-bottom: 5px;  /* Space between label and value */
+            font-size: 12px;  /* Reduced label font size */
+        }
+
+        .rating-value {
+            display: flex;
+            align-items: center;
+            gap: 5px;  /* Space between numeric value and star */
+            font-size: 14px;  /* Reduced font size for number and star */
+        }
+
+        .star-icon {
+            font-size: 14px;  /* Adjust size for the star to match the reduced font size */
+            color: gold;  /* Change star color to yellow */
+        }
+
+        .left {
+            text-align: left;  /* Align to the left */
+        }
+
+        .center {
+            text-align: center;  /* Align to the center */
+        }
+
+        .right {
+            text-align: right;  /* Align to the right */
+        }
+
+
+        #spider-chart, #line-chart {
+            width: 100%;
+            height: 300px;
+        }
+
+        .btn-grey {
+            display: inline-block;
+            background-color: #e4e4e4;
+            color: #333;
+            border: none;
+            padding: 0.5rem 1rem;
+            margin: 15px 0px;
+            font-weight: bold;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s ease;
+            text-decoration: none;
+        }
+        .btn-grey:hover {
+            background-color: #d4d4d4;
+            text-decoration: none;
+        }
+
+         .modal-dialog {
+            width: auto;
+            height: 90%;
+        }
+
+        .modal-content {
+
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .minimize-icon {
+            font-size: 1.5rem;
+            color: #333;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .minimize-icon:hover {
+            color: #FF671F;
+        }
+    </style>
+</head>
+<body>
+<div th:insert="fragments/navbar-ops :: nav"></div>
+<div class="container-fluid">
+    <div class="title mb-4">Pengelolaan Gerai</div>
+    <div class="row g-3">
+        <div class="col-lg-9">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <p class="number" th:text="${jumlahGerai}"></p>
+                        <p>Jumlah Gerai</p>
+                        <a href="/gerai/" class="btn-grey">Lihat Semua Gerai &gt;</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-box">
+                        <p class="number">[[${combinedAverage}]] <span class="star">★</span></p>
+                        <p>Rata-rata Nilai</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-box h-100">
+                        <p>Gerai Nilai Tertinggi</p>
+                        <div class="rating-section">
+                            <span class="store" th:text="${highestRatedStore.storeName}">High</span>
+                            <span class="rating" th:text="${highestRatedStore.averageTotal}">0.0 <span class="star">★</span></span>
+                        </div>
+                        <p>Gerai Nilai Terendah</p>
+                        <div class="rating-section">
+                            <span class="store" th:text="${lowestRatedStore.storeName}">Low</span>
+                            <span class="rating" th:text="${lowestRatedStore.averageTotal}">0.0 <span class="star">★</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-3 mt-3">
+                <div class="col-lg-7">
+                    <div class="info-box h-100">
+                        <p>Histori Nilai Rata-Rata</p>
+                        <select id="range-selector" class="form-select">
+                            <option value="daily" selected>Daily</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                        <canvas id="line-chart"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="info-box h-100">
+                        <p>Rata-Rata Penilaian Indikator</p>
+                        <canvas id="spider-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="info-box h-100">
+                <p class="number" th:text="${jumlahFeedback}"></p>
+                <p>Jumlah Feedback</p>
+                <a href="/user/feedback-view" class="btn-grey">Lihat Semua Feedback &gt;</a>
+                <hr>
+                <p>Feedback Terbaru</p>
+                <div th:each="feedback : ${feedbacks}" class="feedback-item">
+                    <div class="d-flex justify-content-between">
+                        <!-- Username, or 'Anonymous' if no user -->
+                        <p class="name" th:text="${feedback.user != null ? feedback.user.username : 'Anonymous'}"></p>
+
+                        <!-- Tanggal Kunjungan -->
+                        <p class="date" th:text="${feedback.tanggalKunjungan}"></p>
+                    </div>
+                    <p class="store-name" th:text="${feedback.store.storeName}"></p>
+
+                    <!-- Feedback Ratings (on the same row) -->
+                    <div class="ratings">
+                        <!-- Menu Rating aligned to the start -->
+                        <div class="rating-item left">
+                            <span class="rating-label">Menu</span>
+                            <div class="rating-value">
+                                <span th:text="${feedback.menu}"></span> <!-- Display feedback.menu -->
+                                <span class="star-icon">&#9733;</span> <!-- Star icon -->
+                            </div>
+                        </div>
+
+                        <!-- Pelayanan Rating (centered) -->
+                        <div class="rating-item center">
+                            <span class="rating-label">Pelayanan</span>
+                            <div class="rating-value">
+                                <span th:text="${feedback.pelayanan}"></span> <!-- Display feedback.pelayanan -->
+                                <span class="star-icon">&#9733;</span> <!-- Star icon -->
+                            </div>
+                        </div>
+
+                        <!-- Fasilitas Rating aligned to the end -->
+                        <div class="rating-item right">
+                            <span class="rating-label">Fasilitas</span>
+                            <div class="rating-value">
+                                <span th:text="${feedback.fasilitas}"></span> <!-- Display feedback.fasilitas -->
+                                <span class="star-icon">&#9733;</span> <!-- Star icon -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="message" th:text="${feedback.saran}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    var ctx1 = document.getElementById('spider-chart').getContext('2d');
+    var spiderChart = new Chart(ctx1, {
+        type: 'radar',
+        data: {
+            labels: ['Menu', 'Fasilitas', 'Pelayanan'],
+            datasets: [{
+                label: 'Nilai Rata-Rata',
+                data: [
+                    [[${globalAverages['menu']}]],
+                    [[${globalAverages['fasilitas']}]],
+                    [[${globalAverages['pelayanan']}]]
+                ],
+                borderColor: '#FF671F',
+                backgroundColor: 'rgba(255, 103, 31, 0.2)',
+                fill: true,
+                pointBackgroundColor: '#FF671F',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                r: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    },
+                    grid: {
+                        color: '#e4e4e4'
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+<script>
+    // Enhanced styling for the Line Chart
+    var ctx2 = document.getElementById('line-chart').getContext('2d');
+    var lineChart;
+
+    // Function to fetch and render chart data
+    function fetchAndRenderChart(range = 'daily') {
+        fetch(`/api/feedback-global-average?range=${range}`)
+            .then(response => response.json())
+            .then(data => {
+                // Destroy the old chart if it exists
+                if (lineChart) lineChart.destroy();
+
+                // Create a new chart with updated data
+                lineChart = new Chart(ctx2, {
+                    type: 'line',
+                    data: {
+                        labels: data.labels, // Labels from the API
+                        datasets: [{
+                            label: 'Global Average Feedback',
+                            data: data.averages, // Data from the API
+                            borderColor: '#FF671F',
+                            backgroundColor: 'rgba(255, 103, 31, 0.2)',
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 3,
+                            pointRadius: 5,
+                            pointBackgroundColor: '#FF671F',
+                            pointBorderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Feedback Global Average Over Time'
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: range === 'monthly' ? 'Month' : 'Date'
+                                },
+                                ticks: {
+                                    font: {
+                                        family: 'Inter'
+                                    }
+                                },
+                                grid: {
+                                    drawBorder: false,
+                                    color: '#e4e4e4'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Average Score'
+                                },
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                    font: {
+                                        family: 'Inter'
+                                    }
+                                },
+                                grid: {
+                                    drawBorder: false,
+                                    color: '#e4e4e4'
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+    }
+
+    // Event Listener for range selection
+    document.getElementById('range-selector').addEventListener('change', (event) => {
+        fetchAndRenderChart(event.target.value); // Fetch new data based on selected range
+    });
+
+    // Initial chart rendering (default: daily)
+    fetchAndRenderChart();
+</script>
+
+</body>
+</html>

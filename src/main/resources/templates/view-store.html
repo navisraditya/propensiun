@@ -11,6 +11,12 @@
             font-family: Inter;
         }
 
+        .container {
+            margin: 0px auto;
+            width: 100%;
+            padding: 0;
+        }
+
         .h1 {
             font-weight: 700px;
         }
@@ -57,6 +63,7 @@
         .card-title {
             color: #ff671f;
             font-weight: 1000;
+            margin-bottom: 2px;
         }
         .edit-button,
         .delete-button {
@@ -194,25 +201,62 @@
     </style>
 </head>
 <body>
-<div th:insert="fragments/navbar-guest :: nav"></div>
-<div class="container my-4">
-    <h1 class="text-center mb-4">
-        <span th:if="${user.peran.uuid == 1 or user.peran.uuid == 2}">Manajemen Gerai</span>
-        <span th:if="${user.peran.uuid == 5}">Temukan Gerai Kami</span>
-    </h1>
+<div th:insert="fragments/navbar-ops :: nav"></div>
+<div class="container">
+    <div class="row g-0 mb-4">
+        <!-- Page Title (occupies 60% of the row) -->
+        <div class="col-12 col-md-6 d-flex align-items-center">
+            <h1 class="text-left w-100">
+                <span th:if="${user != null and user.peran != null and (user.peran.uuid == 1 or user.peran.uuid == 2)}">
+                    Manajemen Gerai
+                </span>
+                <span th:unless="${user != null and user.peran != null and (user.peran.uuid == 1 or user.peran.uuid == 2)}">
+                    Temukan Gerai Kami
+                </span>
+            </h1>
+        </div>
 
-    <div class="text-center mb-4">
-        <button class="add-button" data-bs-toggle="modal" data-bs-target="#addStoreModal"
-                th:if="${user.peran.uuid == 1}">
+        <!-- "Tambah" button and Search bar (occupies 40% of the row, aligned to the right) -->
+        <div class="col-12 col-md-6 d-flex justify-content-end align-items-center">
+            <!-- "Tambah" button -->
+            <button class="add-button btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#addStoreModal"
+                    th:if="${user != null and user.peran != null and user.peran.uuid == 1}">
                 Tambah
-        </button> <!-- Button to trigger modal -->
+            </button>
+
+            <!-- Search Bar -->
+            <div class="input-group" style="max-width: 300px; width: 100%; position: relative;">
+                <!-- Input field with styling -->
+                <input type="text" id="storeSearch" class="form-control"
+                       placeholder="Cari Gerai" onkeyup="filterStores()"
+                       style="border-radius: 25px; border: 2px solid lightgrey; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding-right: 30px; padding-left: 10px; color: grey;">
+
+                <!-- Search icon inside the input, aligned right -->
+                <i class="fas fa-search" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: grey;"></i>
+            </div>
+
+            <!-- Sort Button (A-Z, Z-A) with text "Urutkan Alfabetis" inside the button -->
+            <div class="input-group" style="max-width: 300px; width: 100%; position: sticky; ">
+                <!-- Sort button with A-Z and Z-A icons and text inside -->
+                <button class="btn btn-light" id="sortButton" onclick="sortStores()"
+                        style="border-radius: 25px; border: 2px solid lightgrey; background-color: white; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); color: grey; padding: 5px; display: flex; align-items: center; justify-content: space-between;">
+
+                    <!-- Text "Urutkan Alfabetis" inside the button -->
+                    <span style="color: grey; padding: 2px 50px 2px 5px;">Urutkan Alfabetis</span>
+
+                    <!-- Sort icons positioned absolutely to the right -->
+                    <i class="fas fa-arrow-down-a-z" id="sortIcon" style="position: absolute; right: 10px; color: grey;"></i>
+                </button>
+            </div>
+        </div>
     </div>
+
 
     <div th:if="${errorMessage}" class="alert alert-danger">
         <p th:text="${errorMessage}"></p>
     </div>
 
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-md-3 g-4" id="storeList">
         <div class="col" th:each="store : ${stores}">
             <div class="card h-100 shadow-sm">
                 <div class="card-body" id="store-card-${store.uuid}">
@@ -234,7 +278,7 @@
                             </button>
 
                             <form th:action="@{/gerai/hapus/{idGerai}(idGerai=${store.uuid})}"
-                                  th:if="${user.peran.uuid == 1}"
+                                  th:if="${user != null and user.peran != null and user.peran.uuid == 1}"
                                   method="post"
                                   onsubmit="return handleSubmit(event)"
                                   style="display:inline;">
@@ -245,21 +289,21 @@
                             </form>
                         </div>
                     </div>
+
                     <!-- Display Mode -->
                     <div id="display-mode-${store.uuid}">
                         <p class="card-text">
                         <div class="d-flex flex-column align-items-start">
                             <div class="d-flex align-items-start mb-2">
                                 <i class="fa-solid fa-store"></i>
-                                <span class="ms-2" th:text="${store.storeAddr}" style="text-align: justify; flex: 1;">Lokasi</span> <!-- Add margin start, justify text, and flex-grow to ensure alignment -->
+                                <span class="ms-2" th:text="${store.storeAddr}" style="text-align: justify; flex: 1;">Lokasi</span>
                             </div>
                             <div class="d-flex align-items-start">
                                 <i class="fas fa-phone"></i>
-                                <span class="ms-2" th:text="${store.storePhone}" style="text-align: justify; flex: 1;">Telefon</span> <!-- Add margin start, justify text, and flex-grow -->
+                                <span class="ms-2" th:text="${store.storePhone}" style="text-align: justify; flex: 1;">Telefon</span>
                             </div>
                         </div>
                         </p>
-
                         <embed th:src="'https://www.google.com/maps/embed/v1/view?key=AIzaSyAOVYRIgupAurZup5y1PRh8Ismb1A3lLao&amp;center=' + ${store.latitude} + ',' + ${store.longitude} + '&amp;zoom=20'"
                                class="map-embed"
                                allowfullscreen
@@ -267,13 +311,51 @@
                                width="100%"
                                height="250px" />
 
-                        <p class="card-text text-center" th:if="${user.peran.uuid == 1 or user.peran.uuid == 2}" style="background-color: #f1f1f1; border-radius: 15px; padding: 1px; margin-top: 15px;">
+                        <!-- Average Feedback Scores -->
+                        <div class="text-center" style="margin-top: 15px;">
+                            <h5 style="font-weight: bold;">Rata-Rata Penilaian</h5>
+                            <div class="d-flex justify-content-between" style="background-color: #f8f9fa; border-radius: 10px; padding: 10px;">
+                                <!-- Average Total -->
+                                <div class="text-center">
+                                    <p>Menu</p>
+                                    <span th:text="${store.averageTotal}">0.0</span>
+                                </div>
+                                <!-- Average Menu -->
+                                <div class="text-center">
+                                    <i class="fas fa-utensils"></i>
+                                    <p>Menu</p>
+                                    <span th:text="${store.averageMenu}">0.0</span>
+                                </div>
+                                <!-- Average Pelayanan -->
+                                <div class="text-center">
+                                    <i class="fas fa-hands-helping"></i>
+                                    <p>Pelayanan</p>
+                                    <span th:text="${store.averagePelayanan}">0.0</span>
+                                </div>
+                                <!-- Average Fasilitas -->
+                                <div class="text-center">
+                                    <i class="fas fa-chair"></i>
+                                    <p>Fasilitas</p>
+                                    <span th:text="${store.averageFasilitas}">0.0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="card-text text-center" th:if="${user != null and user.peran != null and user.peran.uuid == 1}" style="background-color: #f1f1f1; border-radius: 15px; padding: 1px; margin-top: 15px;">
                             <i class="fa-solid fa-user-tie"></i>
-                            <span class="ms-2" th:text="${store.storeManager != null ? store.storeManager.name : 'Belum dipilih'}">Store Manager</span><!-- Add margin start -->
+                            <span class="ms-2" th:text="${store.storeManager != null ? store.storeManager.name : 'Belum dipilih'}">Store Manager</span>
                         </p>
+
+                        <!-- Lihat Detil Gerai Button -->
+                        <div class="text-center">
+                            <a th:href="@{/gerai/detail/{idGerai}(idGerai=${store.uuid})}" class="btn btn-primary">
+                                <i class="fa-solid fa-info-circle"></i> Lihat Detil Gerai
+                            </a>
+                        </div>
                     </div>
 
-<!--                    &lt;!&ndash; Edit Mode (hidden by default) &ndash;&gt;-->
+
+                    <!--                    &lt;!&ndash; Edit Mode (hidden by default) &ndash;&gt;-->
 <!--                    <div id="edit-mode-${store.uuid}" style="display: none;">-->
 <!--                        <form th:action="@{/gerai/ubah/{idGerai}(idGerai=${store.uuid})}" th:object="${store}" method="POST">-->
 <!--                            <div class="mb-3">-->
@@ -709,12 +791,6 @@
         setTimeout(() => {
                 currentForm.submit();
             }, 5000); // Submit after 5 seconds
-
-
-// <!--        if (currentForm) {-->
-// <!--            currentForm.submit(); // Submit the stored form-->
-// <!--        }-->
-// <!--        hideNotification(); // Hide notification after submission-->
     }
 
     function cancelDeletion() {
@@ -782,6 +858,58 @@
             editMode.style.display = 'block';
         }
     }
+</script>
+
+<script>
+    function filterStores() {
+        let input = document.getElementById('storeSearch').value.toLowerCase();
+        let storeList = document.getElementById('storeList');  <!-- Make sure this matches the ID -->
+        let stores = storeList.getElementsByClassName('col'); <!-- Class name for individual store cards -->
+
+        for (let i = 0; i < stores.length; i++) {
+            let storeName = stores[i].getElementsByClassName('card-title')[0].innerText.toLowerCase();
+            if (storeName.includes(input)) {
+                stores[i].style.display = '';
+            } else {
+                stores[i].style.display = 'none';
+            }
+        }
+    }
+</script>
+
+<script>
+    let isAscending = true;
+
+function sortStores() {
+    // Toggle sorting direction
+    isAscending = !isAscending;
+
+    // Get all the store cards
+    const storeCards = Array.from(document.querySelectorAll('.col'));
+
+    // Sort the store cards based on the store name
+    storeCards.sort((a, b) => {
+        const nameA = a.querySelector('.card-title').textContent.trim().toUpperCase();
+        const nameB = b.querySelector('.card-title').textContent.trim().toUpperCase();
+
+        // Compare the names alphabetically
+        if (isAscending) {
+            return nameA.localeCompare(nameB); // A-Z
+        } else {
+            return nameB.localeCompare(nameA); // Z-A
+        }
+    });
+
+    // Re-attach sorted cards to the DOM
+    const container = document.getElementById('storeList');
+    storeCards.forEach(card => container.appendChild(card));
+
+    // Update the sort icon based on the sorting direction
+    const sortIcon = document.getElementById('sortIcon');
+    sortIcon.classList.toggle('fa-arrow-down-a-z', isAscending);
+    sortIcon.classList.toggle('fa-arrow-up-z-a', !isAscending);
+}
+
 </script>
 <!-- Add Bootstrap's JS via CDN -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
