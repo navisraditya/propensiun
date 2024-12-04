@@ -132,7 +132,7 @@
       <div class="row">
           <div class="col-md-4" th:each="promo, iterStat : ${promotions}">
               <div class="card promo-card">
-                <img src="https://drive.google.com/uc?export=view&id=1ZwUOdk9EeQozFiJ-hr95_mazf2areyTA" class="card-img-top" alt="Promo Image"/><div class="card-body">
+                <img th:src="https://drive.google.com/uc?export=view&id=1ZwUOdk9EeQozFiJ-hr95_mazf2areyTA" class="card-img-top" alt="Promo Image"/><div class="card-body">
                       <h5 class="card-title" th:text="${promo.name}">Promo Title</h5>
                       <p class="card-text" th:text="${promo.description}">Promo Description</p>
                       <p class="card-text" th:text="'Berlaku hingga: ' + ${promo.endDate}">Start Date</p>

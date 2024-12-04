@@ -46,13 +46,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
                             .requestMatchers("/user/lupa-password/**").permitAll()
                             .requestMatchers(HttpMethod.GET, "/user/lupa-password/**").permitAll()
                             .requestMatchers(HttpMethod.POST, "/user/lupa-password/**").permitAll()
-<<<<<<< HEAD
-                            .anyRequest().authenticated())
-=======
                                     .requestMatchers(HttpMethod.GET,"/menu/menu-list").permitAll()
                             .anyRequest().authenticated()
                                                                         )
->>>>>>> 7ba55f675a980eba1d73b98db2bf16c976004eb9
                     .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/user/form-add-feedback") // Nonaktifkan CSRF untuk endpoint ini jika diperlukan
                     )
