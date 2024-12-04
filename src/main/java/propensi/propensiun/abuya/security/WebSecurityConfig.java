@@ -46,7 +46,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
                             .requestMatchers("/user/lupa-password/**").permitAll()
                             .requestMatchers(HttpMethod.GET, "/user/lupa-password/**").permitAll()
                             .requestMatchers(HttpMethod.POST, "/user/lupa-password/**").permitAll()
+<<<<<<< HEAD
                             
+=======
+
+>>>>>>> 5981fa8d3e38c3bf445fba796930066c3995a04c
 
                             .anyRequest().authenticated()
                                                                         )
@@ -54,7 +58,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
                         .ignoringRequestMatchers("/user/form-add-feedback") // Nonaktifkan CSRF untuk endpoint ini jika diperlukan
                     )
 
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 5981fa8d3e38c3bf445fba796930066c3995a04c
 
                     .formLogin(formLogin -> formLogin
                                 .loginPage("/user/login")

@@ -41,7 +41,7 @@
 <body>
 
 <!-- Insert Navbar -->
-<div th:insert="fragments/navbar-admin :: nav"></div>
+<div th:insert="fragments/navbar-guest :: nav"></div>
 
 <div class="content container">
   <h1 class="text-center">Daftar Menu</h1>
@@ -76,7 +76,7 @@
         <p class="card-text" th:text="${menu.deskripsi}">Deskripsi Menu</p>
 
         <!-- Tombol Edit dan Delete hanya untuk Admin -->
-        <div th:if="${currentRole.contains('Admin')}">
+        <div th:if="${currentRole != null and currentRole.contains('Admin')}">
           <a href="/menu/form-edit-menu/{id}" th:href="@{/menu/form-edit-menu/{id}(id=${menu.uuid})}" class="btn btn-primary">Edit</a>
 
           <!-- Form untuk Hapus Menu -->
