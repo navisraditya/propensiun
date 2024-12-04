@@ -1,8 +1,10 @@
 package propensi.propensiun.abuya.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.CascadeType;
@@ -55,4 +57,14 @@ public class FeedbackModel {
 
     @Column(name = "saran", nullable = true) 
     private String saran;
+
+    // Automatically captures the time of submission
+    @CreationTimestamp
+    @Column(name = "waktu_pengisian", nullable = false, updatable = false)
+    private LocalDateTime waktuPengisian;
+
+    // User-selected visiting date with format dd-MMM-yyyy
+    @DateTimeFormat(pattern = "dd-MMM-yyyy")
+    @Column(name = "tanggal_kunjungan", nullable = false)
+    private LocalDate tanggalKunjungan;
 }

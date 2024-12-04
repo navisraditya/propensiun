@@ -187,6 +187,10 @@
         </div>
         
         <form th:action="@{/user/form-add-feedback}" method="post">
+            <!-- Hidden field for waktu_pengisian -->
+            <input type="hidden" id="waktuPengisian" name="waktuPengisian"
+                   th:value="${#dates.format(#dates.createNow(), 'dd-MMM-yyyy HH:mm:ss')}">
+
             <!-- Dropdown for branch selection -->
             <div class="dropdown-cabang">
                 <label for="cabang">Cabang:</label>
@@ -198,7 +202,14 @@
                     </option>
                 </select>
             </div>
-            
+
+            <!-- Input for visiting date with calendar picker -->
+            <div>
+                <label for="tanggalKunjungan">Tanggal Kunjungan:</label>
+                <input type="date" id="tanggalKunjungan" name="tanggalKunjungan" required onchange="formatDate()">
+            </div>
+
+
             <!-- Slider for service rating -->
             <div class="range-container">
                 <label for="pelayanan">Pelayanan:</label>
@@ -262,6 +273,29 @@
     <script>
         function updateLabel(rangeInput, labelId) {
             document.getElementById(labelId).innerText = rangeInput.value;
+        }
+    </script>
+
+    <script>
+        function formatDate() {
+            var dateInput = document.getElementById("tanggalKunjungan");
+            var formattedDate = formatToDDMMMYYYY(dateInput.value);
+
+            // Set the hidden input to store the formatted date
+            document.getElementById("formattedTanggalKunjungan").value = formattedDate;
+        }
+
+        function formatToDDMMMYYYY(date) {
+            if (!date) return '';
+
+            // Parse the date input value (which is in yyyy-mm-dd format)
+            var dateObj = new Date(date);
+
+            // Format it to dd-MMM-yyyy
+            var options = { year: 'numeric', month: 'short', day: 'numeric' };
+            var formattedDate = dateObj.toLocaleDateString('en-GB', options).replace(",", "");
+
+            return formattedDate;
         }
     </script>
 
