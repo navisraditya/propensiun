@@ -48,24 +48,28 @@ public class MenuController {
                           @RequestParam("kategori") MenuModel.Kategori kategori,
                           @RequestParam("deskripsi") String deskripsi,
                           @RequestParam("imageFile") MultipartFile imageFile,
+                          Model model,
                           RedirectAttributes redirectAttributes) {
         try {
-
             MenuModel menu = new MenuModel();
             menu.setNama(nama);
             menu.setKategori(kategori);
             menu.setDeskripsi(deskripsi);
 
-            MenuModel savedMenu = menuService.addMenu(menu, imageFile);
-
+            menuService.addMenu(menu, imageFile);
             redirectAttributes.addFlashAttribute("message", "Menu berhasil ditambahkan!");
+            return "redirect:/menu/menu-list";
         } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+
+            model.addAttribute("error", e.getMessage());
+            return "form-add-menu";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Gagal menambahkan menu: " + e.getMessage());
+
+            model.addAttribute("error", "Terjadi kesalahan saat menambahkan menu: " + e.getMessage());
+            return "form-add-menu";
         }
-        return "redirect:/menu/menu-list";
     }
+
 
 
     @PostMapping("/deleteMenu")

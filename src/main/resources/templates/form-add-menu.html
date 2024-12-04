@@ -74,10 +74,6 @@
       <input type="text" id="nama" name="nama" class="form-control" required>
     </div>
 
-    <!-- Menampilkan pesan error jika ada -->
-    <div class="alert alert-danger" th:if="${error}" role="alert">
-      <p th:text="${error}"></p>
-    </div>
 
     <!-- Input untuk Kategori Menu -->
     <div class="form-group">
@@ -105,9 +101,11 @@
     <!-- Tombol untuk submit form -->
     <div class="d-flex justify-content-between mt-3">
       <button type="submit" class="btn btn-primary">Tambah Menu</button>
-      <a href="/menu" class="btn btn-secondary">Kembali ke Daftar Menu</a>
+      <a href="/menu/menu-list" class="btn btn-secondary">Kembali ke Daftar Menu</a>
     </div>
   </form>
+
+</div>
 
 
   <div th:insert="fragments/footer :: footer"></div>
@@ -137,6 +135,7 @@
     }
   });
 </script>
+
 
 </body>
 </html>
