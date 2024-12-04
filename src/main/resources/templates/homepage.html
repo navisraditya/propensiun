@@ -62,49 +62,45 @@
   <body>
     <div th:insert="fragments/navbar-guest :: nav"></div>
 
-    <section
-    id="menuCarousel"
-    class="carousel slide"
-    data-bs-ride="carousel"
-    th:if="${menus != null}"
-  >
-    <div class="carousel-inner">
-      <!-- Dynamically load menu items in the carousel -->
-      <div
-        th:each="menu, iterStat : ${menus}"
-        th:classappend="${iterStat.index == 0} ? 'active' : ''"
-        class="carousel-item"
-        th:style="'background: url(' + menu.gambar + ') no-repeat center center; background-size: cover;'"
-      >
-        <div style="background-color: rgba(0, 0, 0, 0.5); height: 100%; display: flex; align-items: center; justify-content: center;">
-          <div class="text-center text-white">
-            <h1 th:text="${menu.nama}">Nama Menu</h1>
-            <p th:text="${menu.deskripsi}">Deskripsi Menu</p>
-          </div>
+<!-- Carousel Section -->
+<section id="menuCarousel" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <!-- Dynamically load menu items in the carousel -->
+    <div th:each="menu, iterStat : ${menus}" 
+        th:classappend="${iterStat.index == (currentIndex == -1 ? 0 : currentIndex) ? 'carousel-item active' : 'carousel-item'}"
+        class="carousel-item">
+
+        <!-- Image inside the carousel item -->
+        <img th:src="${menu.gambar}" class="d-block w-100" alt="Menu Image">
+
+        <!-- Carousel Caption -->
+        <div class="carousel-caption d-none d-md-block">
+            <h5 th:text="${menu.nama}">Menu Name</h5>
+            <p th:text="${menu.deskripsi}">Menu Description</p>
         </div>
-      </div>
     </div>
-    <!-- Carousel controls -->
-    <button
-      class="carousel-control-prev"
-      type="button"
-      data-bs-target="#menuCarousel"
-      data-bs-slide="prev"
-    >
+</div>
+
+  <!-- Carousel Indicators -->
+<div class="carousel-indicators">
+  <button th:each="menu, iterStat : ${menus}" 
+          th:classappend="${iterStat.index == currentIndex ? 'active' : ''}"
+          type="button" 
+          th:attr="data-bs-target='#{menuCarousel}', aria-label='Slide ' + ${iterStat.index + 1}" 
+          aria-current="true"></button>
+</div>
+
+
+  <!-- Carousel Controls -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#menuCarousel" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
-    </button>
-    <button
-      class="carousel-control-next"
-      type="button"
-      data-bs-target="#menuCarousel"
-      data-bs-slide="next"
-    >
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#menuCarousel" data-bs-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
-    </button>
-  </section>
-  
+  </button>
+</section>
 
     <!-- <section id="menuCarousel" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
@@ -114,33 +110,40 @@
       </div>
     </section> -->
 
-    <div class="content">
-      <!-- promo card -->
-      <section class="promos-section container">
-        <h2 class="text-center mb-4">Available Promotions</h2>
-        <div class="row">
-          <!-- Promo Cards: Dynamically load promotions -->
-          <div class="col-md-4" th:each="promo : ${promotions}">
-            <div class="card promo-card">
-              <img
-                th:src="@{${promo.imageUrl}}"
-                class="card-img-top"
-                alt="Promo Image"
-              />
-              <div class="card-body">
-                <h5 class="card-title" th:text="${promo.title}">Promo Title</h5>
-                <p class="card-text" th:text="${promo.description}">
-                  Promo Description
-                </p>
-                <a th:href="@{${promo.link}}" class="btn btn-primary"
-                  >Claim Now</a
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <!-- navigation card -->
+<section class="navcard-section container">
+  <h2 class="text-center mb-4" style="margin-top: 5%">
+Selamat Datang di Almaz Fried Chicken!  </h2>
+
+<div class="row justify-content-center" style="margin-top: 5%">
+  <div class="col-md-4">
+    <div class="card navcard">
+      <div class="card-body">
+        <h5 class="card-title" style="font-weight: 750">Daftar Menu</h5>
+        <p class="card-text">
+          Lihat menu-menu menarik Almaz!
+        </p>
+        <a class="btn btn-primary" href="/menu/menu-list">Lihat Menu</a>
+      </div>
     </div>
+  </div>
+</div>  
+
+<div class="row justify-content-center" style="margin-top: 5%">
+    <div class="col-md-4">
+      <div class="card navcard">
+        <div class="card-body">
+          <h5 class="card-title" style="font-weight: 750">Lihat Toko yang Tersedia</h5>
+          <p class="card-text">
+            Lihat toko yang tersedia di sekitarmu!
+          </p>
+          <a class="btn btn-primary" href="/gerai/">Lihat Toko</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<br><br>
     <footer>
       <div th:insert="fragments/footer :: footer"></div>
     </footer>
@@ -150,5 +153,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

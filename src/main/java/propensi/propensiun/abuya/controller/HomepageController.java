@@ -38,10 +38,16 @@ public class HomepageController {
     @GetMapping("/")
     public String guestLanding(Model model) {
         List<MenuModel> menus = menuService.getAllMenus();
-
+        int currentIndex = -1; // This could be dynamically set based on some logic, e.g., user selection or default value
+        
+        if (currentIndex == -1) {
+            currentIndex = 0;  // Default to the first item if index is -1
+        }
+        
         model.addAttribute("menus", menus);
-        return "homepage";
-    }
+        model.addAttribute("currentIndex", currentIndex);
+        return "homepage";  // Replace with your template name
+        }
 
     @GetMapping("/redirectHomepage")
     public ModelAndView redirectHomepage(Model model) {
