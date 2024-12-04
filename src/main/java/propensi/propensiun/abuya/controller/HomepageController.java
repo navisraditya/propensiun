@@ -37,6 +37,9 @@ public class HomepageController {
 
     @GetMapping("/")
     public String guestLanding(Model model) {
+        List<MenuModel> menus = menuService.getAllMenus();
+
+        model.addAttribute("menus", menus);
         return "homepage";
     }
 

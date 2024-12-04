@@ -62,54 +62,57 @@
   <body>
     <div th:insert="fragments/navbar-guest :: nav"></div>
 
-    <!-- Banner for Menus in carousel -->
     <section
-      id="menuCarousel"
-      class="carousel slide"
-      data-bs-ride="carousel"
-      th:if="${menus != null}"
-    >
-      <div class="carousel-inner">
-        <!-- Dynamically load menu items in the carousel -->
-        <div
-          th:each="menu, iterStat : ${menus}"
-          th:classappend="${iterStat.index == 0} ? 'active' : ''"
-          class="carousel-item"
-        >
-          <div>
-            <h1 th:text="${menu.title}">Menu Title</h1>
-            <p th:text="${menu.description}">Menu Description</p>
+    id="menuCarousel"
+    class="carousel slide"
+    data-bs-ride="carousel"
+    th:if="${menus != null}"
+  >
+    <div class="carousel-inner">
+      <!-- Dynamically load menu items in the carousel -->
+      <div
+        th:each="menu, iterStat : ${menus}"
+        th:classappend="${iterStat.index == 0} ? 'active' : ''"
+        class="carousel-item"
+        th:style="'background: url(' + menu.gambar + ') no-repeat center center; background-size: cover;'"
+      >
+        <div style="background-color: rgba(0, 0, 0, 0.5); height: 100%; display: flex; align-items: center; justify-content: center;">
+          <div class="text-center text-white">
+            <h1 th:text="${menu.nama}">Nama Menu</h1>
+            <p th:text="${menu.deskripsi}">Deskripsi Menu</p>
           </div>
         </div>
       </div>
-      <!-- Carousel controls -->
-      <button
-        class="carousel-control-prev"
-        type="button"
-        data-bs-target="#menuCarousel"
-        data-bs-slide="prev"
-      >
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button
-        class="carousel-control-next"
-        type="button"
-        data-bs-target="#menuCarousel"
-        data-bs-slide="next"
-      >
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </section>
+    </div>
+    <!-- Carousel controls -->
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#menuCarousel"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#menuCarousel"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </section>
+  
 
-    <section id="menuCarousel" class="carousel slide" data-bs-ride="carousel">
+    <!-- <section id="menuCarousel" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item">
           <h1>Almaz Fried Chicken</h1>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <div class="content">
       <!-- promo card -->
