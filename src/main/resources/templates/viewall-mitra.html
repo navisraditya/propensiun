@@ -9,8 +9,6 @@
     <!-- Font Awesome for Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
     <style>
-<<<<<<< HEAD
-=======
         /* Ensure body and html take up the full height */
         html, body {
             height: 100%;
@@ -24,9 +22,8 @@
             flex: 1;
         }
 
->>>>>>> 4dd235f8a2bebe86f90bbf1e961ae02aece3b645
         .table {
-            margin-top: 20px;
+            margin-top: 30px; /* Space between the table and other elements */
             border-collapse: separate;
             border-spacing: 0;
             border-radius: 10px;
@@ -34,6 +31,7 @@
             background-color: white;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         .table th, .table td {
             text-align: center;
             vertical-align: middle;
@@ -42,50 +40,44 @@
             white-space: normal;
             max-width: 200px; /* Adjust as necessary */
         }
+
+        /* Updated Header Styling */
         .table th {
-<<<<<<< HEAD
-            background-color: #007bff;
-=======
-            background-color: #ff7e5f; /* Orange color */
->>>>>>> 4dd235f8a2bebe86f90bbf1e961ae02aece3b645
-            color: white;
+            background-color: #ffe5b4; /* Light orange color */
+            color: #333; /* Dark text for contrast */
+            text-align: center; /* Center-align text */
+            padding: 10px;
         }
+
         .table tbody tr:hover {
             background-color: #f1f1f1;
         }
-<<<<<<< HEAD
-        footer {
-      background-color: #f8f9fa;
-      padding: 10px 0;
-      text-align: center;
-      font-size: 14px;
-    }
 
-
-    </style>
-
-=======
+        h1.text-center {
+            margin-top: 20px;
+            margin-bottom: 30px; /* Added space below the header */
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            color: #555; /* Optional color for title */
+        }
 
         footer {
             background-color: #f8f9fa;
             padding: 10px 0;
-            text-align: left;
+            text-align: center;
             font-size: 14px;
         }
     </style>
->>>>>>> 4dd235f8a2bebe86f90bbf1e961ae02aece3b645
 </head>
 <body>
 <!-- Navbar Fragment -->
 <div th:insert="fragments/navbar-ops :: nav"></div>
 
-<<<<<<< HEAD
-=======
 <!-- Main Content -->
->>>>>>> 4dd235f8a2bebe86f90bbf1e961ae02aece3b645
 <div class="content container">
     <div class="header">
-        <h1 class="text-center mt-4">Daftar List Mitra</h1>
+        <h1 class="text-center">Daftar List Mitra</h1>
     </div>
 
     <div class="table-responsive">
