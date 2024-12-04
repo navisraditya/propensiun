@@ -2,13 +2,11 @@ package propensi.propensiun.abuya.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import propensi.propensiun.abuya.model.MenuModel;
 import propensi.propensiun.abuya.repository.MenuDb;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -23,6 +21,12 @@ public class MenuServiceImpl implements MenuService {
     public List<MenuModel> getAllMenus() {
         return menuDb.findAll();
     }
+
+    @Override
+    public List<MenuModel> getMenusByCategory(MenuModel.Kategori kategori) {
+        return menuDb.findByKategori(kategori);
+    }
+
 
     @Override
     public MenuModel addMenu(MenuModel menu, MultipartFile image) throws Exception {
@@ -52,8 +56,15 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public MenuModel updateMenu(MenuModel menu) {
+        return null;
+    }
 
-        if (menuDb.existsByNamaIgnoreCase(menu.getNama())) {
+    @Override
+    public MenuModel updateMenu(MenuModel menu, MultipartFile image) throws Exception {
+
+        MenuModel existingMenu = menuDb.findById(menu.getUuid()).orElseThrow(() -> new IllegalArgumentException("Menu tidak ditemukan"));
+
+        if (!menu.getNama().equalsIgnoreCase(existingMenu.getNama()) && menuDb.existsByNamaIgnoreCase(menu.getNama())) {
             throw new IllegalArgumentException("Nama menu sudah ada, silakan gunakan nama yang lain.");
         }
 
@@ -61,8 +72,16 @@ public class MenuServiceImpl implements MenuService {
             throw new IllegalArgumentException("Nama menu harus memiliki minimal 5 karakter.");
         }
 
+
         if (menu.getDeskripsi() == null || menu.getDeskripsi().isEmpty()) {
             throw new IllegalArgumentException("Deskripsi tidak boleh kosong.");
+        }
+
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = supabaseService.uploadImage(image);
+            menu.setGambar(imageUrl);
+        } else {
+            menu.setGambar(existingMenu.getGambar());
         }
 
         return menuDb.save(menu);

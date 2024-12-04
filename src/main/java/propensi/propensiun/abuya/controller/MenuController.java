@@ -24,9 +24,18 @@ public class MenuController {
 
 
     @GetMapping("/menu-list")
-    public String showMenuList(Model model, Authentication authentication) {
-        List<MenuModel> menus = menuService.getAllMenus();
+    public String showMenuList(@RequestParam(required = false) MenuModel.Kategori kategori,
+                               Model model,
+                               Authentication authentication) {
+        List<MenuModel> menus;
+        if (kategori != null) {
+            menus = menuService.getMenusByCategory(kategori);
+        } else {
+            menus = menuService.getAllMenus();
+        }
         model.addAttribute("menus", menus);
+        model.addAttribute("selectedCategory", kategori);
+        model.addAttribute("categories", List.of(MenuModel.Kategori.values()));
 
         if (authentication != null) {
             String currentRole = authentication.getAuthorities().toString();
@@ -97,18 +106,22 @@ public class MenuController {
                            @RequestParam("nama") String nama,
                            @RequestParam("kategori") MenuModel.Kategori kategori,
                            @RequestParam("deskripsi") String deskripsi,
-                           @RequestParam("imageFile") MultipartFile imageFile,
+                           @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
                            RedirectAttributes redirectAttributes) {
         try {
             MenuModel menu = menuService.getMenuById(id);
             menu.setNama(nama);
             menu.setKategori(kategori);
             menu.setDeskripsi(deskripsi);
-            MenuModel updatedMenu = menuService.updateMenu(menu);
+
+            MenuModel updatedMenu = menuService.updateMenu(menu, imageFile);
+
             redirectAttributes.addFlashAttribute("message", "Menu berhasil diubah!");
+            return "redirect:/menu/menu-list";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Gagal mengubah menu: " + e.getMessage());
+            return "redirect:/menu/form-edit-menu/" + id;
         }
-        return "redirect:/menu/form-edit-menu/{id}";
     }
+
 }
