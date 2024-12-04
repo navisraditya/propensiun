@@ -94,7 +94,7 @@
         th:each="menu, iterStat : ${menus}"
         th:classappend="${iterStat.index == 0} ? 'active' : ''"
         class="carousel-item"
-        th:style="'background: url(' + menu.gambar + ') no-repeat center center; background-size: cover;'"
+        th:style="'background: url('menu.gambar') no-repeat center center; background-size: cover;'"
       >
         <div style="background-color: rgba(0, 0, 0, 0.5); height: 100%; display: flex; align-items: center; justify-content: center;">
           <div class="text-center text-white">
@@ -127,7 +127,8 @@
 
 <div class="content">
   <section class="promos-section container">
-      <h2 class="text-center mb-4">Available Promotions</h2>
+      <h2 class="text-center mb-4">Selamat Datang di Almaz Fried Chicken!</h2>
+      <h3 class="text-center mb-4">Promo yang tersedia</h3>
       <div class="row">
           <div class="col-md-4" th:each="promo, iterStat : ${promotions}">
               <div class="card promo-card">
@@ -143,12 +144,41 @@
                           <span th:if="${promo.stores == null or promo.stores.isEmpty()}">&nbsp;</span>    
                           </p>
                       </div>
-                      <a class="btn btn-primary" data-bs-toggle="collapse" th:href="'#collapsePromo' + ${iterStat.index}" role="button" aria-expanded="false" aria-controls="collapsePromo">Claim Now</a>
+                      <a class="btn btn-primary" data-bs-toggle="collapse" th:href="'#collapsePromo' + ${iterStat.index}" role="button" aria-expanded="false" aria-controls="collapsePromo">Detail Promo</a>
                   </div>
               </div>
           </div>
       </div>
   </section>
+
+  <div class="row justify-content-center" style="margin-top: 5%">
+    <div class="col-md-4">
+      <div class="card navcard">
+        <div class="card-body">
+          <h5 class="card-title" style="font-weight: 750">Daftar Menu</h5>
+          <p class="card-text">
+            Lihat menu-menu menarik Almaz!
+          </p>
+          <a class="btn btn-primary" href="/menu/menu-list">Lihat Menu</a>
+        </div>
+      </div>
+    </div>
+  </div>  
+  
+  <div class="row justify-content-center" style="margin-top: 5%">
+      <div class="col-md-4">
+        <div class="card navcard">
+          <div class="card-body">
+            <h5 class="card-title" style="font-weight: 750">Lihat Toko yang Tersedia</h5>
+            <p class="card-text">
+              Lihat toko yang tersedia di sekitarmu!
+            </p>
+            <a class="btn btn-primary" href="/gerai/">Lihat Toko</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  <br><br>
 </div>
 </section>
 </div>
