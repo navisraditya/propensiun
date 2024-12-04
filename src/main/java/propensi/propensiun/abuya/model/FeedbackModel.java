@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,12 +35,12 @@ public class FeedbackModel {
     private Integer uuid;
 
     // Foreign key untuk store
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "store_id", referencedColumnName = "uuid", nullable = false)
     private StoreModel store;
 
     // Foreign key untuk user
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", referencedColumnName = "uuid", nullable = true)
     private UserModel user;
 
