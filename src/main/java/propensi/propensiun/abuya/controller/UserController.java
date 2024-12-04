@@ -1,6 +1,8 @@
 package propensi.propensiun.abuya.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +27,9 @@ import propensi.propensiun.abuya.service.UserService;
 
 import java.lang.reflect.Member;
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -434,6 +439,8 @@ public class UserController {
     @PostMapping(value = "/form-add-feedback")
     private String postFormAddFeedback (
         @RequestParam("cabang") String storeId,
+        @RequestParam("tanggalKunjungan") @DateTimeFormat(pattern = "dd-MMM-yyyy")  LocalDate tanggalKunjungan,
+        @RequestParam("waktuPengisian") @DateTimeFormat(pattern = "dd-MMM-yyyy HH:mm:ss") LocalDateTime waktuPengisian,
         @RequestParam("pelayanan") float pelayanan,
         @RequestParam("menu") float menu,
         @RequestParam("fasilitas") float fasilitas,
@@ -453,7 +460,7 @@ public class UserController {
 
         StoreModel store = storeService.getStoreById(storeId);
 
-        FeedbackModel feedback = new FeedbackModel(null, store, user, pelayanan, menu, fasilitas, kotakSaran);
+        FeedbackModel feedback = new FeedbackModel(null, store, user, pelayanan, menu, fasilitas, kotakSaran, waktuPengisian, tanggalKunjungan);
         System.out.println("Store ID"+store);
         feedbackService.saveFeedback(feedback);
         redirectAttributes.addFlashAttribute("success", "Feedback berhasil ditambahkan");
