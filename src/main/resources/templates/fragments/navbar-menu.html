@@ -1,0 +1,61 @@
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-light" style="background-color: #FF671F; color: white">
+    <link th:href="@{/styles/nav.css}" rel="stylesheet" />
+    <div class="container-fluid">
+
+        <!-- Logo or Brand -->
+        <a class="navbar-brand" href="/">
+            <img src="/images/logo-almaz.png" alt="logo almaz" width="125px">
+        </a>
+
+        <!-- Toggler for mobile view -->
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Links in navbar -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/adminlanding">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/menu/menu-list">Menu List</a>
+                </li>
+            </ul>
+
+            <!-- Buttons aligned right -->
+            <div class="d-flex">
+                <!-- For Admin -->
+                <div th:if="${currentRole != null and currentRole.contains('Admin')}">
+                    <a class="btn btn-outline-light me-2 nav-button" href="/menu/form-add-menu">Add Menu</a>
+                    <a class="btn btn-outline-light nav-button" href="/logout">Logout</a>
+                </div>
+
+                <!-- For Guest (role null) -->
+                <div th:if="${currentRole == null}">
+                    <a class="btn btn-outline-light nav-button" href="/user/add">Register</a>
+                </div>
+
+                <!-- For Other Roles (not Admin) -->
+                <div th:if="${currentRole != null and !currentRole.contains('Admin')}">
+                    <a class="btn btn-outline-light me-2 nav-button" href="/user/profile">Profile</a>
+                    <a class="btn btn-outline-light nav-button" href="/logout">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
