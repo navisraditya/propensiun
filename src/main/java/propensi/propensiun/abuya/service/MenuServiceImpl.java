@@ -26,11 +26,9 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public MenuModel addMenu(MenuModel menu, MultipartFile image) throws Exception {
-
         if (menuDb.existsByNamaIgnoreCase(menu.getNama())) {
             throw new IllegalArgumentException("Nama menu sudah ada, silakan gunakan nama yang lain.");
         }
-
 
         if (menu.getNama().length() < 5) {
             throw new IllegalArgumentException("Nama menu harus memiliki minimal 5 karakter.");
@@ -44,7 +42,6 @@ public class MenuServiceImpl implements MenuService {
         String imageUrl = supabaseService.uploadImage(image);
         menu.setGambar(imageUrl);
 
-
         return menuDb.save(menu);
     }
 
@@ -55,6 +52,19 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public MenuModel updateMenu(MenuModel menu) {
+
+        if (menuDb.existsByNamaIgnoreCase(menu.getNama())) {
+            throw new IllegalArgumentException("Nama menu sudah ada, silakan gunakan nama yang lain.");
+        }
+
+        if (menu.getNama().length() < 5) {
+            throw new IllegalArgumentException("Nama menu harus memiliki minimal 5 karakter.");
+        }
+
+        if (menu.getDeskripsi() == null || menu.getDeskripsi().isEmpty()) {
+            throw new IllegalArgumentException("Deskripsi tidak boleh kosong.");
+        }
+
         return menuDb.save(menu);
     }
 
